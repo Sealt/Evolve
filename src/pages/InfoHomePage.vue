@@ -1,47 +1,61 @@
 <template>
   <div class="firstCard">
-    <Swipe class="my-swipe" :autoplay="3000" :width="375" :height="130" indicator-color="white">
+    <Swipe
+      class="my-swipe"
+      :autoplay="3000"
+      height="130"
+      indicator-color="white">
       <SwipeItem v-for="image in swiperImages" :key="image">
         <img :src="image" />
       </SwipeItem>
     </Swipe>
     <Row class="bannerButton" justify="space-around">
       <Col span="4">
-      <div class="col">
-        <Icon name="newspaper" size="7vw" />
-        实况
-      </div></Col>
+        <div class="col">
+          <Icon name="newspaper" size="7vw" />
+          实况
+        </div></Col
+      >
       <Col span="4">
-      <div class="col">
-        <Icon name="newspaper" size="7vw" />
-        实况
-      </div>
+        <div class="col">
+          <Icon name="newspaper" size="7vw" />
+          实况
+        </div>
       </Col>
       <Col span="4">
-      <div class="col">
-        <Icon name="label" size="7vw" />
-        状态
-      </div>
+        <div class="col">
+          <Icon name="label" size="7vw" />
+          状态
+        </div>
       </Col>
       <Col span="4">
-      <div class="col">
-        <Icon name="notes" size="7vw" />
-        日程
-      </div>
+        <div class="col">
+          <Icon name="notes" size="7vw" />
+          日程
+        </div>
       </Col>
       <Col span="4">
-      <div class="col">
-        <Icon name="records" size="7vw" />
-        咨询
-      </div>
+        <div class="col">
+          <Icon name="records" size="7vw" />
+          咨询
+        </div>
       </Col>
     </Row>
   </div>
+  <LittleCard
+    title="考研"
+    detail="397万热度 204.8万讨论666"
+    image="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+    Hot="1"
+    Follow="1"
+    />
 </template>
 
 <script setup lang="ts">
 import { Swipe, SwipeItem, Row, Col, Icon } from "vant";
+import LittleCard from "@/components/LittleCard.vue";
 const swiperImages = ["/1.png", "/2.png", "/3.png"];
+
 </script>
 
 <style scoped>
@@ -66,7 +80,9 @@ img {
   font-size: 14px;
   margin: 10px 0px;
 }
-
+.van-col:active {
+  background-color: whitesmoke;
+}
 .bannerButton {
   background-color: white;
 }
