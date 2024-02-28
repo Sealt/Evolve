@@ -42,18 +42,12 @@
       </Col>
     </Row>
   </div>
-  <LittleCard
-    title="考研"
-    detail="397万热度 204.8万讨论666"
-    image="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
-    Hot="1"
-    Follow="1"
-    />
+  <InfoCard/>
 </template>
 
 <script setup lang="ts">
 import { Swipe, SwipeItem, Row, Col, Icon } from "vant";
-import LittleCard from "@/components/LittleCard.vue";
+import InfoCard from "@/components/InfoCard.vue";
 const swiperImages = ["/1.png", "/2.png", "/3.png"];
 
 </script>
@@ -62,7 +56,7 @@ const swiperImages = ["/1.png", "/2.png", "/3.png"];
 .firstCard {
   margin: 5px;
   border: 1px solid whitesmoke;
-  border-radius: 15px;
+  border-radius: 10px;
   overflow: hidden;
 }
 
