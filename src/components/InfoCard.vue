@@ -1,5 +1,5 @@
 <template>
-  <div class="infocard">
+  <div class="infocard" @click="cardOnClick">
     <div class="infocard-header">
       <div class="infocard-header__avator">
         <Image
@@ -13,7 +13,7 @@
         <div class="detail">来自头条推荐 南昌·信息工程学院</div>
       </div>
       <div class="infocard-header__action">
-        <Icon name="arrow-down" class="action" />
+        <Icon name="arrow-down" class="action" @click.stop="actionOn"/>
       </div>
     </div>
     <div class="infocard-content">
@@ -32,28 +32,48 @@
     </div>
     <div class="infocard-footer">
       <HotCommentCard />
-      <div class="flex justify-around m-10">
-        <div class="flex items-center gap-5 text-15 text-gray-500 active:bg-vant-n3">
+      <div class="flex justify-around">
+        <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
           <Icon name="share-o" size="20" color="gray" />
           <div>18</div>
         </div>
-        <div class="flex items-center gap-5 text-15 text-gray-500">
+        <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
           <Icon name="comment-o" size="20" color="gray" />
           <div>18</div>
         </div>
-        <div class="flex items-center gap-5 text-15 text-gray-500">
-          <Icon name="good-job-o" size="20" color="gray" />
+        <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
+          <Icon name="good-job-o" size="20" color="gray" @click.stop="likeOn" />
           <div>18</div>
         </div>
       </div>
     </div>
+    <ActionSheet
+      v-model:show="showInfoAction"
+      :actions="infoActions"
+      cancel-text="取消"
+      close-on-click-action
+      teleport=".InfoView"
+      @cancel="actionOnCancel" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { Image, Button, Icon } from "vant";
+import { Image, Button, Icon, ActionSheet } from "vant";
 import TinyCard from "./TinyCard.vue";
 import HotCommentCard from "./HotCommentCard.vue";
+import { ref } from 'vue'
+import {useRouter} from "vue-router";
+const router = useRouter()
+const showInfoAction = ref(false)
+const infoActions = [ {name: '1'},{name:'2'}];
+const actionOnCancel = () => {}
+const actionOn = () => { showInfoAction.value = true}
+const likeOn = () => {alert('gaag')}
+const props = defineProps<
+  {to: string}
+>()
+
+const cardOnClick = () => { router.push('/info/'+props.to)}
 </script>
 
 <style lang="scss" scoped>

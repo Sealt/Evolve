@@ -6,28 +6,33 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'info',
+      name: 'infoview',
       component: InfoView
     },
     {
       path: '/res',
-      name: 'res',
+      name: 'resview',
       component: () => import('../views/ResView.vue')
     },
     {
       path: '/chat',
-      name: 'char',
+      name: 'chatview',
       component: () => import('../views/ChatView.vue')
     },
     {
       path: '/me',
-      name: 'me',
+      name: 'meview',
       component: () => import('../views/MeView.vue')
     },
     {
       path: '/event/:id',
-      name: 'event',
-      component: () => import('../pages/ProjectDetail.vue')
+      name: 'eventpage',
+      component: () => import('../pages/ProjectPage.vue')
+    },
+    {
+      path: '/info/:id',
+      name: 'infopage',
+      component: () => import('../pages/InfoCardPage.vue')
     }
   ]
 })

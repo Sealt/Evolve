@@ -6,12 +6,12 @@
     <div class="card-content">
       <div class="card-content__title">{{ title }}</div>
       <div class="card-content__detail">
-        <Icon v-if="Hot=='1'" name="fire-o" style="color: red" size="14px" />
+        <Icon v-if="hot=='1'" name="fire-o" style="color: red" size="14px" />
         <div class="card-content__detail-wrapper">{{ detail }}</div>
       </div>
     </div>
     <div class="card-button">
-        <Tag v-show="Follow == '1'" type="primary" size="medium" round>已关注</Tag>
+        <Tag v-show="follow == '1'" type="primary" size="medium" round>已关注</Tag>
     </div>
   </div>
 </template>
@@ -25,8 +25,8 @@ const props = defineProps<{
   image?: string;
   title?: string;
   detail?: string;
-  Hot?: string;
-  Follow?: string;
+  hot?: string;
+  follow?: string;
   to?: string;
 }>();
 const handleClick = () => { router.push('/event/'+props.to)}

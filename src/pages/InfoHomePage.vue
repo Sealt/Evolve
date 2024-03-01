@@ -42,14 +42,21 @@
       </Col>
     </Row>
   </div>
-  <InfoCard/>
+  <LittleCard
+    image="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+    hot="1"
+    detail="9999万关注 1258讨论"
+    title="考研"
+    follow="1"
+    to="125153" />
+  <InfoCard to="123"/>
 </template>
 
 <script setup lang="ts">
 import { Swipe, SwipeItem, Row, Col, Icon } from "vant";
 import InfoCard from "@/components/InfoCard.vue";
+import LittleCard from "@/components/LittleCard.vue";
 const swiperImages = ["/1.png", "/2.png", "/3.png"];
-
 </script>
 
 <style scoped>

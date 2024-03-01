@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="InfoView">
     <TopBar />
     <Tabs v-model:active="tabActiveName" sticky shrink swipeable>
       <Tab name="follow" title="关注">关注</Tab>
