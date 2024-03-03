@@ -13,10 +13,19 @@
         <div class="detail">来自头条推荐 南昌·信息工程学院</div>
       </div>
       <div class="infocard-header__action">
-        <Icon name="arrow-down" class="action" @click.stop="actionOn"/>
+        <Icon name="arrow-down" class="action" @click.stop="actionOn" />
       </div>
     </div>
     <div class="infocard-content">
+      <LittleCard
+        class="mb-10 mt-5"
+        type="res"
+        image="./icon_pdf.png"
+        hot="0"
+        detail="1568下载 4积分 2金币66666666666666666666666666666"
+        title="高等数学一-23-24-Z-真题.pdf111111111111"
+        follow="0"
+        to="125153" />
       <div class="infocard-content__text">我就是普普通通的内容</div>
       <div class="infocard-content__image">
         <Image
@@ -61,19 +70,25 @@
 import { Image, Button, Icon, ActionSheet } from "vant";
 import TinyCard from "./TinyCard.vue";
 import HotCommentCard from "./HotCommentCard.vue";
-import { ref } from 'vue'
-import {useRouter} from "vue-router";
-const router = useRouter()
-const showInfoAction = ref(false)
-const infoActions = [ {name: '1'},{name:'2'}];
-const actionOnCancel = () => {}
-const actionOn = () => { showInfoAction.value = true}
-const likeOn = () => {alert('gaag')}
-const props = defineProps<
-  {to: string}
->()
+import LittleCard from "./LittleCard.vue";
 
-const cardOnClick = () => { router.push('/info/'+props.to)}
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const showInfoAction = ref(false);
+const infoActions = [{ name: "1" }, { name: "2" }];
+const actionOnCancel = () => {};
+const actionOn = () => {
+  showInfoAction.value = true;
+};
+const likeOn = () => {
+  alert("gaag");
+};
+const props = defineProps<{ to: string }>();
+
+const cardOnClick = () => {
+  router.push("/info/" + props.to);
+};
 </script>
 
 <style lang="scss" scoped>

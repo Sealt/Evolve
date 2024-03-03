@@ -39,6 +39,6 @@ const tabActiveName = ref("home");
   bottom: 5.3vw;
 }
 .van-tabs__content {
-  background-color: whitesmoke;
+  background-color: #f2f3f5;
 }
 </style>

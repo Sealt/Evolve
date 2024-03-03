@@ -46,6 +46,7 @@
 
 <script setup lang="ts">
 import { Image, Icon, TextEllipsis } from "vant";
+
 const cc = [
   { user: "hi23hd", to: "", content: "这是一条评论内容评论的评论的评论测试" },
   {

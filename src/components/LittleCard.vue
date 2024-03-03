@@ -1,27 +1,35 @@
 <template>
-  <div @click="handleClick" class="card">
+  <div @click.stop="handleClick" class="card">
     <div class="card-image">
-      <Image :src="image" fit="cover" class="image"/>
+      <Image :src="image" fit="cover" class="image" />
     </div>
     <div class="card-content">
       <div class="card-content__title">{{ title }}</div>
       <div class="card-content__detail">
-        <Icon v-if="hot=='1'" name="fire-o" style="color: red" size="14px" />
+        <Icon
+          v-if="hot == '1'"
+          name="fire-o"
+          class="text-red-500 mr-4"
+          size="14px" />
         <div class="card-content__detail-wrapper">{{ detail }}</div>
       </div>
     </div>
     <div class="card-button">
-        <Tag v-show="follow == '1'" type="primary" size="medium" round>已关注</Tag>
+      <Tag v-show="follow == '1'" type="primary" size="medium" round
+        >已关注</Tag
+      >
+      <Tag v-show="type == 'res'" type="success" size="medium" round>获取</Tag>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Image, Icon, Tag } from "vant";
-import { useRouter } from 'vue-router'
-import { ref } from 'vue'
-const router = useRouter()
+import { useRouter } from "vue-router";
+import { ref,onMounted } from "vue";
+const router = useRouter();
 const props = defineProps<{
+  type?: string;
   image?: string;
   title?: string;
   detail?: string;
@@ -29,7 +37,13 @@ const props = defineProps<{
   follow?: string;
   to?: string;
 }>();
-const handleClick = () => { router.push('/event/'+props.to)}
+
+onMounted(()=>{
+})
+
+const handleClick = () => {
+  if (props.type == "event") router.push("/event/" + props.to);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -38,9 +52,8 @@ const handleClick = () => { router.push('/event/'+props.to)}
   box-sizing: content-box;
   height: 40px;
   background-color: white;
-  margin: 5px;
   padding: 10px;
-  border: 1px solid whitesmoke;
+  border: 1px solid #f2f3f5;
   border-radius: 5px;
   .card-image {
     width: 40px;
@@ -57,17 +70,20 @@ const handleClick = () => { router.push('/event/'+props.to)}
   .card-content {
     display: flex;
     min-width: 100px;
+    max-width: 220px;
     flex-direction: column;
     justify-content: space-between;
     margin-left: 10px;
     .card-content__title {
       font-size: 15px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .card-content__detail {
       display: flex;
       align-items: center;
       .card-content__detail-wrapper {
-        margin-left: 4px;
         display: inline-block;
         font-size: 12px;
         color: gray;
@@ -87,6 +103,6 @@ const handleClick = () => { router.push('/event/'+props.to)}
   }
 }
 .card:active {
-  background-color: #dcdee0;
+  background-color: #ebedf0;
 }
 </style>

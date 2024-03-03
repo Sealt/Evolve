@@ -24,24 +24,36 @@
       <Image :src="image" fit="contain" class="*:max-h-450" width="100vw" />
     </SwipeItem>
   </Swipe>
+  <LittleCard
+    class="mx-15 mb-10 mt-5"
+    type="res"
+    image="../icon_pdf.png"
+    hot="0"
+    detail="1568下载 4积分 2金币66666666666666666666666666666"
+    title="高等数学一-23-24-Z-真题.pdf111111111111"
+    follow="0"
+    to="125153" />
   <div class="px-15 text-15">
     我是一段普通的内容哈哈我是一段普通的内容哈哈我是一段普通的内容哈哈我是一段普通的内容哈哈<br />还能换个行
   </div>
   <div class="px-15 pt-10 pb-5"><TinyCard /></div>
   <div class="px-15 text-12 text-gray-500">发布于广东</div>
-  <div class="px-15 py-10 flex justify-between"><span class="text-14 text-gray-600">共 202 回复</span></div>
-  <div class="px-15" v-for="comment in [1,1]">
+  <div class="px-15 py-10 flex justify-between">
+    <span class="text-14 text-gray-600">共 202 回复</span>
+  </div>
+  <div class="px-15" v-for="comment in [1, 1]">
     <Comment />
-    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { Swipe, SwipeItem, Icon, Image, Button,Tab,Tabs } from "vant";
+import { Swipe, SwipeItem, Icon, Image, Button, Tab, Tabs } from "vant";
 import TinyCard from "@/components/TinyCard.vue";
 import Comment from "@/components/Comment.vue";
-import { ref } from 'vue'
+import LittleCard from "@/components/LittleCard.vue";
+import { ref } from "vue";
 const images = ["../test.jpg", "../1.png", "../2.png"];
-const activeCommentType = ref(0)
+const activeCommentType = ref(0);
 </script>
 
 <style lang="scss" scoped>
