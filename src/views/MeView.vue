@@ -1,7 +1,7 @@
 <template>
   <div>
     Hello Me
-    <Tabbar route>
+    <Tabbar route placeholder>
       <TabbarItem name="info" to="/" icon="info-o">信息</TabbarItem>
       <TabbarItem name="res" to="/res" icon="apps-o">资源</TabbarItem>
       <TabbarItem name="chat" to="/chat" icon="chat-o">消息</TabbarItem>

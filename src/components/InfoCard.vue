@@ -13,7 +13,23 @@
         <div class="detail">来自头条推荐 南昌·信息工程学院</div>
       </div>
       <div class="infocard-header__action">
-        <Icon name="arrow-down" class="action" @click.stop="actionOn" />
+        <div v-if="HotIndex == '01'" class="gap-3 flex items-center mr-5">
+          <Icon name="fire-o" class="inline text-red-600"/>
+          <div class="text-red-600 font-bold italic inline-flex">{{ HotIndex }}</div>
+        </div>
+        <div v-else-if="HotIndex == '02'" class="gap-3 flex items-center mr-5">
+          <Icon name="fire-o" class="inline text-orange-500"/>
+          <div class="text-orange-600 font-bold italic inline-flex">{{ HotIndex }}</div>
+        </div>
+        <div v-else-if="HotIndex == '03'" class="gap-3 flex items-center mr-5">
+          <Icon name="fire-o" class="inline text-amber-500"/>
+          <div class="text-amber-600 font-bold italic inline-flex">{{ HotIndex }}</div>
+        </div>
+        <div v-else-if="HotIndex != null" class="gap-3 flex items-center mr-5">
+          <Icon name="fire-o" class="inline text-gray-500"/>
+          <div class="text-gray-600 font-bold italic inline-flex">{{ HotIndex }}</div>
+        </div>
+        <Icon v-else name="arrow-down" class="action" @click.stop="actionOn" />
       </div>
     </div>
     <div class="infocard-content">
@@ -84,7 +100,7 @@ const actionOn = () => {
 const likeOn = () => {
   alert("gaag");
 };
-const props = defineProps<{ to: string }>();
+const props = defineProps<{ to: string; HotIndex: string }>();
 
 const cardOnClick = () => {
   router.push("/info/" + props.to);
@@ -97,7 +113,6 @@ const cardOnClick = () => {
   flex-direction: column;
   background-color: white;
   border-radius: 10px;
-  margin: 5px;
   .infocard-header {
     display: flex;
     padding: 10px;

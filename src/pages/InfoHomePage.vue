@@ -43,7 +43,6 @@
     </Row>
   </div>
   <LittleCard
-  class="m-5"
     image="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
     type="event"
     hot="1"
@@ -63,7 +62,6 @@ const swiperImages = ["/1.png", "/2.png", "/3.png"];
 
 <style scoped>
 .firstCard {
-  margin: 5px;
   border: 1px solid whitesmoke;
   border-radius: 10px;
   overflow: hidden;

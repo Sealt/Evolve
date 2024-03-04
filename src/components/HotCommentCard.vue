@@ -5,9 +5,8 @@
       508赞
     </div>
     <div class="text-14 p-10">
-      <div class="text-vant inline">春天的芭蕾</div>
-      ：这真是我看过最好的礼物！<br />
-      wocaonizhendeshuoshizheyangdema
+      <div class="text-vant inline break-all">春天的芭蕾</div>
+      <div class="inline break-all">:这真是我看过最awoc好的礼物hahaonizhendeshuoshizheyangdema</div>
     </div>
   </div>
 </template>

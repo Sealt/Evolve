@@ -1,13 +1,14 @@
 <template>
-  <div>
+  <div class="h-screen flex flex-col">
     <TopBar />
     <Tabs v-model:active="tabActiveName" sticky shrink swipeable>
-      <Tab name="store" title="资料库">资料库</Tab>
-      <Tab name="res" title="资源">资源
+      <Tab name="store" title="资料库">
+        <StockTree />
       </Tab>
+      <Tab name="res" title="资源">资源 </Tab>
       <Tab name="market" title="广场">市场</Tab>
     </Tabs>
-    <Tabbar route>
+    <Tabbar route placeholder>
       <TabbarItem name="info" to="/" icon="info-o">信息</TabbarItem>
       <TabbarItem name="res" to="/res" icon="apps-o">资源</TabbarItem>
       <TabbarItem name="chat" to="/chat" icon="chat-o">消息</TabbarItem>
@@ -18,11 +19,31 @@
 
 <script setup lang="ts">
 import TopBar from "@/components/TopBar.vue";
-import { Tab, Tabs,Tabbar,TabbarItem } from "vant";
+import StockTree from "@/components/StockTree.vue";
+import { Tab, Tabs, Tabbar, TabbarItem } from "vant";
 import { ref } from "vue";
-const tabActiveName = ref("res");
+const tabActiveName = ref("store");
 </script>
 
-<style>
-
+<style scoped>
+:deep(.van-tabs){
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+:deep(.van-tabs__content) {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+:deep(.van-tab__panel) {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+:deep(.van-swipe-item) {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
 </style>
