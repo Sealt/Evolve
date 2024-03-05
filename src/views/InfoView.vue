@@ -7,9 +7,11 @@
         <InfoHomePage />
       </Tab>
       <Tab name="hot" title="热门">
-        <InfoHotPage/>
+        <InfoHotPage />
       </Tab>
-      <Tab name="event" title="事件">事件</Tab>
+      <Tab name="event" title="事件">
+        <InfoEventPage />
+      </Tab>
       <Tab name="info" title="信息">信息</Tab>
       <Tab name="experience" title="经验">经验</Tab>
     </Tabs>
@@ -25,10 +27,11 @@
 <script setup lang="ts">
 import TopBar from "@/components/TopBar.vue";
 import InfoHomePage from "@/pages/InfoHomePage.vue";
-import InfoHotPage from '@/pages/InfoHotPage.vue'
-import { Tab, Tabs,Tabbar,TabbarItem } from "vant";
+import InfoHotPage from "@/pages/InfoHotPage.vue";
+import InfoEventPage from "@/pages/InfoEventPage.vue";
+import { Tab, Tabs, Tabbar, TabbarItem } from "vant";
 import { ref } from "vue";
-const tabActiveName = ref("hot");
+const tabActiveName = ref("event");
 </script>
 
 <style>
@@ -47,7 +50,7 @@ const tabActiveName = ref("hot");
 </style>
 
 <style scoped>
-:deep(.van-tabs){
+:deep(.van-tabs) {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -60,8 +63,8 @@ const tabActiveName = ref("hot");
 :deep(.van-tab__panel) {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding: 5px;
+  gap: 10px;
+  padding: 10px;
 }
 :deep(.van-swipe-item) {
   display: flex;

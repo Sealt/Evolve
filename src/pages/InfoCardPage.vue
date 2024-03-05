@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-45 border-b bg-white items-center sticky top-0 z-50">
-    <Icon class="pl-10 pr-20" name="arrow-left" />
+    <Icon class="pl-10 pr-20" size="5vw" name="arrow-left" />
     <Image
       src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
       fit="cover"
@@ -12,7 +12,7 @@
     </div>
     <div class="flex justify-end w-full pr-10 items-center">
       <Button plain round size="small" type="primary">关注</Button>
-      <Icon name="ellipsis" />
+      <Icon name="ellipsis" size="5vw"/>
     </div>
   </div>
   <Swipe

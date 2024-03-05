@@ -14,12 +14,12 @@
         <span class="text-12 text-gray-500">1分钟前</span>
         <div class="flex items-center gap-5">
           <div class="flex items-center">
-            <Icon name="good-job-o" /><span class="text-12 text-gray-500 px-5"
+            <Icon name="good-job-o" size="4vw"/><span class="text-12 text-gray-500 px-5"
               >998</span
             >
           </div>
           <div class="flex items-center">
-            <Icon name="comment-o" /><span class="text-12 text-gray-500 px-5"
+            <Icon name="comment-o" size="4vw"/><span class="text-12 text-gray-500 px-5"
               >986</span
             >
           </div>

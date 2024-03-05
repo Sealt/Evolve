@@ -14,20 +14,20 @@
       </div>
       <div class="infocard-header__action">
         <div v-if="HotIndex == '01'" class="gap-3 flex items-center mr-5">
-          <Icon name="fire-o" class="inline text-red-600"/>
-          <div class="text-red-600 font-bold italic inline-flex">{{ HotIndex }}</div>
+          <Icon name="fire-o" size="4vw" class="inline text-red-600"/>
+          <div class="text-red-600 font-bold italic inline-flex text-14">{{ HotIndex }}</div>
         </div>
         <div v-else-if="HotIndex == '02'" class="gap-3 flex items-center mr-5">
-          <Icon name="fire-o" class="inline text-orange-500"/>
-          <div class="text-orange-600 font-bold italic inline-flex">{{ HotIndex }}</div>
+          <Icon name="fire-o" size="4vw" class="inline text-orange-500"/>
+          <div class="text-orange-600 font-bold italic inline-flex text-14">{{ HotIndex }}</div>
         </div>
         <div v-else-if="HotIndex == '03'" class="gap-3 flex items-center mr-5">
-          <Icon name="fire-o" class="inline text-amber-500"/>
-          <div class="text-amber-600 font-bold italic inline-flex">{{ HotIndex }}</div>
+          <Icon name="fire-o" size="4vw" class="inline text-amber-500"/>
+          <div class="text-amber-600 font-bold italic inline-flex text-14">{{ HotIndex }}</div>
         </div>
         <div v-else-if="HotIndex != null" class="gap-3 flex items-center mr-5">
-          <Icon name="fire-o" class="inline text-gray-500"/>
-          <div class="text-gray-600 font-bold italic inline-flex">{{ HotIndex }}</div>
+          <Icon name="fire-o" size="4vw" class="inline text-gray-500"/>
+          <div class="text-gray-600 font-bold italic inline-flex text-14">{{ HotIndex }}</div>
         </div>
         <Icon v-else name="arrow-down" class="action" @click.stop="actionOn" />
       </div>
@@ -59,15 +59,15 @@
       <HotCommentCard />
       <div class="flex justify-around">
         <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
-          <Icon name="share-o" size="20" color="gray" />
+          <Icon name="share-o" size="5vw" color="gray" />
           <div>18</div>
         </div>
         <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
-          <Icon name="comment-o" size="20" color="gray" />
+          <Icon name="comment-o" size="5vw" color="gray" />
           <div>18</div>
         </div>
         <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
-          <Icon name="good-job-o" size="20" color="gray" @click.stop="likeOn" />
+          <Icon name="good-job-o" size="5vw" color="gray" @click.stop="likeOn" />
           <div>18</div>
         </div>
       </div>
@@ -165,15 +165,15 @@ const cardOnClick = () => {
       font-size: 15px;
     }
     .infocard-content__image {
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(auto-fit,minmax(100px,1fr));
       border-radius: 5px;
       overflow: hidden;
-      gap: 3px;
+      grid-gap: 3px;
       margin: 10px 0px;
       .content-image {
-        height: 30vw;
-        width: 30vw;
+        min-height: 28vw;
+        min-width: 28vw;
       }
     }
   }
