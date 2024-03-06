@@ -31,7 +31,7 @@ import InfoHotPage from "@/pages/InfoHotPage.vue";
 import InfoEventPage from "@/pages/InfoEventPage.vue";
 import { Tab, Tabs, Tabbar, TabbarItem } from "vant";
 import { ref } from "vue";
-const tabActiveName = ref("event");
+const tabActiveName = ref("home");
 </script>
 
 <style>

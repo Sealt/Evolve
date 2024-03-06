@@ -8,13 +8,14 @@
       </div>
     </div>
     <div class="flex items-center justify-stretch active:bg-vant-n3 rounded-[5px]" v-for="a in [1,1,1,1]">
-      <div class="flex gap-10 items-center py-3">
+      <div class="flex gap-10 items-center py-3 grow">
         <Image
           src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
           fit="cover"
-          class="size-20 inline-flex"
+          class="size-20 shrink-0"
           radius="3" />
-          <div class="text-14 grow truncate">保研 - 这是一个节点的展示信息测试中哈哈</div>
+          <div class="text-14 truncate max-w-90">报送</div>
+          <div class="text-14 truncate grow w-0">这是一个节点的展示信息测试中哈哈6666</div>
       </div>
     </div>
   </div>

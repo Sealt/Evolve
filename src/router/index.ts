@@ -27,12 +27,22 @@ const router = createRouter({
     {
       path: '/event/:id',
       name: 'eventpage',
+      component: () => import('../pages/EventPage.vue')
+    },
+    {
+      path: '/project/:id',
+      name: 'projectpage',
       component: () => import('../pages/ProjectPage.vue')
     },
     {
       path: '/info/:id',
       name: 'infopage',
       component: () => import('../pages/InfoCardPage.vue')
+    },
+    {
+      path: '/node/:id',
+      name: 'nodepage',
+      component: () => import('../pages/NodeCardPage.vue')
     }
   ]
 })

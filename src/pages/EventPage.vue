@@ -1,11 +1,12 @@
 <template>
-  <div class="father">
+  <div class="father h-screen flex flex-col">
     <NavBar
       :border="false"
       :fixed="true"
       left-arrow
       left-text="返回"
       :placeholder="true"
+      class="shrink-0"
       @click-left="onClickLeft" />
     <div class="event">
       <div class="event-image">
@@ -27,25 +28,24 @@
       </div>
     </div>
     <div class="event-intro">这是一段简单的事件介绍你好</div>
-    <div class="event-tabs">
       <Tabs
         v-model:active="activeTab"
         sticky
         offset-top="46"
         animated
         swipeable>
-        <Tab title="节点" name="a">内容1</Tab>
+        <Tab title="节点" name="a"><NodeFlowPage /></Tab>
         <Tab title="信息" name="b">内容2</Tab>
         <Tab title="经验" name="c">内容3</Tab>
         <Tab title="资源" name="d">内容3</Tab>
         <Tab title="问答" name="e">内容3</Tab>
       </Tabs>
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { NavBar, Image, Button, Tab, Tabs } from "vant";
+import NodeFlowPage from "./NodeFlowPage.vue";
 import { ref } from "vue";
 const activeTab = ref("a");
 const onClickLeft = () => {
@@ -57,9 +57,7 @@ const onClickLeft = () => {
 :deep(.van-nav-bar) {
   background-color: whitesmoke;
 }
-.father {
-  background-color: whitesmoke;
-}
+
 .event-intro {
   background-color: whitesmoke;
   padding: 5px 16px 10px 16px;
@@ -106,10 +104,29 @@ const onClickLeft = () => {
     justify-content: flex-end;
   }
 }
-.event-tabs {
-  border: 1px solid whitesmoke;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-  overflow: hidden;
+
+</style>
+<style scoped>
+:deep(.van-tabs) {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+:deep(.van-tabs__content) {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+:deep(.van-tab__panel) {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 10px;
+  padding: 10px;
+}
+:deep(.van-swipe-item) {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 </style>

@@ -9,7 +9,8 @@
         <Icon
           v-if="hot == '1'"
           name="fire-o"
-          class="text-red-500 mr-4 size-14"
+          class="text-red-500 mr-4"
+          size="4vw"
            />
         <div class="card-content__detail-wrapper">{{ detail }}</div>
       </div>
@@ -66,7 +67,9 @@ const showResPopup = ref(false);
 const handleClick = () => {
   if (props.type == "event") {
     router.push("/event/" + props.to);
-  } else {
+  } if (props.type == "project") {
+    router.push("/project/" + props.to);
+  }else {
     showResPopup.value = true;
   }
 };
