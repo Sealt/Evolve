@@ -44,22 +44,64 @@
   <div class="px-15" v-for="comment in [1, 1]">
     <Comment />
   </div>
+  <div
+    class="flex sticky bottom-0 bg-white border-t-[1px] gap-10 p-7 items-center">
+    <div
+      class="flex grow bg-vant-n2 text-vant-t3 text-13 rounded-full pl-10 py-3 items-center gap-5" @click="handleComment">
+      <Icon name="records-o" size="4vw" />
+      <div class="text-13">写回复...</div>
+    </div>
+    <div class="flex gap-5 items-center">
+      <Icon name="comment-o" size="4vw" class="text-vant-t3" />
+      <div class="text-vant-t3 text-13">648</div>
+    </div>
+    <div class="flex gap-5 items-center">
+      <Icon name="good-job-o" size="4vw" class="text-vant-t3" />
+      <div class="text-vant-t3 text-13">6245</div>
+    </div>
+    <div class="flex gap-5 items-center">
+      <Icon name="star-o" size="4vw" class="text-vant-t3" />
+      <div class="text-vant-t3 text-13">6867</div>
+    </div>
+  </div>
+  <Popup v-model:show="showCommentPop" class="p-15 h-1/3" position="bottom" round>
+    <div class="flex flex-col gap-10 h-full">
+      <div class="flex items-center justify-between">
+      <div class="text-14">回复</div>
+      <div class="text-14 text-vant">发布</div>
+    </div>
+    <div class="flex grow">
+      <Field v-model="commentText" placeholder="回复: 计科211史诗琪" maxlength="400" type="textarea" show-word-limit class="grow"/>
+    </div>
+    </div>
+  </Popup>
 </template>
 
 <script setup lang="ts">
-import { Swipe, SwipeItem, Icon, Image, Button, Tab, Tabs } from "vant";
+import { Swipe, SwipeItem, Icon, Image, Button, Field, Popup } from "vant";
 import TinyCard from "@/components/TinyCard.vue";
 import Comment from "@/components/Comment.vue";
 import LittleCard from "@/components/LittleCard.vue";
 import { ref } from "vue";
 const images = ["../test.jpg", "../1.png", "../2.png"];
 const activeCommentType = ref(0);
+const showCommentPop = ref(false);
+const commentText = ref('');
+const handleComment = () => {
+  showCommentPop.value = true;
+}
 </script>
 
 <style lang="scss" scoped>
+.van-overlay {
+  --van-overlay-background: rgba(0,0,0,0.3)
+}
 .van-button {
   --van-button-small-height: 26px;
   margin-right: 20px;
+}
+.van-field {
+  padding: 0px;
 }
 :deep(.van-swipe__indicators) {
   position: static;
@@ -67,5 +109,15 @@ const activeCommentType = ref(0);
   transform: none;
   justify-content: center;
   padding: 5px 0px;
+}
+:deep(.van-field__value) {
+  display: flex;
+  flex-direction: column;
+}
+:deep(.van-field__body) {
+  flex-grow: 1;
+}
+:deep(.van-field__control--min-height) {
+  height: 100% !important;
 }
 </style>
