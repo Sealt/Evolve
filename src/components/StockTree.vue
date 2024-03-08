@@ -43,7 +43,7 @@ const activeIndex = ref(0);
     flex: 1 0 0;
 }
 .van-tree-select__content {
-    flex: 3 0 0;
+    flex: 0 0 78%;
 }
 .van-sidebar-item {
     display: flex;

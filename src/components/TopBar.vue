@@ -1,7 +1,7 @@
 <template>
     <Search show-action v-model="searchValue" placeholder="搜索">
     <template #action>
-        <Icon id="new" name="add" size="7vw" />
+        <Icon id="new" name="add" size="7vw" @click="handlePublish"/>
     </template>
     <template #left>
         <Icon id="avator" name="user-circle-o" size="7vw" />
@@ -11,8 +11,13 @@
 
 <script setup lang="ts">
 import { Search,Button,Icon } from 'vant'
+import { useRouter } from 'vue-router';
 import { ref } from 'vue'
+const router = useRouter();
 const searchValue = ref('')
+const handlePublish = () => {
+    router.push('/publish')
+}
 </script>
 
 <style scoped>

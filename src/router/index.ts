@@ -44,6 +44,12 @@ const router = createRouter({
       name: 'nodepage',
       component: () => import('../pages/NodeCardPage.vue')
     }
+    ,
+    {
+      path: '/publish',
+      name: 'publishview',
+      component: () => import('../views/PublishView.vue')
+    }
   ]
 })
 

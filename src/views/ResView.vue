@@ -5,7 +5,7 @@
       <Tab name="store" title="资料库">
         <StockTree />
       </Tab>
-      <Tab name="res" title="资源">资源 </Tab>
+      <Tab name="res" title="资源">资源</Tab>
       <Tab name="market" title="广场">市场</Tab>
     </Tabs>
     <Tabbar route placeholder>
