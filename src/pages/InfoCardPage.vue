@@ -92,10 +92,11 @@ const handleComment = () => {
 }
 </script>
 
+<style>
+
+</style>
 <style lang="scss" scoped>
-.van-overlay {
-  --van-overlay-background: rgba(0,0,0,0.3)
-}
+
 .van-button {
   --van-button-small-height: 26px;
   margin-right: 20px;

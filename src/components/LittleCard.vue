@@ -69,7 +69,7 @@ const handleClick = () => {
     router.push("/event/" + props.to);
   } if (props.type == "project") {
     router.push("/project/" + props.to);
-  }else {
+  }if (props.type == "res") {
     showResPopup.value = true;
   }
 };

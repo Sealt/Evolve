@@ -5,10 +5,10 @@
       <Tab title="信息"><PublishInfoPage/></Tab>
       <Tab title="经验">信息建设完毕后直接移用</Tab>
       <Tab title="资源"><PublishResPage/></Tab>
-      <Tab title="项目"> </Tab>
-      <Tab title="事件"> </Tab>
-      <Tab title="节点"> </Tab>
-      <Tab title="状态"> </Tab>
+      <Tab title="项目"><PublishProjectPage/></Tab>
+      <Tab title="事件"><PublishEventPage/> </Tab>
+      <Tab title="节点"> <PublishNodePage/></Tab>
+      <Tab title="状态"><PublishStatusPage/> </Tab>
     </Tabs>
   </div>
 </template>
@@ -17,6 +17,10 @@
 import PublishInfoPage from "@/pages/PublishInfoPage.vue";
 import PublishResPage from "@/pages/PublishResPage.vue";
 import { Tab, Tabs, NavBar } from "vant";
+import PublishProjectPage from "@/pages/PublishProjectPage.vue";
+import PublishEventPage from "@/pages/PublishEventPage.vue";
+import PublishNodePage from "@/pages/PublishNodePage.vue";
+import PublishStatusPage from "@/pages/PublishStatusPage.vue";
 import { ref } from "vue";
 const activeTab = ref(0);
 </script>

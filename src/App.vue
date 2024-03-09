@@ -13,4 +13,7 @@ const active = ref("info");
 body::-webkit-scrollbar {
   display: none;
 }
+.van-overlay {
+  --van-overlay-background: rgba(0,0,0,0.3)
+}
 </style>
