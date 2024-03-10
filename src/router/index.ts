@@ -49,6 +49,16 @@ const router = createRouter({
       path: '/publish',
       name: 'publishview',
       component: () => import('../views/PublishView.vue')
+    },
+    {
+      path: '/search',
+      name: 'searchpage',
+      component: () => import('../pages/SearchPage.vue')
+    },
+    {
+      path: '/events',
+      name: 'eventspage',
+      component: () => import('../pages/EventSortPage.vue')
     }
   ]
 })

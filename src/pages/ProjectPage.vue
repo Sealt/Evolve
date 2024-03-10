@@ -1,5 +1,5 @@
 <template>
-  <div class="father">
+  <div class="father flex flex-col h-screen">
     <NavBar
       :border="false"
       :fixed="true"
@@ -27,21 +27,17 @@
       </div>
     </div>
     <div class="event-intro">这是一段简单的资源项目介绍你好</div>
-    <div class="event-tabs">
-      <Tabs
-        v-model:active="activeTab"
-        sticky
-        offset-top="46"
-        animated
-        swipeable>
-        <Tab title="资料库" name="a">内容1</Tab>
-        <Tab title="校友分享" name="b">内容2</Tab>
-      </Tabs>
-    </div>
+    <Tabs v-model:active="activeTab" sticky offset-top="46" animated swipeable>
+      <Tab title="资料库" name="a">
+        <StockTree />
+      </Tab>
+      <Tab title="校友分享" name="b">内容2</Tab>
+    </Tabs>
   </div>
 </template>
 
 <script setup lang="ts">
+import StockTree from "@/components/StockTree.vue";
 import { NavBar, Image, Button, Tab, Tabs } from "vant";
 import { ref } from "vue";
 const activeTab = ref("a");
@@ -103,10 +99,26 @@ const onClickLeft = () => {
     justify-content: flex-end;
   }
 }
-.event-tabs {
-  border: 1px solid whitesmoke;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-  overflow: hidden;
+</style>
+<style scoped>
+:deep(.van-tabs) {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+:deep(.van-tabs__content) {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+:deep(.van-tab__panel) {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+:deep(.van-swipe-item) {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 </style>

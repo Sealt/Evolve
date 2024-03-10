@@ -1,6 +1,6 @@
 <template>
   <div class="flex h-45 border-b bg-white items-center sticky top-0 z-50">
-    <Icon class="pl-10 pr-20" size="5vw" name="arrow-left" />
+    <Icon class="pl-10 pr-20" size="5vw" name="arrow-left" @click="onBack"/>
     <Image
       src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
       fit="cover"
@@ -83,6 +83,11 @@ import TinyCard from "@/components/TinyCard.vue";
 import Comment from "@/components/Comment.vue";
 import LittleCard from "@/components/LittleCard.vue";
 import { ref } from "vue";
+import {useRouter} from 'vue-router'
+const router = useRouter()
+const onBack = () => {
+  router.back()
+}
 const images = ["../test.jpg", "../1.png", "../2.png"];
 const activeCommentType = ref(0);
 const showCommentPop = ref(false);

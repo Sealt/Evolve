@@ -1,5 +1,5 @@
 <template>
-  <div class="InfoView h-screen flex flex-col">
+  <div class="CurrentView h-screen flex flex-col">
     <TopBar />
     <Tabs v-model:active="tabActiveName" sticky shrink swipeable>
       <Tab name="follow" title="关注">关注</Tab>

@@ -7,7 +7,7 @@
       @click="handleEventPopup" />
     <Field
       v-model="nameText"
-      label="节点内容"
+      label="节点标题"
       placeholder="请输入"
       input-align="right" />
     <Field
@@ -19,6 +19,11 @@
       v-model="endTime"
       label="终止时间"
       placeholder="2024-00-00 00:00:00"
+      input-align="right" />
+      <Field
+      v-model="commentText"
+      label="备注"
+      placeholder="补充和说明"
       input-align="right" />
     <Popup v-model:show="showEventPopup" class="h-1/2" round position="bottom">
       <div class="flex flex-col p-15 gap-15">
@@ -65,6 +70,7 @@ const nameText = ref("");
 const startTime = ref("");
 const endTime = ref("");
 const searchValue = ref("");
+const commentText = ref("");
 const onSelectEvent = () => {
   showEventPopup.value = false;
   showToast("success");

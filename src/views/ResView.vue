@@ -1,14 +1,16 @@
 <template>
-  <div class="h-screen flex flex-col">
+  <div class="CurrentView h-screen flex flex-col">
     <TopBar />
     <Tabs v-model:active="tabActiveName" sticky shrink swipeable>
       <Tab name="store" title="资料库">
         <StockTree />
       </Tab>
-      <Tab name="res" title="资源">资源</Tab>
+      <Tab name="res" title="资源">
+        <ResMainPage />
+      </Tab>
       <Tab name="market" title="广场">市场</Tab>
     </Tabs>
-    <Tabbar route placeholder>
+    <Tabbar route placeholder class="shrink-0">
       <TabbarItem name="info" to="/" icon="info-o">信息</TabbarItem>
       <TabbarItem name="res" to="/res" icon="apps-o">资源</TabbarItem>
       <TabbarItem name="chat" to="/chat" icon="chat-o">消息</TabbarItem>
@@ -22,7 +24,8 @@ import TopBar from "@/components/TopBar.vue";
 import StockTree from "@/components/StockTree.vue";
 import { Tab, Tabs, Tabbar, TabbarItem } from "vant";
 import { ref } from "vue";
-const tabActiveName = ref("store");
+import ResMainPage from "@/pages/ResMainPage.vue";
+const tabActiveName = ref("res");
 </script>
 
 <style scoped>

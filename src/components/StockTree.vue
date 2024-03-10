@@ -9,7 +9,7 @@
             v-for="a in [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]"
             class="m-5"
             image="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
-            type="event"
+            type="project"
             hot="1"
             detail="9999万关注 1258讨论"
             title="考研"

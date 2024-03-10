@@ -77,7 +77,7 @@
       :actions="infoActions"
       cancel-text="取消"
       close-on-click-action
-      teleport=".InfoView"
+      teleport=".CurrentView"
       @cancel="actionOnCancel" />
   </div>
 </template>

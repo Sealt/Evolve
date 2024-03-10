@@ -1,5 +1,5 @@
 <template>
-    <Search show-action v-model="searchValue" placeholder="搜索">
+    <Search show-action v-model="searchValue" placeholder="搜索" @click-input="onFocus">
     <template #action>
         <Icon id="new" name="add" size="7vw" @click="handlePublish"/>
     </template>
@@ -17,6 +17,9 @@ const router = useRouter();
 const searchValue = ref('')
 const handlePublish = () => {
     router.push('/publish')
+}
+const onFocus = () => {
+    router.push('/search')
 }
 </script>
 
