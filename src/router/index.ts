@@ -59,6 +59,11 @@ const router = createRouter({
       path: '/events',
       name: 'eventspage',
       component: () => import('../pages/EventSortPage.vue')
+    },
+    {
+      path: '/notify/:type',
+      name: 'notifypage',
+      component: () => import('../pages/NotifyPage.vue')
     }
   ]
 })
