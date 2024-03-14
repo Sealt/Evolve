@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center">
+  <div class="flex items-center" @click="handleClick">
     <Image
       src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
       fit="cover"
@@ -11,15 +11,16 @@
         <div class="shrink-0 text-12 text-vant-t2">2022-1-16</div>
       </div>
       <div v-if="dot" class="flex items-center">
-        <div class="text-14 text-vant truncate">
+        <div class="text-13 text-vant truncate">
           这是具体的消息内容555消息内容555消息内容555消息内容555
         </div>
-        <div class="shrink-0 flex items-center justify-center text-12 bg-vant text-white rounded-[50%] size-14">
-            1
+        <div
+          class="shrink-0 flex items-center justify-center text-12 bg-vant text-white rounded-[50%] size-14">
+          1
         </div>
       </div>
       <div v-else class="flex items-center">
-        <div class="text-14 text-vant-t2 truncate">
+        <div class="text-13 text-vant-t2 truncate">
           这是具体的消息内容555消息内容555消息内容555消息内容555
         </div>
       </div>
@@ -28,8 +29,22 @@
 </template>
 
 <script setup lang="ts">
-import { Image, Badge,Tag } from "vant";
+import { Image, Badge, Tag } from "vant";
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+const props = defineProps<{
+  type: string;
+}>();
 const dot = true;
+const handleClick = () => {
+  if (props.type == "message") {
+    router.push({
+      path: "/message",
+      query: { uid: "23123", nickname: "helloworld" }
+    });
+  }
+};
 </script>
 
 <style scoped></style>

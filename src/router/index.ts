@@ -64,6 +64,11 @@ const router = createRouter({
       path: '/notify/:type',
       name: 'notifypage',
       component: () => import('../pages/NotifyPage.vue')
+    },
+    {
+      path: '/message',
+      name: 'messagepage',
+      component: () => import('../pages/MessagePage.vue')
     }
   ]
 })

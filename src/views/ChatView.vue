@@ -24,7 +24,7 @@
           <div class="text-14">私信</div>
       </div>
     </div>
-    <div class="flex flex-col mx-15 mb-15 gap-15"><NotifyItem v-for="a in [1,1,1,1,1,1,1,1,1,1,2,3]"/></div>
+    <div class="flex flex-col mx-15 mb-15 gap-15"><NotifyItem type="message" v-for="a in [1,1,1,1,1,1,1,1,1,1,2,3]"/></div>
     <Tabbar route placeholder>
       <TabbarItem name="info" to="/" icon="info-o">信息</TabbarItem>
       <TabbarItem name="res" to="/res" icon="apps-o">资源</TabbarItem>
