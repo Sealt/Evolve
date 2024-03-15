@@ -10,6 +10,11 @@ const router = createRouter({
       component: InfoView
     },
     {
+      path: '/login',
+      name: 'loginview',
+      component: () => import('../views/LoginView.vue')
+    },
+    {
       path: '/res',
       name: 'resview',
       component: () => import('../views/ResView.vue')
@@ -23,6 +28,11 @@ const router = createRouter({
       path: '/me',
       name: 'meview',
       component: () => import('../views/MeView.vue')
+    },
+    {
+      path: '/user/:id',
+      name: 'userpage',
+      component: () => import('../pages/UserPage.vue')
     },
     {
       path: '/event/:id',
@@ -61,14 +71,19 @@ const router = createRouter({
       component: () => import('../pages/EventSortPage.vue')
     },
     {
-      path: '/notify/:type',
-      name: 'notifypage',
-      component: () => import('../pages/NotifyPage.vue')
+      path: '/detail/:type',
+      name: 'detailpage',
+      component: () => import('../pages/DetailPage.vue')
     },
     {
       path: '/message',
       name: 'messagepage',
       component: () => import('../pages/MessagePage.vue')
+    },
+    {
+      path: '/message/push',
+      name: 'pushpage',
+      component: () => import('../pages/MessagePushPage.vue')
     }
   ]
 })

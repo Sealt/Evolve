@@ -43,6 +43,10 @@ const handleClick = () => {
       path: "/message",
       query: { uid: "23123", nickname: "helloworld" }
     });
+  } else if (props.type == "push") {
+    router.push({
+      path: "/message/push"
+    });
   }
 };
 </script>

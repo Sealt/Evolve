@@ -30,8 +30,13 @@ import InfoHomePage from "@/pages/InfoHomePage.vue";
 import InfoHotPage from "@/pages/InfoHotPage.vue";
 import InfoEventPage from "@/pages/InfoEventPage.vue";
 import { Tab, Tabs, Tabbar, TabbarItem } from "vant";
-import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { ref,onMounted } from "vue";
 const tabActiveName = ref("home");
+const router = useRouter();
+onMounted(() => {
+  router.push('/login')
+})
 </script>
 
 <style>

@@ -7,7 +7,7 @@
       fixed
       class="shrink-0"
       placeholder />
-    <div class="flex flex-col grow bg-vant-n2 p-10 gap-10 overflow-scroll snap-end">
+    <div class="flex flex-col grow bg-vant-n2 p-10 gap-10 overflow-scroll">
       <div class="flex text-13 text-vant-t2 justify-center">
         2024-01-03 14:00
       </div>
