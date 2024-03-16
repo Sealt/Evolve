@@ -35,7 +35,6 @@ import { ref,onMounted } from "vue";
 const tabActiveName = ref("home");
 const router = useRouter();
 onMounted(() => {
-  router.push('/login')
 })
 </script>
 

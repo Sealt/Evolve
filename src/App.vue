@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from "vue-router";
-import { Tabbar, TabbarItem } from "vant";
-import { ref } from "vue";
-const active = ref("info");
+import { RouterView } from "vue-router";
 </script>
 
 <template>

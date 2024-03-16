@@ -34,7 +34,7 @@
       </div>
       <div
         class="flex flex-col items-center"
-        @click="router.push({path:'/detail/fans'})">
+        @click="router.push({ path: '/detail/fans' })">
         <div class="text-16 font-bold">9937</div>
         <div class="text-13 text-vant-t2">粉丝</div>
       </div>
@@ -49,9 +49,10 @@
       </div>
     </div>
     <div class="flex flex-col rounded-[10px] overflow-hidden">
-      <Cell title="个人资料" is-link />
-      <Cell title="校园认证" is-link />
-      <Cell title="账号设置" is-link />
+      <Cell title="个人资料" is-link @click="router.push('/user/edit')" />
+      <Cell title="校园认证" is-link @click="router.push('/user/auth')" />
+      <Cell title="账号设置" is-link @click="router.push('/user/account')" />
+      <Cell title="退出登录" is-link @click="onLogout" />
     </div>
     <Tabbar route placeholder>
       <TabbarItem name="info" to="/" icon="info-o">信息</TabbarItem>
@@ -63,10 +64,19 @@
 </template>
 
 <script setup lang="ts">
-import { Tabbar, TabbarItem, Icon, Image,Cell } from "vant";
+import { Tabbar, TabbarItem, Icon, Image, Cell, showToast } from "vant";
 import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/user";
 import { ref, onMounted } from "vue";
 const router = useRouter();
+const userStore = useUserStore();
+const onLogout = () => {
+  // localStorage.removeItem("user");
+  userStore.removeToken()
+  userStore.userId = ""
+  showToast("退出成功");
+  router.push("/login");
+};
 </script>
 
 <style scoped></style>

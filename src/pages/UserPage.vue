@@ -2,7 +2,7 @@
   <div class="CurrentView flex flex-col h-screen">
     <div
       class="flex fixed t-0 l-0 before:absolute before:top-0 before:left-0 before:w-full before:h-full before:bg-black/50 before:z-10">
-      <Image src="/bg.png" fit="cover" width="100vw" height="45vh" />
+      <Image src="/bg.png" fit="cover" width="100vw" height="50vh" />
     </div>
     <div class="flex p-10 z-20">
       <Icon
@@ -20,6 +20,7 @@
           round />
         <div class="flex grow justify-end gap-5">
           <div
+          @click="router.push('/user/edit')"
             class="text-white bg-white/30 rounded-full text-14 w-90 h-30 flex items-center justify-center">
             编辑资料
           </div>
