@@ -8,97 +8,132 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      name: "infoview",
+      name: "infoView",
       component: InfoView,
     },
     {
       path: "/login",
-      name: "loginview",
+      name: "loginView",
       component: () => import("../views/LoginView.vue"),
     },
     {
       path: "/res",
-      name: "resview",
+      name: "resView",
       component: () => import("../views/ResView.vue"),
     },
     {
       path: "/chat",
-      name: "chatview",
+      name: "chatView",
       component: () => import("../views/ChatView.vue"),
     },
     {
       path: "/me",
-      name: "meview",
+      name: "meView",
       component: () => import("../views/MeView.vue"),
     },
     {
       path: "/user/:id",
-      name: "userpage",
+      name: "userPage",
       component: () => import("../pages/UserPage.vue"),
     },
     {
       path: "/user/edit",
-      name: "userdatapage",
+      name: "userDataPage",
       component: () => import("../pages/UserDataPage.vue"),
     },
     {
+      path: "/user/edit/name",
+      name: "editUserNamePage",
+      component: () => import("../pages/EditUserNamePage.vue"),
+    },
+    {
+      path: "/user/edit/pwd",
+      name: "editPwdPage",
+      component: () => import("../pages/EditPwdPage.vue"),
+    },
+    {
+      path: "/user/edit/avatar",
+      name: "editAvatarPage",
+      component: () => import("../pages/EditAvatarPage.vue"),
+    },
+    {
+      path: "/user/edit/avatar/cropper",
+      name: "avatarCropperPage",
+      component: () => import("../pages/EditAvatarCropperPage.vue"),
+    },
+    {
+      path: "/user/edit/avatar/cropper",
+      name: "bgimgCropperPage",
+      component: () => import("../pages/EditBgimgCropperPage.vue"),
+    },
+    {
+      path: "/user/edit/bgimg",
+      name: "editBgimgPage",
+      component: () => import("../pages/EditBgimgPage.vue"),
+    },
+    {
       path: "/user/auth",
-      name: "userauthpage",
+      name: "userAuthPage",
       component: () => import("../pages/UserAuthPage.vue"),
     },
     {
+      path: "/user/auth/do",
+      name: "userAuthDoPage",
+      component: () => import("../pages/UserAuthDoPage.vue"),
+    },
+    {
       path: "/user/account",
-      name: "useraccountpage",
+      name: "userAccountPage",
       component: () => import("../pages/UserAccountPage.vue"),
     },
     {
       path: "/event/:id",
-      name: "eventpage",
+      name: "eventPage",
       component: () => import("../pages/EventPage.vue"),
     },
     {
       path: "/project/:id",
-      name: "projectpage",
+      name: "projectPage",
       component: () => import("../pages/ProjectPage.vue"),
     },
     {
       path: "/info/:id",
-      name: "infopage",
+      name: "infoPage",
       component: () => import("../pages/InfoCardPage.vue"),
     },
     {
       path: "/node/:id",
-      name: "nodepage",
+      name: "nodePage",
       component: () => import("../pages/NodeCardPage.vue"),
     },
     {
       path: "/publish",
-      name: "publishview",
+      name: "publishView",
       component: () => import("../views/PublishView.vue"),
     },
     {
       path: "/search",
-      name: "searchpage",
+      name: "searchPage",
       component: () => import("../pages/SearchPage.vue"),
     },
     {
       path: "/events",
-      name: "eventspage",
+      name: "eventsPage",
       component: () => import("../pages/EventSortPage.vue"),
     },
     {
       path: "/detail/:type",
-      name: "detailpage",
+      name: "detailPage",
       component: () => import("../pages/DetailPage.vue"),
     },
     {
       path: "/message",
-      name: "messagepage",
+      name: "messagePage",
       component: () => import("../pages/MessagePage.vue"),
     },
     {
       path: "/message/push",
-      name: "pushpage",
+      name: "pushPage",
       component: () => import("../pages/MessagePushPage.vue"),
     },
   ],
@@ -108,8 +143,7 @@ router.beforeEach((to, from, next) => {
   // const token = localStorage.getItem("token");
   //在前置路由中解构对象就对了
   const tokenStore = useUserStore();
-  console.log(tokenStore.token)
-  if (to.name === "loginview") {
+  if (to.name === "loginView") {
     next();
   } else if (tokenStore.token) {
     next();
@@ -120,7 +154,7 @@ router.beforeEach((to, from, next) => {
         "欢迎使用高校研学服务平台，请点击确认按钮，注册或登录后使用信息和资源。",
     }).then(() => {
       next({
-        name: "loginview",
+        name: "loginView",
       });
     });
   }

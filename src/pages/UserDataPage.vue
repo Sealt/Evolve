@@ -1,22 +1,102 @@
 <template>
-    <div>
-        <NavBar left-arrow title="编辑资料" @click-left="router.back()"/>
-        <Cell title="头像"/>
-        <Cell title="主页背景"/>
-        <Cell title="用户名"/>
-        <Cell title="昵称"/>
-        <Cell title="性别"/>
-        <Cell title="签名"/>
-        <Cell title="高校" value="江西理工大学"/>
+  <div>
+    <NavBar left-arrow title="编辑资料" @click-left="router.back()" />
+    <Cell title="头像" center @click="router.push('/user/edit/avatar')">
+      <template #value>
+        <div class="flex items-center justify-end">
+          <Image
+            src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+            fit="cover"
+            class="size-40 shrink-0"
+            round />
+        </div>
+      </template>
+    </Cell>
+    <Cell title="主页背景" center @click="router.push('/user/edit/bgimg')">
+      <template #value>
+        <div class="flex items-center justify-end">
+          <Image
+            src="/bg.png"
+            fit="cover"
+            class="size-40 rounded-[5px] overflow-hidden" />
+        </div>
+      </template>
+    </Cell>
+    <Cell
+      title="用户名"
+      :value="data.userName"
+      @click="router.push('/user/edit/name')" />
+    <Cell title="性别" :value="data.gender" @click="showPicker = true" />
+    <Cell title="签名" :value="data.bio" @click="showBioField = true" />
+    <Cell title="高校" :value="data.university" />
+  </div>
+  <Popup v-model:show="showPicker" position="bottom" round>
+    <Picker
+      :columns="columns"
+      @cancel="showPicker = false"
+      @confirm="onConfirm" />
+  </Popup>
+  <Popup v-model:show="showBioField" class="p-15 h-1/3" position="bottom" round>
+    <div class="flex flex-col gap-10 h-full">
+      <div class="flex items-center justify-between">
+        <div class="text-14">签名</div>
+        <div class="text-14 text-vant" @click="saveBio">确定</div>
+      </div>
+      <div class="flex grow">
+        <Field
+          v-model="bioFieldValue"
+          placeholder="介绍你自己"
+          maxlength="60"
+          type="textarea"
+          show-word-limit
+          class="grow" />
+      </div>
     </div>
+  </Popup>
 </template>
 
 <script setup lang="ts">
-import { NavBar,Cell } from 'vant';
+import { NavBar, Cell, Image, Picker, Popup, Field, showToast } from "vant";
 import { useRouter } from "vue-router";
+import { ref } from "vue";
 const router = useRouter();
+const showPicker = ref(false);
+const showBioField = ref(false);
+const bioFieldValue = ref("");
+var data = ref({
+  userName: "abc",
+  gender: "男",
+  university: "江西理工大学",
+  bio: "abcdefg",
+});
+const columns = [
+  { text: "男", value: 0 },
+  { text: "女", value: 1 },
+  { text: "保密", value: 2 },
+];
+const onConfirm = ({ selectedOptions}:any) => {
+  showPicker.value = false;
+  data.value.gender = selectedOptions[0].text;
+};
+const saveBio = () => {
+  showBioField.value = false;
+  showToast("修改成功");
+  data.value.bio = bioFieldValue.value;
+};
 </script>
 
 <style scoped>
-
+.van-field {
+  padding: 0px;
+}
+:deep(.van-field__value) {
+  display: flex;
+  flex-direction: column;
+}
+:deep(.van-field__body) {
+  flex-grow: 1;
+}
+:deep(.van-field__control--min-height) {
+  height: 100% !important;
+}
 </style>

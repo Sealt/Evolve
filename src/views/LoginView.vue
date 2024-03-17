@@ -107,10 +107,49 @@
       <div class="text-15">高校研学服务平台 V1.0</div>
     </div>
   </div>
+
+  <div
+    v-show="status == 'select'"
+    class="flex flex-col items-center px-15 py-30 gap-10 bg-vant-n1 h-screen">
+    <div class="flex flex-col items-center gap-5">
+      <div class="text-20 font-bold">选择高校</div>
+      <div>请选择你要加入的平台，确认后不可修改</div>
+    </div>
+    <div class="flex flex-col bg-white rounded-[10px] w-full my-10 overflow-hidden">
+      <Search />
+      <RadioGroup v-model="checked">
+        <CellGroup class="max-h-[30vh] overflow-scroll">
+          <Cell title="江西理工大学" clickable @click="checked = index.toString();" v-for="(a,index) in [1,1,1,1,1]">
+            <template #right-icon>
+              <Radio :name="index.toString()" />
+            </template>
+          </Cell>
+        </CellGroup>
+      </RadioGroup>
+    </div>
+    <div
+      class="flex justify-center bg-vant text-white p-10 w-[50vw] rounded-[10px]"
+      @click="onCheck">
+      进入平台
+    </div>
+    <div class="flex grow items-end gap-5 justify-center">
+      <div class="text-15">高校研学服务平台 V1.0</div>
+    </div>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { Image, Field, Checkbox, Button, showToast } from "vant";
+import {
+  Cell,
+  CellGroup,
+  RadioGroup,
+  Radio,
+  Search,
+  Field,
+  Checkbox,
+  Button,
+  showToast,
+} from "vant";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
@@ -122,7 +161,7 @@ const sms = ref("");
 const smstime = ref(60);
 const smsText = ref("发送验证码");
 const userName = ref("");
-const checked = ref(true);
+const checked = ref("");
 const pwd = ref("");
 const disableSms = ref(true);
 const haveTel = ref(true);
@@ -143,8 +182,14 @@ const onLogin = () => {
 };
 const onCheck = () => {
   if (status.value == "pwd") {
+    // 密码登录逻辑
   }
   if (status.value == "check") {
+    // 验证码登录逻辑 如果是首次注册 跳转大学选择
+    status.value = "select";
+    return;
+  }
+  if (status.value == "select") {
   }
   userStore.setToken("123456789");
   userStore.userId = "66778899";
