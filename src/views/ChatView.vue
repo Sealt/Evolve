@@ -9,7 +9,7 @@
           src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
           fit="cover"
           class="size-48 rounded-[10px] overflow-hidden" />
-        <div class="text-14">赞和收藏</div>
+        <div class="text-14">赞和获取</div>
       </div>
       <div
         class="flex flex-col items-center gap-5"
@@ -32,7 +32,7 @@
     </div>
     <div class="flex flex-col mx-15 mb-15 gap-15">
       <NotifyItem
-        type="push"
+        type="message"
         v-for="a in [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3]" />
     </div>
     <Tabbar route placeholder>

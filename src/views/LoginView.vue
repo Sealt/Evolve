@@ -115,11 +115,16 @@
       <div class="text-20 font-bold">选择高校</div>
       <div>请选择你要加入的平台，确认后不可修改</div>
     </div>
-    <div class="flex flex-col bg-white rounded-[10px] w-full my-10 overflow-hidden">
+    <div
+      class="flex flex-col bg-white rounded-[10px] w-full my-10 overflow-hidden">
       <Search />
       <RadioGroup v-model="checked">
         <CellGroup class="max-h-[30vh] overflow-scroll">
-          <Cell title="江西理工大学" clickable @click="checked = index.toString();" v-for="(a,index) in [1,1,1,1,1]">
+          <Cell
+            title="江西理工大学"
+            clickable
+            @click="checked = index.toString()"
+            v-for="(a, index) in [1, 1, 1, 1, 1]">
             <template #right-icon>
               <Radio :name="index.toString()" />
             </template>
@@ -153,6 +158,7 @@ import {
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
+import { getTestData,type ITestDataType} from "@/api/test";
 const userStore = useUserStore();
 const router = useRouter();
 const status = ref("login");
@@ -183,6 +189,14 @@ const onLogin = () => {
 const onCheck = () => {
   if (status.value == "pwd") {
     // 密码登录逻辑
+    const getThing = async () => {
+      const params:ITestDataType = {
+        userAccount: 'shiqi',
+        userPassword: '123456789'
+      };
+      getTestData(params);
+    };
+    getThing()
   }
   if (status.value == "check") {
     // 验证码登录逻辑 如果是首次注册 跳转大学选择
