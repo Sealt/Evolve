@@ -72,8 +72,7 @@ const router = useRouter();
 const userStore = useUserStore();
 const onLogout = () => {
   // localStorage.removeItem("user");
-  userStore.removeToken()
-  userStore.userId = ""
+  userStore.clear()
   showToast("退出成功");
   router.push("/login");
 };

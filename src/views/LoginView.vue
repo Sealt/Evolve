@@ -117,16 +117,19 @@
     </div>
     <div
       class="flex flex-col bg-white rounded-[10px] w-full my-10 overflow-hidden">
-      <Search />
+      <Search
+        v-model="searchValue"
+        @update:model-value="onSearch"
+        @clear="onClear" />
       <RadioGroup v-model="checked">
         <CellGroup class="max-h-[30vh] overflow-scroll">
           <Cell
-            title="江西理工大学"
+            :title="uni.uniName"
             clickable
-            @click="checked = index.toString()"
-            v-for="(a, index) in [1, 1, 1, 1, 1]">
+            @click="checked = uni.id"
+            v-for="uni in uniList">
             <template #right-icon>
-              <Radio :name="index.toString()" />
+              <Radio :name="uni.id" />
             </template>
           </Cell>
         </CellGroup>
@@ -155,10 +158,18 @@ import {
   Button,
   showToast,
 } from "vant";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
-import { getTestData,type ITestDataType} from "@/api/test";
+import {
+  loginByAccount,
+  type ILoginByAccountType,
+  loginBySms,
+  type ILoginBySmsType,
+  getSms,
+  getUniversity,
+  signWithUniversity,
+} from "@/api/user";
 const userStore = useUserStore();
 const router = useRouter();
 const status = ref("login");
@@ -171,44 +182,110 @@ const checked = ref("");
 const pwd = ref("");
 const disableSms = ref(true);
 const haveTel = ref(true);
+const searchValue = ref("");
+const uniList: any = ref([]);
+onMounted(() => {
+  if (userStore.token && userStore.university == 0) {
+    status.value = "select";
+  }
+});
+const onClear = () => {
+  checked.value = "";
+  uniList.value = [];
+};
+const onSearch = () => {
+  checked.value = "";
+  if (searchValue.value == "") {
+    uniList.value = [];
+    return;
+  }
+  getUniversity({ query: searchValue.value }).then((res) => {
+    uniList.value = res.data;
+  });
+};
 const onLogin = () => {
-  status.value = "check";
-  disableSms.value = true;
-  smsText.value = "发送验证码(" + smstime.value + ")";
-  var jb = setInterval(() => {
-    if (smstime.value == 0) {
-      disableSms.value = false;
-      smsText.value = "发送验证码";
-      clearInterval(jb);
-      return;
+  const params: ILoginBySmsType = {
+    mobile: tel.value,
+    scene: "signup"
+  };
+  getSms(params).then(res => {
+    if (res.code == 200) {
+      // todo 测试
+      sms.value = res.message
+      status.value = "check";
+      disableSms.value = true;
+      smsText.value = "发送验证码(" + smstime.value + ")";
+      var jb = setInterval(() => {
+        if (smstime.value == 0) {
+          disableSms.value = false;
+          smsText.value = "发送验证码";
+          clearInterval(jb);
+          return;
+        }
+        smstime.value--;
+        smsText.value = "发送验证码(" + smstime.value + ")";
+      }, 1000);
+    } else {
+      showToast("获取验证码失败");
     }
-    smstime.value--;
-    smsText.value = "发送验证码(" + smstime.value + ")";
-  }, 1000);
+  });
 };
 const onCheck = () => {
   if (status.value == "pwd") {
     // 密码登录逻辑
-    const getThing = async () => {
-      const params:ITestDataType = {
-        userAccount: 'shiqi',
-        userPassword: '123456789'
-      };
-      getTestData(params);
+    const params: ILoginByAccountType = {
+      userAccount: userName.value,
+      userPassword: pwd.value,
     };
-    getThing()
+    loginByAccount(params).then((res) => {
+      if (res.code == 200) {
+        userStore.setToken(res.data.loginToken);
+        userStore.userId = res.data.id;
+        userStore.userRole = res.data.userRole;
+        userStore.university = res.data.university;
+        showToast("登录成功");
+        router.push("/");
+      } else {
+        showToast(res.message);
+      }
+    });
   }
   if (status.value == "check") {
-    // 验证码登录逻辑 如果是首次注册 跳转大学选择
-    status.value = "select";
-    return;
+    // 验证码登录逻辑
+    const params: ILoginBySmsType = {
+      code: sms.value,
+      mobile: tel.value,
+    };
+    loginBySms(params).then((res) => {
+      if (res.code == 200) {
+        userStore.setToken(res.data.loginToken);
+        userStore.userId = res.data.id;
+        userStore.userRole = res.data.userRole;
+        userStore.university = res.data.university;
+        if (res.data.university == 0) {
+          // 如果是首次注册 跳转大学选择
+          status.value = "select";
+        } else {
+          showToast("登录成功");
+
+          router.push("/");
+        }
+      } else {
+        showToast(res.message);
+      }
+    });
   }
   if (status.value == "select") {
+    signWithUniversity({ uniId: checked.value }).then((res) => {
+      if (res.code == 200) {
+        showToast("注册成功");
+        userStore.university = Number.parseInt(checked.value);
+        router.push("/");
+      } else {
+        showToast("注册失败");
+      }
+    });
   }
-  userStore.setToken("123456789");
-  userStore.userId = "66778899";
-  showToast("登录成功");
-  router.push("/");
 };
 </script>
 
@@ -217,3 +294,4 @@ const onCheck = () => {
   display: flex;
 }
 </style>
+@/api/user

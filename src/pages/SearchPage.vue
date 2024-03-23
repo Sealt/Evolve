@@ -35,4 +35,8 @@ const onSearch = () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+:deep(.van-search__content) {
+  background: #f2f3f5;
+}
+</style>

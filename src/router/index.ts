@@ -142,12 +142,13 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   // const token = localStorage.getItem("token");
   //在前置路由中解构对象就对了
-  const tokenStore = useUserStore();
+  const userStore = useUserStore();
   if (to.name === "loginView") {
     next();
-  } else if (tokenStore.token) {
+  } else if (userStore.token && userStore.university != 0) {
     next();
-  } else {
+  }
+ else {
     showDialog({
       title: "欢迎",
       message:
