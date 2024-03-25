@@ -27,13 +27,18 @@ import { useRouter } from "vue-router";
 import { ref } from "vue";
 import "vue-cropper/dist/index.css";
 import { VueCropper } from "vue-cropper";
+import { uploadBgImg } from "@/api/user";
 const router = useRouter();
 const cropper = ref();
 const onCropper = () => {
   cropper.value.getCropBlob((data: Blob) => {
-    router.replace({
-      name: "editBgimgPage",
-      query: { img: window.URL.createObjectURL(data),status:'done' },
+    var bgimg = new FormData();
+    bgimg.append("bgimg", data);
+    uploadBgImg(bgimg).then((res) => {
+      router.replace({
+        name: "editBgimgPage",
+        query: { img: res.data.data, status: "done" },
+      });
     });
   });
 };

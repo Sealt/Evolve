@@ -8,13 +8,13 @@
     </div>
     <div class="flex gap-10 px-5" @click="router.push('/user/test')">
       <Image
-        src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+      :src="data.avatar"
         fit="cover"
         class="size-48 shrink-0"
         round />
       <div class="flex flex-col justify-between">
-        <div class="text-16">北冥有鱼</div>
-        <div class="text-13 text-vant-t2">金币: 0.0 / 积分: 50</div>
+        <div class="text-16">{{ data.userName }}</div>
+        <div class="text-13 text-vant-t2">金币: {{data.coin}} / 积分: {{ data.score }}</div>
       </div>
       <div class="flex items-center grow justify-end">
         <div class="text-12 text-vant-t2">空间</div>
@@ -23,19 +23,19 @@
     </div>
     <div class="grid grid-cols-3 bg-white rounded-[10px] py-5">
       <div class="flex flex-col items-center">
-        <div class="text-16 font-bold">190</div>
+        <div class="text-16 font-bold">{{ data.posts }}</div>
         <div class="text-13 text-vant-t2">动态</div>
       </div>
       <div
         class="flex flex-col items-center"
         @click="router.push({ path: '/detail/follow' })">
-        <div class="text-16 font-bold">125</div>
+        <div class="text-16 font-bold">{{ data.follow }}</div>
         <div class="text-13 text-vant-t2">关注</div>
       </div>
       <div
         class="flex flex-col items-center"
         @click="router.push({ path: '/detail/fans' })">
-        <div class="text-16 font-bold">9937</div>
+        <div class="text-16 font-bold">{{ data.fans }}</div>
         <div class="text-13 text-vant-t2">粉丝</div>
       </div>
     </div>
@@ -68,6 +68,9 @@ import { Tabbar, TabbarItem, Icon, Image, Cell, showToast } from "vant";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 import { ref, onMounted } from "vue";
+const tabActiveName = ref("a");
+import { getUserInfo } from "@/api/user";
+const data:any =ref({realAuth:{}})
 const router = useRouter();
 const userStore = useUserStore();
 const onLogout = () => {
@@ -76,6 +79,11 @@ const onLogout = () => {
   showToast("退出成功");
   router.push("/login");
 };
+onMounted(() => {
+  getUserInfo({ id: userStore.userId, infoType: "all" }).then((res) => {
+    data.value = res.data;
+  });
+});
 </script>
 
 <style scoped></style>

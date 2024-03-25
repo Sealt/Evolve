@@ -27,14 +27,20 @@ import { useRouter } from "vue-router";
 import { ref } from "vue";
 import "vue-cropper/dist/index.css";
 import { VueCropper } from "vue-cropper";
+import { uploadAvatar } from "@/api/user";
 const router = useRouter();
 const cropper = ref();
 const onCropper = () => {
   cropper.value.getCropBlob((data: Blob) => {
-    router.replace({
+    var avatar = new FormData();
+    avatar.append("avatar",data);
+    uploadAvatar(avatar).then(res => {
+      router.replace({
       name: "editAvatarPage",
-      query: { img: window.URL.createObjectURL(data),status:'done' },
+      query: { img: res.data.data,status:'done' },
     });
+    })
+
   });
 };
 </script>

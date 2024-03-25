@@ -5,7 +5,7 @@
       <template #value>
         <div class="flex items-center justify-end">
           <Image
-            src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+            :src="data.avatar"
             fit="cover"
             class="size-40 shrink-0"
             round />
@@ -16,7 +16,7 @@
       <template #value>
         <div class="flex items-center justify-end">
           <Image
-            src="/bg.png"
+            :src="data.bgImg"
             fit="cover"
             class="size-40 rounded-[5px] overflow-hidden" />
         </div>
@@ -25,7 +25,7 @@
     <Cell
       title="用户名"
       :value="data.userName"
-      @click="router.push('/user/edit/name')" />
+      @click="router.push('/user/edit/name?username=' + data.userName)" />
     <Cell title="性别" :value="data.gender" @click="showPicker = true" />
     <Cell title="签名" :value="data.bio" @click="showBioField = true" />
     <Cell title="高校" :value="data.university" />
@@ -58,31 +58,50 @@
 <script setup lang="ts">
 import { NavBar, Cell, Image, Picker, Popup, Field, showToast } from "vant";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { getUserInfo, editGender, editBio } from "@/api/user";
+import { useUserStore } from "@/stores/user";
+const userStore = useUserStore();
 const router = useRouter();
 const showPicker = ref(false);
 const showBioField = ref(false);
 const bioFieldValue = ref("");
 var data = ref({
-  userName: "abc",
-  gender: "男",
-  university: "江西理工大学",
-  bio: "abcdefg",
+  avatar: "",
+  bgImg: "",
+  userName: "",
+  gender: "",
+  university: "",
+  bio: "",
 });
 const columns = [
-  { text: "男", value: 0 },
-  { text: "女", value: 1 },
-  { text: "保密", value: 2 },
+  { text: "男", value: 1 },
+  { text: "女", value: 2 },
+  { text: "保密", value: 0 },
 ];
-const onConfirm = ({ selectedOptions}:any) => {
+const onConfirm = ({ selectedOptions }: any) => {
   showPicker.value = false;
-  data.value.gender = selectedOptions[0].text;
+  editGender({gender: selectedOptions[0].value}).then((res) => {
+    if (res.code == 200) {
+      showToast("修改成功");
+      data.value.gender = selectedOptions[0].text;
+    }
+  })
 };
 const saveBio = () => {
   showBioField.value = false;
-  showToast("修改成功");
-  data.value.bio = bioFieldValue.value;
+  editBio({ bio: bioFieldValue.value }).then((res) => {
+    if (res.code == 200) {
+      showToast("修改成功");
+      data.value.bio = bioFieldValue.value;
+    }
+  });
 };
+onMounted(() => {
+  getUserInfo({ id: userStore.userId, infoType: "all" }).then((res) => {
+    data.value = res.data;
+  });
+});
 </script>
 
 <style scoped>
