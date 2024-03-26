@@ -7,7 +7,7 @@ export interface ILoginByAccountType {
 
 export interface ILoginBySmsType {
 	code?:string,
-  mobile:string,
+  mobile?:string,
   scene?:string
 }
 export interface IUserRequestType{
@@ -40,6 +40,12 @@ export const loginBySms = async (data: ILoginBySmsType) => {
 export const getSms = async (data: ILoginBySmsType) => {
   return await request.post({
     url: '/user/getSms',
+    data: data
+  })
+}
+export const checkSms = async (data: any) => {
+  return await request.post({
+    url: '/user/checkSms',
     data: data
   })
 }

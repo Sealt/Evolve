@@ -19,7 +19,7 @@
             size="mini"
             type="primary"
             :disabled="disableSms"
-            @click="getSms"
+            @click="onGet"
             >{{ smsText }}</Button
           >
         </template></Field
@@ -39,20 +39,20 @@
         <div>请修改密码，可使用手机号和密码登录</div>
       </div>
       <div class="flex flex-col py-20 w-full">
-      <Field
-        v-model="pwdOne"
-        type="password"
-        maxlength="16"
-        label="密码"
-        placeholder="请输入密码"
-        border />
-      <Field
-        v-model="pwdTwo"
-        type="password"
-        maxlength="16"
-        label="确认密码"
-        placeholder="请再次输入密码"
-        border />
+        <Field
+          v-model="pwdOne"
+          type="password"
+          maxlength="16"
+          label="密码"
+          placeholder="请输入密码"
+          border />
+        <Field
+          v-model="pwdTwo"
+          type="password"
+          maxlength="16"
+          label="确认密码"
+          placeholder="请再次输入密码"
+          border />
       </div>
       <div
         class="flex justify-center bg-vant text-white p-10 w-[50vw] rounded-[10px]"
@@ -74,6 +74,7 @@ import { Field, Button, showToast, NavBar } from "vant";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
+import { getSms, checkSms, editPassword } from "@/api/user";
 const userStore = useUserStore();
 const router = useRouter();
 const status = ref("auth");
@@ -81,28 +82,53 @@ const pwdOne = ref("");
 const pwdTwo = ref("");
 const disableSms = ref(false);
 const sms = ref("");
+var checkToken = '';
 const smstime = ref(60);
 const smsText = ref("发送验证码");
 const onEdit = () => {
-  showToast('success')
-  router.replace('/user/account')
-}
-const onCheck = () => {
-  status.value = "edit";
-};
-const getSms = () => {
-  disableSms.value = true;
-  smsText.value = "发送验证码(" + smstime.value + ")";
-  var jb = setInterval(() => {
-    if (smstime.value == 0) {
-      disableSms.value = false;
-      smsText.value = "发送验证码";
-      clearInterval(jb);
-      return;
+  editPassword({userPassword:pwdTwo.value,checkToken:checkToken}).then(res => {
+    if(res.code ==200){
+      showToast("success");
+  router.replace("/user/account");
+    } else {
+      showToast('修改失败')
     }
-    smstime.value--;
-    smsText.value = "发送验证码(" + smstime.value + ")";
-  }, 1000);
+  })
+
+};
+const onCheck = () => {
+  checkSms({code:sms.value,mobile:router.currentRoute.value.query.mobile as string}).then(res => {
+    if (res.code == 200) {
+      checkToken = res.message
+      status.value = "edit";
+    } else {
+      showToast('校验失败')
+    }
+  })
+
+};
+const onGet = () => {
+  getSms({
+    mobile: router.currentRoute.value.query.mobile as string,
+    scene: "editpwd",
+  }).then((res) => {
+    if (res.code == 200) {
+      disableSms.value = true;
+      smsText.value = "发送验证码(" + smstime.value + ")";
+      var jb = setInterval(() => {
+        if (smstime.value == 0) {
+          disableSms.value = false;
+          smsText.value = "发送验证码";
+          clearInterval(jb);
+          return;
+        }
+        smstime.value--;
+        smsText.value = "发送验证码(" + smstime.value + ")";
+      }, 1000);
+
+      sms.value = res.message
+    }
+  });
 };
 </script>
 

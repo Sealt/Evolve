@@ -3,7 +3,7 @@
     <Cell
       title="发布到"
       is-link
-      value="更容易被看到"
+      :value="eventId == '' ? '更容易被看到' : eventValue"
       @click="handleEventPopup" />
     <Field
       v-model="textValue"
@@ -36,23 +36,30 @@
             class="grow"
             v-model="searchValue"
             placeholder="请输入事件关键词"
-            @search="onSearch" />
-          <Icon class="text-vant-t2" name="cross" size="5vw" @click="onClosePopup" />
+            @update:model-value="onSearch" />
+          <Icon
+            class="text-vant-t2"
+            name="cross"
+            size="5vw"
+            @click="onClosePopup" />
         </div>
         <div class="flex flex-col gap-5">
           <div
             class="flex gap-10 items-center"
-            v-for="a in [1, 1, 1, 1, 1]" @click="onSelectEvent">
+            v-for="item in targetList"
+            @click="onSelectEvent(item)">
             <Image
-              src="./icon_pdf.png"
+              :src="item.icon"
               fit="cover"
               class="size-40 rounded-[5px] overflow-hidden" />
             <div class="flex flex-col">
-              <div class="text-15">考研</div>
-              <div class="text-13 text-vant-t2">热度数据</div>
+              <div class="text-15">{{ item.eventName }}</div>
+              <div class="text-13 text-vant-t2">
+                {{ item.hotIndex + " & " + item.discussCount }}
+              </div>
             </div>
             <div class="flex justify-end grow">
-              <Icon class="text-vant-t2" name="arrow" size="5vw"  />
+              <Icon class="text-vant-t2" name="arrow" size="5vw" />
             </div>
           </div>
         </div>
@@ -75,26 +82,70 @@ import {
   type UploaderInstance,
 } from "vant";
 import { ref, onMounted } from "vue";
+import { pubInfo, getTargetList, type IInfoType } from "@/api/publish";
+import { useUserStore } from "@/stores/user";
+import { useRouter } from "vue-router";
+const userStore = useUserStore();
+const router = useRouter();
 const textValue = ref("");
 const eventValue = ref("");
 const sourceText = ref("");
 const scopeText = ref("");
 const searchValue = ref("");
-const onSelectEvent = () => {
+const imgList = ref<UploaderFileListItem[]>([]);
+const showEventPopup = ref(false);
+const uploader = ref<UploaderInstance>();
+const targetList: any = ref([]);
+const eventId = ref('');
+
+const onPublish = () => {
+  var formData = new FormData();
+  imgList.value.forEach((file) => {
+    formData.append("images", file.file as File);
+  });
+  var data: IInfoType = {
+    userId: userStore.userId,
+    eventId: eventId.value,
+    typed: 1,
+    content: textValue.value,
+    infoSource: sourceText.value,
+    scopeDetail: scopeText.value,
+  };
+  formData.append("data", JSON.stringify(data));
+  pubInfo(formData).then((res) => {
+    if (res.data.code == 200) {
+      showToast("发表成功");
+      router.back();
+    } else {
+      showToast("发表失败");
+    }
+  });
+};
+defineExpose({
+  onPublish,
+});
+const onSelectEvent = (item: any) => {
   showEventPopup.value = false;
-  showToast('success')
-}
+  eventId.value = item.id;
+  eventValue.value = item.eventName
+  showToast("success");
+};
 const onClosePopup = () => {
   showEventPopup.value = false;
 };
 const onSearch = () => {
-  showToast("success");
+  getTargetList({ typed: 1, query: searchValue.value }).then((res) => {
+    if (res.code == 200) {
+      targetList.value = res.data;
+      showToast("success");
+    }
+  });
 };
-const showEventPopup = ref(false);
+
 const handleEventPopup = () => {
   showEventPopup.value = true;
 };
-const uploader = ref<UploaderInstance>();
+
 const imgDelete = () => {
   if (uploader.value) {
     if (uploader.value.modelValue.length < 3) {
@@ -107,7 +158,6 @@ const imgDelete = () => {
   }
 };
 
-const imgList = ref<UploaderFileListItem[]>([]);
 const afterRead = (file: any) => {
   if (uploader.value) {
     if (uploader.value.modelValue.length < 3) {
@@ -120,22 +170,16 @@ const afterRead = (file: any) => {
   }
 
   if (file.length == null) {
-    file.status = "uploading";
-    file.message = "上传中...";
+    file.status = "done";
+    // file.message = "上传中...";
 
-    setTimeout(() => {
-      file.status = "failed";
-      file.message = "上传失败";
-    }, 1000);
+    // setTimeout(() => {
+    //   file.status = "failed";
+    //   file.message = "上传失败";
+    // }, 1000);
   } else {
     file.forEach((element: any) => {
-      element.status = "uploading";
-      element.message = "上传中...";
-
-      setTimeout(() => {
-        element.status = "failed";
-        element.message = "上传失败";
-      }, 1000);
+      element.status = "done";
     });
   }
 };

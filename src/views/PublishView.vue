@@ -1,8 +1,8 @@
 <template>
   <div class="flex flex-col h-screen">
-    <NavBar title="发布动态" left-arrow left-text="返回" right-text="发布" @click-left="onBack"/>
+    <NavBar title="发布动态" left-arrow left-text="返回" right-text="发布" @click-left="onBack" @click-right="onPublish"/>
     <Tabs v-model:active="activeTab">
-      <Tab title="信息"><PublishInfoPage/></Tab>
+      <Tab title="信息"><PublishInfoPage ref="info"/></Tab>
       <Tab title="经验">信息建设完毕后直接移用</Tab>
       <Tab title="资源"><PublishResPage/></Tab>
       <Tab title="项目"><PublishProjectPage/></Tab>
@@ -24,9 +24,20 @@ import PublishStatusPage from "@/pages/PublishStatusPage.vue";
 import { ref } from "vue";
 import {useRouter} from 'vue-router'
 const activeTab = ref(0);
+const info = ref();
 const router = useRouter()
 const onBack = () => {
   router.back()
+}
+const onPublish = () =>{
+  switch (activeTab.value) {
+    case 0:
+      info.value.onPublish();
+      break;
+
+    default:
+      break;
+  }
 }
 </script>
 
