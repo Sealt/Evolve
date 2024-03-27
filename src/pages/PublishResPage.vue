@@ -3,7 +3,7 @@
     <Cell
       title="发布到"
       is-link
-      value="更容易被看到"
+      :value="projectId == '' ? '更容易被看到' : projectValue"
       @click="handleProjectPopup" />
     <input type="file" ref="fileUploader" class="hidden" @change="getFile" />
     <Cell title="添加文件" is-link value="资源" @click="handleFilePopup" />
@@ -58,7 +58,7 @@
             class="grow"
             v-model="searchValue"
             placeholder="请输入项目关键词"
-            @search="onSearch" />
+            @update:model-value="onSearch" />
           <Icon
             class="text-vant-t2"
             name="cross"
@@ -68,15 +68,15 @@
         <div class="flex flex-col gap-5">
           <div
             class="flex gap-10 items-center"
-            v-for="a in [1, 1, 1, 1, 1]"
-            @click="onSelectProject">
+            v-for="item in targetList"
+            @click="onSelectProject(item)">
             <Image
-              src="./icon_pdf.png"
+            :src="item.icon"
               fit="cover"
               class="size-40 rounded-[5px] overflow-hidden" />
             <div class="flex flex-col">
-              <div class="text-15">考研</div>
-              <div class="text-13 text-vant-t2">热度数据</div>
+              <div class="text-15">{{ item.projectName }}</div>
+              <div class="text-13 text-vant-t2">{{ item.hotIndex + ' & '+item.resourceCount }}</div>
             </div>
             <div class="flex justify-end grow">
               <Icon class="text-vant-t2" name="arrow" size="5vw" />
@@ -110,11 +110,34 @@
         </div>
         <Cell title="文件名" :label="currentFile.name" />
         <Cell title="文件类型" :value="currentFile.type" />
+        <RadioGroup v-model="fileUploadType">
+          <CellGroup>
+            <Cell
+              title="上传文件"
+              clickable
+              @click="fileUploadType = 'upload'"
+              label="将文件上传至服务器，用户从服务器下载获取文件">
+              <template #right-icon>
+                <Radio name="upload" />
+              </template>
+            </Cell>
+            <Cell
+              title="指定获取方式"
+              clickable
+              @click="fileUploadType = 'third'"
+              label="用户从提供的第三方途径下载，例如群文件、网盘链接等">
+              <template #right-icon>
+                <Radio name="third" />
+              </template>
+            </Cell>
+          </CellGroup>
+        </RadioGroup>
         <Field
+          v-show="fileUploadType == 'third'"
           v-model="currentFile.getway"
           label="获取方式"
           type="textarea"
-          placeholder="请输入用户获取文件的方式（群文件、网盘等）"
+          placeholder="请输入用户获取文件的方式（群文件、网盘链接等）"
           label-align="top"
           required />
         <Field
@@ -142,6 +165,9 @@
 import {
   Popup,
   Cell,
+  CellGroup,
+  RadioGroup,
+  Radio,
   Search,
   Field,
   Uploader,
@@ -153,29 +179,76 @@ import {
 } from "vant";
 import LittleCard from "@/components/LittleCard.vue";
 import { ref } from "vue";
+import { clone, cloneDeep, cloneDeepWith } from "lodash";
+import { pubRes,getTargetList } from "@/api/publish";
+import { useUserStore } from "@/stores/user";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const userStore = useUserStore();
+const projectValue = ref("");
 const textValue = ref("");
-const resValue = ref("");
-const sourceText = ref("");
-const scopeText = ref("");
+const targetList:any = ref([]);
 const uploader = ref<UploaderInstance>();
 const fileUploader = ref();
+const fileUploadType = ref();
 const searchValue = ref("");
 var currentFileIndex = -1;
 var fileMode = "new";
 const currentFile: any = ref({});
-const fileList = ref<any>([]);
-
+const fileList:any = ref([]);
+const imgList = ref<UploaderFileListItem[]>([]);
 const showResPopup = ref(false);
 const showFilePopup = ref(false);
-const onClickFile = (index:number) => {
-  Object.assign(currentFile.value, fileList.value[index]);
+var finallyFileList:File[] = [];
+var projectId = "";
+
+const onPublish = () => {
+  console.log(fileList.value)
+  // 处理一份最终的文件数组
+  fileList.value.forEach((file:any) => {
+    if (file.uploadType == 'upload') {
+      finallyFileList.push(file.file)
+    }
+      file.file = null;
+  });
+  console.log(finallyFileList)
+  // 组装参数
+  var formData = new FormData();
+  imgList.value.forEach((file) => {
+    formData.append("images", file.file as File);
+  });
+  finallyFileList.forEach((file) => {
+    formData.append("files", file)
+  })
+  var data: any = {
+    userId: userStore.userId,
+    projectId: projectId,
+    content: textValue.value,
+  };
+  formData.append("data", JSON.stringify(data));
+  formData.append("fileInfo", JSON.stringify(fileList.value));
+  pubRes(formData).then((res) => {
+    if (res.data.code == 200) {
+      showToast("发表成功");
+      router.back();
+    } else {
+      showToast("发表失败");
+    }
+  });
+};
+defineExpose({
+    onPublish,
+  });
+const onClickFile = (index: number) => {
+  currentFile.value = cloneDeep(fileList.value[index]);
   currentFileIndex = index;
   fileMode = "edit";
   showFilePopup.value = true;
 };
 const saveFile = () => {
   if (
-    currentFile.value.getway == "" ||
+    (fileUploadType.value == "third" && currentFile.value.getway == "") ||
     currentFile.value.source == "" ||
     currentFile.value.point == "" ||
     currentFile.value.gold == ""
@@ -183,10 +256,13 @@ const saveFile = () => {
     showToast("请完整输入资源信息");
     return;
   }
+  currentFile.value.uploadType = fileUploadType.value;
   if (fileMode == "edit") {
-    Object.assign(fileList.value[currentFileIndex], currentFile.value);
+    Object.assign(fileList.value[currentFileIndex],currentFile.value);
   } else {
-    fileList.value.push(JSON.parse(JSON.stringify(currentFile.value)));
+    var temp = {};
+    Object.assign(temp,currentFile.value);
+    fileList.value.push(temp);
   }
   showFilePopup.value = false;
   currentFile.value = {};
@@ -207,29 +283,39 @@ const getFile = (e: any) => {
     name: "",
     type: "",
     size: 0,
+    uploadType: "",
     getway: "",
     source: "",
     point: "0",
     gold: "0",
+    file:File
   };
   file.name = e.target.files[0].name;
   file.type = e.target.files[0].name.split(".").pop();
   file.size = e.target.files[0].size;
+  file.file = e.target.files[0]
   fileUploader.value.value = null;
-  Object.assign(currentFile.value, file);
+  Object.assign(currentFile.value,file);
   fileMode = "new";
   showFilePopup.value = true;
 };
-const onSelectProject = () => {
+const onSelectProject = (item:any) => {
   showResPopup.value = false;
+  projectId = item.id;
+  projectValue.value = item.projectName
+  showToast("success");
 };
 const onClosePopup = () => {
   showResPopup.value = false;
 };
 const onSearch = () => {
-  showToast("success");
+  getTargetList({ typed: 2, query: searchValue.value }).then((res) => {
+    if (res.code == 200) {
+      targetList.value = res.data;
+      showToast("success");
+    }
+  });
 };
-
 const handleProjectPopup = () => {
   showResPopup.value = true;
 };
@@ -250,7 +336,6 @@ const imgDelete = () => {
   }
 };
 
-const imgList = ref<UploaderFileListItem[]>([]);
 const afterRead = (file: any) => {
   if (uploader.value) {
     if (uploader.value.modelValue.length < 3) {
@@ -262,27 +347,14 @@ const afterRead = (file: any) => {
     }
   }
   if (file.length == null) {
-    file.status = "uploading";
-    file.message = "上传中...";
-
-    setTimeout(() => {
-      file.status = "failed";
-      file.message = "上传失败";
-    }, 1000);
+    file.status = "done";
   } else {
     file.forEach((element: any) => {
-      element.status = "uploading";
-      element.message = "上传中...";
-
-      setTimeout(() => {
-        element.status = "failed";
-        element.message = "上传失败";
-      }, 1000);
+      element.status = "done";
     });
   }
 };
 const onOversize = (file: any) => {
-  console.log(file);
   showToast("文件大小不能超过 1mb");
 };
 </script>

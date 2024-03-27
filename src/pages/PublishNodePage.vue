@@ -3,7 +3,7 @@
     <Cell
       title="事件"
       is-link
-      value="请选择节点所属事件"
+      :value="eventId == '' ? '选择事件' : eventValue"
       @click="handleEventPopup" />
     <Field
       v-model="nameText"
@@ -20,7 +20,7 @@
       label="终止时间"
       placeholder="2024-00-00 00:00:00"
       input-align="right" />
-      <Field
+    <Field
       v-model="commentText"
       label="备注"
       placeholder="补充和说明"
@@ -32,7 +32,7 @@
             class="grow"
             v-model="searchValue"
             placeholder="搜索"
-            @search="onSearch" />
+            @update:model-value="onSearch" />
           <Icon
             class="text-vant-t2"
             name="cross"
@@ -42,16 +42,17 @@
         <div class="flex flex-col gap-5">
           <div
             class="flex gap-10 items-center"
-            v-for="a in [1, 1, 1, 1, 1]"
-            @click="onSelectEvent">
+            v-for="item in targetList"
+            @click="onSelectEvent(item)">
             <Image
-              src="./icon_pdf.png"
+              :src="item.icon"
               fit="cover"
               class="size-40 rounded-[5px] overflow-hidden" />
-
             <div class="flex flex-col">
-              <div class="text-15">考研</div>
-              <div class="text-13 text-vant-t2">热度数据</div>
+              <div class="text-15">{{ item.eventName }}</div>
+              <div class="text-13 text-vant-t2">
+                {{ item.hotIndex + " & " + item.discussCount }}
+              </div>
             </div>
             <div class="flex justify-end grow">
               <Icon class="text-vant-t2" name="arrow" size="5vw" />
@@ -66,20 +67,58 @@
 <script setup lang="ts">
 import { Popup, Cell, Search, Field, showToast, Icon, Image } from "vant";
 import { ref, onMounted } from "vue";
+import { pubNode, getTargetList } from "@/api/publish";
+import { useUserStore } from "@/stores/user";
+import { useRouter } from "vue-router";
+const userStore = useUserStore();
+const router = useRouter();
+const targetList: any = ref([]);
+const eventId = ref("");
+const eventValue = ref("");
 const nameText = ref("");
 const startTime = ref("");
 const endTime = ref("");
 const searchValue = ref("");
 const commentText = ref("");
-const onSelectEvent = () => {
+
+const onPublish = () => {
+  var data: any = {
+    userId: userStore.userId,
+    eventId: eventId.value,
+    title: nameText.value,
+    content: commentText.value,
+    startTime: startTime.value,
+    endTime: endTime.value,
+  };
+  pubNode(data).then((res) => {
+    if (res.code == 200) {
+      showToast("发表成功");
+      router.back();
+    } else {
+      showToast("发表失败");
+    }
+  });
+};
+defineExpose({
+  onPublish,
+});
+
+const onSelectEvent = (item: any) => {
   showEventPopup.value = false;
+  eventId.value = item.id;
+  eventValue.value = item.eventName;
   showToast("success");
 };
 const onClosePopup = () => {
   showEventPopup.value = false;
 };
 const onSearch = () => {
-  showToast("success");
+  getTargetList({ typed: 1, query: searchValue.value }).then((res) => {
+    if (res.code == 200) {
+      targetList.value = res.data;
+      showToast("success");
+    }
+  });
 };
 const showEventPopup = ref(false);
 const handleEventPopup = () => {
