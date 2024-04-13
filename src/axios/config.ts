@@ -6,7 +6,7 @@ import axios, {
   } from 'axios'
 import { useUserStore } from '@/stores/user'
 
-const userStore = useUserStore()
+
   const base_url = import.meta.env.VITE_BASE_URL
   const request_timeout = import.meta.env.VITE_REQUEST_TIMEOUT
 
@@ -23,6 +23,7 @@ const userStore = useUserStore()
   service.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
       // 配置请求头
+      const userStore = useUserStore()
       const token = userStore.token
       config.headers.authorization = token
       return config

@@ -1,39 +1,64 @@
 <template>
-  <div class="infocard" @click="cardOnClick">
-    <div class="infocard-header">
-      <div class="infocard-header__avator">
-        <Image
-          src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
-          fit="cover"
-          class="image"
-          round />
+  <div class="infocard bg-white rounded-[10px]" @click="cardOnClick">
+    <div class="flex flex-col pt-10 px-10 gap-10">
+      <div class="flex h-[35px] box-content">
+        <div class="flex items-center">
+          <Image
+            :src="info.user.avatar"
+            fit="cover"
+            class="size-[32px]"
+            round />
+        </div>
+        <div class="flex flex-col justify-between ml-10 shrink-0">
+          <div class="text-[14px]">{{ info.user.userName }}</div>
+          <div class="text-vant-t2 text-[10px]">
+            {{
+              info.infoSource +
+              " " +
+              info.user.realAuth.campus +
+              " " +
+              info.user.realAuth.collage
+            }}
+          </div>
+        </div>
+        <div class="flex justify-end self-center w-full">
+          <div v-if="HotIndex == '01'" class="gap-3 flex items-center mr-5">
+            <Icon name="fire-o" size="4vw" class="inline text-red-600" />
+            <div class="text-red-600 font-bold italic inline-flex text-14">
+              {{ HotIndex }}
+            </div>
+          </div>
+          <div
+            v-else-if="HotIndex == '02'"
+            class="gap-3 flex items-center mr-5">
+            <Icon name="fire-o" size="4vw" class="inline text-orange-500" />
+            <div class="text-orange-600 font-bold italic inline-flex text-14">
+              {{ HotIndex }}
+            </div>
+          </div>
+          <div
+            v-else-if="HotIndex == '03'"
+            class="gap-3 flex items-center mr-5">
+            <Icon name="fire-o" size="4vw" class="inline text-amber-500" />
+            <div class="text-amber-600 font-bold italic inline-flex text-14">
+              {{ HotIndex }}
+            </div>
+          </div>
+          <div
+            v-else-if="HotIndex != null"
+            class="gap-3 flex items-center mr-5">
+            <Icon name="fire-o" size="4vw" class="inline text-gray-500" />
+            <div class="text-gray-600 font-bold italic inline-flex text-14">
+              {{ HotIndex }}
+            </div>
+          </div>
+          <div v-els class="flex justify-center items-center size-[32px]">
+            <Icon e name="arrow-down" @click.stop="actionOn" />
+          </div>
+        </div>
       </div>
-      <div class="infocard-header__user">
-        <div class="nickname">春风Benin</div>
-        <div class="detail">来自头条推荐 南昌·信息工程学院</div>
-      </div>
-      <div class="infocard-header__action">
-        <div v-if="HotIndex == '01'" class="gap-3 flex items-center mr-5">
-          <Icon name="fire-o" size="4vw" class="inline text-red-600"/>
-          <div class="text-red-600 font-bold italic inline-flex text-14">{{ HotIndex }}</div>
-        </div>
-        <div v-else-if="HotIndex == '02'" class="gap-3 flex items-center mr-5">
-          <Icon name="fire-o" size="4vw" class="inline text-orange-500"/>
-          <div class="text-orange-600 font-bold italic inline-flex text-14">{{ HotIndex }}</div>
-        </div>
-        <div v-else-if="HotIndex == '03'" class="gap-3 flex items-center mr-5">
-          <Icon name="fire-o" size="4vw" class="inline text-amber-500"/>
-          <div class="text-amber-600 font-bold italic inline-flex text-14">{{ HotIndex }}</div>
-        </div>
-        <div v-else-if="HotIndex != null" class="gap-3 flex items-center mr-5">
-          <Icon name="fire-o" size="4vw" class="inline text-gray-500"/>
-          <div class="text-gray-600 font-bold italic inline-flex text-14">{{ HotIndex }}</div>
-        </div>
-        <Icon v-else name="arrow-down" class="action" @click.stop="actionOn" />
-      </div>
-    </div>
-    <div class="infocard-content">
       <LittleCard
+        v-for="item in info.fileList"
         class="mb-10 mt-5"
         type="res"
         image="./icon_pdf.png"
@@ -42,34 +67,34 @@
         title="高等数学一-23-24-Z-真题.pdf111111111111"
         follow="0"
         to="125153" />
-      <div class="infocard-content__text">我就是普普通通的内容</div>
-      <div class="infocard-content__image">
+      <div class="text-[15px]">{{ info.content }}</div>
+      <div
+        v-show="info.imageList.length"
+        class="grid grid-cols-3 gap-4 overflow-hidden rounded-[5px]">
         <Image
-          v-for="image in [1, 1, 1, 1, 1, 1, 1, 1]"
-          src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+          v-for="image in info.imageList"
+          :src="image"
           fit="cover"
           radius="0"
-          class="content-image" />
+          class="min-h-[28vw] min-w-[28vw]" />
       </div>
-      <div class="infocard-content__related">
-        <TinyCard /><TinyCard /><TinyCard /><TinyCard />
+      <div class="flex gap-5 flex-wrap">
+        <TinyCard :icon="info.event.icon" :cardname="info.event.eventName" />
       </div>
+      <HotCommentCard v-show="info.hotCommentId" />
     </div>
-    <div class="infocard-footer">
-      <HotCommentCard />
-      <div class="flex justify-around">
-        <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
-          <Icon name="share-o" size="5vw" color="gray" />
-          <div>18</div>
-        </div>
-        <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
-          <Icon name="comment-o" size="5vw" color="gray" />
-          <div>18</div>
-        </div>
-        <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
-          <Icon name="good-job-o" size="5vw" color="gray" @click.stop="likeOn" />
-          <div>18</div>
-        </div>
+    <div class="flex justify-around">
+      <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
+        <Icon name="share-o" size="5vw" color="gray" />
+        <div>{{ info.starCount }}</div>
+      </div>
+      <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
+        <Icon name="comment-o" size="5vw" color="gray" />
+        <div>{{ info.commentCount }}</div>
+      </div>
+      <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
+        <Icon name="good-job-o" size="5vw" color="gray" @click.stop="likeOn" />
+        <div>{{ info.likeCount }}</div>
       </div>
     </div>
     <ActionSheet
@@ -100,82 +125,14 @@ const actionOn = () => {
 const likeOn = () => {
   alert("gaag");
 };
-const props = defineProps<{ to: string; HotIndex: string }>();
+const props = defineProps<{
+  info: any;
+  HotIndex?: string;
+}>();
 
 const cardOnClick = () => {
-  router.push("/info/" + props.to);
+  router.push("/info/" + props.info.id);
 };
 </script>
 
-<style lang="scss" scoped>
-.infocard {
-  display: flex;
-  flex-direction: column;
-  background-color: white;
-  border-radius: 10px;
-  .infocard-header {
-    display: flex;
-    padding: 10px;
-    box-sizing: content-box;
-    height: 35px;
-
-    .infocard-header__avator {
-      display: flex;
-      align-items: center;
-    }
-    .image {
-      width: 32px;
-      height: 32px;
-    }
-    .infocard-header__user {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      margin-left: 10px;
-      flex-shrink: 0;
-
-      .nickname {
-        font-size: 14px;
-      }
-      .detail {
-        font-size: 10px;
-        color: gray;
-      }
-    }
-    .infocard-header__action {
-      display: flex;
-      justify-content: flex-end;
-      align-self: center;
-      width: 100%;
-      .action {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 32px;
-        height: 32px;
-      }
-      .action:active {
-        background-color: whitesmoke;
-      }
-    }
-  }
-  .infocard-content {
-    margin: 0px 10px;
-    .infocard-content__text {
-      font-size: 15px;
-    }
-    .infocard-content__image {
-      display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(100px,1fr));
-      border-radius: 5px;
-      overflow: hidden;
-      grid-gap: 3px;
-      margin: 10px 0px;
-      .content-image {
-        min-height: 28vw;
-        min-width: 28vw;
-      }
-    }
-  }
-}
-</style>
+<style lang="scss" scoped></style>

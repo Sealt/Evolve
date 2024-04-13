@@ -1,15 +1,19 @@
 <template>
     <div class="tinycard">
-        <Image src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+        <Image :src="icon"
           fit="cover"
           class="image"
           radius="3" />
-          <div class="eventname">高等数学一</div>
+          <div class="eventname">{{cardname}}</div>
     </div>
 </template>
 
 <script setup lang="ts">
 import { Image } from 'vant'
+defineProps<{
+    icon:string;
+    cardname:string;
+}>();
 </script>
 
 <style lang="scss" scoped>
@@ -19,8 +23,7 @@ import { Image } from 'vant'
     padding: 3px;
     border-radius: 5px;
     background-color: #f2f3f5;
-    margin-right: 5px;
-    margin-bottom: 5px;
+    gap:5px;
     .image {
         height: 20px;
         width: 20px;

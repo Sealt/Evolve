@@ -50,7 +50,6 @@
     title="考研"
     follow="1"
     to="125153" />
-  <InfoCard to="123"/>
 </template>
 
 <script setup lang="ts">

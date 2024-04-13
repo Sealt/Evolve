@@ -1,10 +1,7 @@
 <template>
   <HotList />
   <HotSearch />
-  <InfoCard HotIndex="01"/>
-  <InfoCard HotIndex="02"/>
-  <InfoCard HotIndex="03"/>
-  <InfoCard HotIndex="04"/>
+
 </template>
 
 <script setup lang="ts">

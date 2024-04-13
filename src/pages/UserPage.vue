@@ -56,7 +56,7 @@
         swipeable
         class="pt-10">
         <Tab name="info" title="信息">
-          <InfoCard to="123" />
+
         </Tab>
         <Tab name="exp" title="经验"></Tab>
         <Tab name="event" title="事件"></Tab>

@@ -1,10 +1,15 @@
 <template>
   <div class="flex flex-col">
     <Cell
-      title="发布到"
+      title="所属项目"
       is-link
-      :value="projectId == '' ? '更容易被看到' : projectValue"
+      :value="projectId == '' ? '为资源添加分类' : projectValue"
       @click="handleProjectPopup" />
+      <Cell
+      title="关联事件"
+      is-link
+      :value="eventId == '' ? '能被更多人看到' : eventValue"
+      @click="handleEventPopup" />
     <input type="file" ref="fileUploader" class="hidden" @change="getFile" />
     <Cell title="添加文件" is-link value="资源" @click="handleFilePopup" />
 
@@ -58,12 +63,12 @@
             class="grow"
             v-model="searchValue"
             placeholder="请输入项目关键词"
-            @update:model-value="onSearch" />
+            @update:model-value="onProjectSearch" />
           <Icon
             class="text-vant-t2"
             name="cross"
             size="5vw"
-            @click="onClosePopup" />
+            @click="onCloseProjectPopup" />
         </div>
         <div class="flex flex-col gap-5">
           <div
@@ -158,6 +163,42 @@
           input-align="right" />
       </div>
     </Popup>
+    <Popup v-model:show="showEventPopup" class="h-1/2" round position="bottom">
+      <div class="flex flex-col p-15 gap-15">
+        <div class="flex items-center justify-between gap-10">
+          <Search
+            class="grow"
+            v-model="searchValue"
+            placeholder="请输入事件关键词"
+            @update:model-value="onEventSearch" />
+          <Icon
+            class="text-vant-t2"
+            name="cross"
+            size="5vw"
+            @click="onCloseEventPopup" />
+        </div>
+        <div class="flex flex-col gap-5">
+          <div
+            class="flex gap-10 items-center"
+            v-for="item in targetList"
+            @click="onSelectEvent(item)">
+            <Image
+              :src="item.icon"
+              fit="cover"
+              class="size-40 rounded-[5px] overflow-hidden" />
+            <div class="flex flex-col">
+              <div class="text-15">{{ item.eventName }}</div>
+              <div class="text-13 text-vant-t2">
+                {{ item.hotIndex + " & " + item.discussCount }}
+              </div>
+            </div>
+            <div class="flex justify-end grow">
+              <Icon class="text-vant-t2" name="arrow" size="5vw" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </Popup>
   </div>
 </template>
 
@@ -187,6 +228,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const userStore = useUserStore();
 const projectValue = ref("");
+const eventValue = ref("");
 const textValue = ref("");
 const targetList:any = ref([]);
 const uploader = ref<UploaderInstance>();
@@ -199,9 +241,11 @@ const currentFile: any = ref({});
 const fileList:any = ref([]);
 const imgList = ref<UploaderFileListItem[]>([]);
 const showResPopup = ref(false);
+const showEventPopup = ref(false);
 const showFilePopup = ref(false);
 var finallyFileList:File[] = [];
 var projectId = "";
+var eventId = "";
 
 const onPublish = () => {
   console.log(fileList.value)
@@ -224,6 +268,7 @@ const onPublish = () => {
   var data: any = {
     userId: userStore.userId,
     projectId: projectId,
+    eventId: eventId,
     content: textValue.value,
   };
   formData.append("data", JSON.stringify(data));
@@ -304,12 +349,33 @@ const onSelectProject = (item:any) => {
   projectId = item.id;
   projectValue.value = item.projectName
   showToast("success");
+  targetList.value = [];
 };
-const onClosePopup = () => {
+const onSelectEvent = (item: any) => {
+  showEventPopup.value = false;
+  eventId = item.id;
+  eventValue.value = item.eventName
+  showToast("success");
+  targetList.value = [];
+};
+const onCloseProjectPopup = () => {
   showResPopup.value = false;
+  targetList.value = [];
 };
-const onSearch = () => {
+const onCloseEventPopup = () => {
+  showEventPopup.value = false;
+  targetList.value = [];
+};
+const onProjectSearch = () => {
   getTargetList({ typed: 2, query: searchValue.value }).then((res) => {
+    if (res.code == 200) {
+      targetList.value = res.data;
+      showToast("success");
+    }
+  });
+};
+const onEventSearch = () => {
+  getTargetList({ typed: 1, query: searchValue.value }).then((res) => {
     if (res.code == 200) {
       targetList.value = res.data;
       showToast("success");
@@ -318,6 +384,9 @@ const onSearch = () => {
 };
 const handleProjectPopup = () => {
   showResPopup.value = true;
+};
+const handleEventPopup = () => {
+  showEventPopup.value = true;
 };
 const handleFilePopup = () => {
   if (fileUploader.value) {

@@ -10,6 +10,7 @@ const router = createRouter({
       path: "/",
       name: "infoView",
       component: InfoView,
+      meta: { keepAlive:true}
     },
     {
       path: "/login",
@@ -20,6 +21,7 @@ const router = createRouter({
       path: "/res",
       name: "resView",
       component: () => import("../views/ResView.vue"),
+      meta: { keepAlive:true}
     },
     {
       path: "/chat",

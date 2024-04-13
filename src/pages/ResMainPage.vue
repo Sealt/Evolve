@@ -1,7 +1,6 @@
 <template>
     <div class="flex flex-col p-10 gap-10">
         <ResStatistics />
-        <InfoCard to="123"/>
     </div>
 </template>
 

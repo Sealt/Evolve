@@ -12,8 +12,12 @@
       <Tab name="event" title="事件">
         <InfoEventPage />
       </Tab>
-      <Tab name="info" title="信息">信息</Tab>
-      <Tab name="experience" title="经验">经验</Tab>
+      <Tab name="info" title="信息">
+        <InfoFlowPage />
+      </Tab>
+      <Tab name="experience" title="经验">
+        <InfoExpsPage />
+      </Tab>
     </Tabs>
     <Tabbar route placeholder class="shrink-0">
       <TabbarItem name="info" to="/" icon="info-o">信息</TabbarItem>
@@ -29,6 +33,8 @@ import TopBar from "@/components/TopBar.vue";
 import InfoHomePage from "@/pages/InfoHomePage.vue";
 import InfoHotPage from "@/pages/InfoHotPage.vue";
 import InfoEventPage from "@/pages/InfoEventPage.vue";
+import InfoFlowPage from "@/pages/InfoFlowPage.vue";
+import InfoExpsPage from "@/pages/InfoExpsPage.vue";
 import { Tab, Tabs, Tabbar, TabbarItem } from "vant";
 import { useRouter } from "vue-router";
 import { ref,onMounted } from "vue";
