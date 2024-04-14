@@ -10,15 +10,15 @@
     <div class="event">
       <div class="event-image">
         <Image
-          src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+          :src="project.icon"
           fit="cover"
           class="image" />
       </div>
       <div class="event-content">
-        <div class="event-content__title">高等数学</div>
+        <div class="event-content__title">{{ project.projectName }}</div>
 
         <div class="event-content__detail">
-          <div class="event-content__detaila">68.4万热度 61.3万讨论</div>
+          <div class="event-content__detaila">{{ project.hotIndex +' 热度 ' +  project.resourceCount +' 讨论' }}</div>
           <div class="event-content__detailb">531万关注</div>
         </div>
       </div>
@@ -26,10 +26,10 @@
         <Button type="primary" size="small" round>已关注</Button>
       </div>
     </div>
-    <div class="event-intro">这是一段简单的资源项目介绍你好</div>
+    <div class="event-intro">{{ project.projectDesc }}</div>
     <Tabs v-model:active="activeTab" sticky offset-top="46" animated swipeable>
       <Tab title="资料库" name="a">
-        <StockTree />
+        <StockTree type="database"/>
       </Tab>
       <Tab title="校友分享" name="b">内容2</Tab>
     </Tabs>
@@ -39,11 +39,34 @@
 <script setup lang="ts">
 import StockTree from "@/components/StockTree.vue";
 import { NavBar, Image, Button, Tab, Tabs } from "vant";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { getProject } from "@/api/res";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const activeTab = ref("a");
+const project = ref({
+  id: "",
+  userId: "",
+  managerIds: null,
+  projectName: "",
+  projectDesc: "",
+  icon: "",
+  sort: 0,
+  largeId: 0,
+  hotIndex: null,
+  resourceCount: null,
+  createTime: "",
+});
 const onClickLeft = () => {
   history.back();
 };
+onMounted(() => {
+  getProject({ projectId: router.currentRoute.value.params.id }).then((res) => {
+    if (res.code == 200) {
+      project.value = res.data;
+    }
+  });
+});
 </script>
 
 <style lang="scss" scoped>

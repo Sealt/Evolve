@@ -10,8 +10,7 @@
           v-if="hot == '1'"
           name="fire-o"
           class="text-red-500 mr-4"
-          size="4vw"
-           />
+          size="4vw" />
         <div class="card-content__detail-wrapper">{{ detail }}</div>
       </div>
     </div>
@@ -22,30 +21,49 @@
       <Tag v-show="type == 'res'" type="success" size="medium" round>获取</Tag>
     </div>
     <Popup
-    class="h-1/3"
-    v-model:show="showResPopup"
-    position="bottom"
-    round
-    closeable
-    teleport="body">
-    <div class="flex m-15 flex-col gap-10">
-      <div>资源详情</div>
-      <div class="flex">
-        <Tag class="mr-10 w-60 justify-center h-21 shrink-0" type="primary">资源名</Tag>
-        <div class="text-14 break-all">高等数学一-23-24-Z-真题.pdf156184551516518</div>
+      class="h-1/3"
+      v-model:show="showResPopup"
+      position="bottom"
+      round
+      closeable
+      teleport="body">
+      <div class="flex m-15 flex-col gap-10">
+        <div>资源详情</div>
+        <div class="flex">
+          <Tag class="mr-10 w-60 justify-center h-21 shrink-0" type="primary"
+            >资源名</Tag
+          >
+          <div class="text-14 break-all">
+            {{ fileItem.fileName }}
+          </div>
+        </div>
+        <div class="flex">
+          <Tag class="mr-10 w-60 justify-center h-21 shrink-0" type="primary"
+            >文件大小</Tag
+          >
+          <div class="text-14">
+            {{ (fileItem.size / 1000000).toFixed(2) + " Mb" }}
+          </div>
+        </div>
+        <div class="flex" v-if="fileItem.uploadType == 'third'">
+          <Tag class="mr-10 w-60 justify-center h-21 shrink-0" type="primary"
+            >获取方式</Tag
+          >
+          <div class="text-14 break-all">
+            {{ fileItem.source }}
+          </div>
+        </div>
+        <div class="flex" v-if="fileItem.uploadType == 'upload'">
+          <Tag class="mr-10 w-60 justify-center h-21 shrink-0" type="primary"
+            >下载地址</Tag
+          >
+          <div class="text-14 break-all">
+            {{ fileItem.url }}
+          </div>
+        </div>
       </div>
-      <div class="flex">
-        <Tag class="mr-10 w-60 justify-center h-21 shrink-0" type="primary">作者</Tag>
-        <div class="text-14">计科211史诗琪</div>
-      </div>
-      <div class="flex">
-        <Tag class="mr-10 w-60 justify-center h-21 shrink-0" type="primary">获取方式</Tag>
-        <div class="text-14 break-all">微信公众号江理一起来学资料557387278578278578278282785278578578578578278278278578库微信公众号江理一起来学资料库微信公众号江理一起来学资料库微信公众号江理一起来学资料库</div>
-      </div>
-    </div>
-  </Popup>
+    </Popup>
   </div>
-
 </template>
 
 <script setup lang="ts">
@@ -61,15 +79,21 @@ const props = defineProps<{
   hot?: string;
   follow?: string;
   to?: string;
+  fileItem?: any;
 }>();
 const showResPopup = ref(false);
 
 const handleClick = () => {
   if (props.type == "event") {
     router.push("/event/" + props.to);
-  } if (props.type == "project") {
+  }
+  if (props.type == "project") {
     router.push("/project/" + props.to);
-  }if (props.type == "res") {
+  }
+  if (props.type == "file") {
+    router.push("/post/res/" + props.to);
+  }
+  if (props.type == "res") {
     showResPopup.value = true;
   }
 };

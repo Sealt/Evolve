@@ -3,12 +3,14 @@
     <TopBar />
     <Tabs v-model:active="tabActiveName" sticky shrink swipeable>
       <Tab name="store" title="资料库">
-        <StockTree />
+        <StockTree type="project"/>
       </Tab>
       <Tab name="res" title="资源">
         <ResMainPage />
       </Tab>
-      <Tab name="market" title="广场">市场</Tab>
+      <Tab name="market" title="广场">
+        <ResFlowPage />
+      </Tab>
     </Tabs>
     <Tabbar route placeholder class="shrink-0">
       <TabbarItem name="info" to="/" icon="info-o">信息</TabbarItem>
@@ -25,7 +27,8 @@ import StockTree from "@/components/StockTree.vue";
 import { Tab, Tabs, Tabbar, TabbarItem } from "vant";
 import { ref } from "vue";
 import ResMainPage from "@/pages/ResMainPage.vue";
-const tabActiveName = ref("res");
+import ResFlowPage from "@/pages/ResFlowPage.vue";
+const tabActiveName = ref("market");
 </script>
 
 <style scoped>

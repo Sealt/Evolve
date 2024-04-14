@@ -13,14 +13,10 @@
     </div>
     <div class="flex flex-col grow z-20">
       <div class="flex p-15 items-center">
-        <Image
-          :src="data.avatar"
-          fit="cover"
-          class="size-64 shrink-0"
-          round />
+        <Image :src="data.avatar" fit="cover" class="size-64 shrink-0" round />
         <div class="flex grow justify-end gap-5">
           <div
-          @click="router.push('/user/edit')"
+            @click="router.push('/user/edit')"
             class="text-white bg-white/30 rounded-full text-14 w-90 h-30 flex items-center justify-center">
             编辑资料
           </div>
@@ -33,7 +29,7 @@
       <div class="flex flex-col px-15 gap-10">
         <div class="text-16 font-bold text-white">{{ data.userName }}</div>
         <div class="text-14 text-white">
-            {{ data.bio }}
+          {{ data.bio }}
         </div>
         <div class="flex gap-10 items-end">
           <span class="text-16 font-bold text-white">{{ data.likes }}</span>
@@ -45,19 +41,15 @@
         </div>
       </div>
       <div class="flex px-15 py-10 gap-5">
-        <div class="text-13 bg-white/30 rounded-full px-10 text-white">{{ data.gender }}</div>
         <div class="text-13 bg-white/30 rounded-full px-10 text-white">
-          {{ data.realAuth.collage }}
+          {{ data.gender }}
+        </div>
+        <div class="text-13 bg-white/30 rounded-full px-10 text-white">
+          {{ data.realAuth == null ? "暂无认证" : data.realAuth.collage }}
         </div>
       </div>
-      <Tabs
-        v-model:active="tabActiveName"
-        sticky
-        swipeable
-        class="pt-10">
-        <Tab name="info" title="信息">
-
-        </Tab>
+      <Tabs v-model:active="tabActiveName" sticky swipeable class="pt-10">
+        <Tab name="info" title="信息"> </Tab>
         <Tab name="exp" title="经验"></Tab>
         <Tab name="event" title="事件"></Tab>
         <Tab name="node" title="节点"></Tab>
@@ -71,14 +63,14 @@
 <script setup lang="ts">
 import { Tabs, Tab, Image, Icon, Button } from "vant";
 import { useRouter } from "vue-router";
-import { ref,onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import InfoCard from "@/components/InfoCard.vue";
 const router = useRouter();
 const tabActiveName = ref("a");
 import { getUserInfo } from "@/api/user";
 import { useUserStore } from "@/stores/user";
 const userStore = useUserStore();
-const data:any =ref({realAuth:{}})
+const data: any = ref({ realAuth: { collage: "" } });
 onMounted(() => {
   getUserInfo({ id: userStore.userId, infoType: "all" }).then((res) => {
     data.value = res.data;

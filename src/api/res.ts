@@ -1,9 +1,8 @@
 import request from "@/axios"
 
-export const getSorts = async (data: any) => {
+export const getSorts = async () => {
   return await request.get({
     url: "/res/getSorts",
-    params: data,
   });
 };
 export const getDatabase = async (data: any) => {

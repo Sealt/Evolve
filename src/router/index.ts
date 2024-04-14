@@ -99,9 +99,9 @@ const router = createRouter({
       component: () => import("../pages/ProjectPage.vue"),
     },
     {
-      path: "/info/:id",
-      name: "infoPage",
-      component: () => import("../pages/InfoCardPage.vue"),
+      path: "/post/:type/:id",
+      name: "postPage",
+      component: () => import("../pages/PostCardPage.vue"),
     },
     {
       path: "/node/:id",

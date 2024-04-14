@@ -13,11 +13,7 @@
           <div class="text-[14px]">{{ info.user.userName }}</div>
           <div class="text-vant-t2 text-[10px]">
             {{
-              info.infoSource +
-              " " +
-              info.user.realAuth.campus +
-              " " +
-              info.user.realAuth.collage
+              infoDesc
             }}
           </div>
         </div>
@@ -57,29 +53,54 @@
           </div>
         </div>
       </div>
-      <LittleCard
-        v-for="item in info.fileList"
-        class="mb-10 mt-5"
-        type="res"
-        image="./icon_pdf.png"
-        hot="0"
-        detail="1568下载 4积分 2金币66666666666666666666666666666"
-        title="高等数学一-23-24-Z-真题.pdf111111111111"
-        follow="0"
-        to="125153" />
+      <div v-show="type == 'res'" class="flex flex-col gap-5">
+        <LittleCard
+          v-for="item in info.fileList"
+          type="res"
+          :image="iconBaseUrl + '/res/fileicon/file_icon_' + item.type + '.png'"
+          hot="0"
+          :detail="
+            item.gainCount +
+            ' 下载 ' +
+            item.point +
+            ' 积分 ' +
+            item.gold +
+            ' 金币 '
+          "
+          :title="item.fileName"
+          follow="0"
+          :to="item.id"
+          :file-item="item" />
+      </div>
       <div class="text-[15px]">{{ info.content }}</div>
       <div
-        v-show="info.imageList.length"
-        class="grid grid-cols-3 gap-4 overflow-hidden rounded-[5px]">
+        v-show="info.imageList.length == 1"
+        class="flex w-fit overflow-hidden rounded-[5px]">
+        <Image
+          :src="info.imageList[0]"
+          fit="cover"
+          radius="0"
+          class="min-h-[28vw] min-w-[28vw] max-w-[25vh]" />
+      </div>
+      <div
+        v-show="info.imageList.length >= 2"
+        class="grid imageGrid gap-4 overflow-hidden rounded-[5px]">
         <Image
           v-for="image in info.imageList"
           :src="image"
           fit="cover"
           radius="0"
-          class="min-h-[28vw] min-w-[28vw]" />
+          class="min-h-[28vw] min-w-[28vw] max-h-[20vh]" />
       </div>
       <div class="flex gap-5 flex-wrap">
-        <TinyCard :icon="info.event.icon" :cardname="info.event.eventName" />
+        <TinyCard
+          v-if="type == 'info'"
+          :icon="info.event.icon"
+          :cardname="info.event.eventName" />
+        <TinyCard
+          v-else
+          :icon="info.project.icon"
+          :cardname="info.project.projectName" />
       </div>
       <HotCommentCard v-show="info.hotCommentId" />
     </div>
@@ -113,11 +134,14 @@ import TinyCard from "./TinyCard.vue";
 import HotCommentCard from "./HotCommentCard.vue";
 import LittleCard from "./LittleCard.vue";
 
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const showInfoAction = ref(false);
 const infoActions = [{ name: "1" }, { name: "2" }];
+const iconBaseUrl = import.meta.env.VITE_ICON_URL;
+const imageLength = ref(3);
+const infoDesc = ref("");
 const actionOnCancel = () => {};
 const actionOn = () => {
   showInfoAction.value = true;
@@ -126,13 +150,35 @@ const likeOn = () => {
   alert("gaag");
 };
 const props = defineProps<{
-  info: any;
+  info?: any;
+  from?: string;
+  type?: string;
   HotIndex?: string;
 }>();
 
 const cardOnClick = () => {
-  router.push("/info/" + props.info.id);
+  router.push("/post/" + props.type + "/" + props.info.id);
 };
+onMounted(() => {
+  if (props.info.imageList.length == 2) {
+    imageLength.value = 2;
+  } else if (props.info.imageList.length >= 3) {
+    imageLength.value = 3;
+  }
+  var from = ''
+  if (props.from != null) {
+    from = props.from;
+  }
+  var auth = '暂未认证'
+  if (props.info.user.realAuth != null) {
+    auth = props.info.user.realAuth.campus + ' '+props.info.user.realAuth.collage;
+  }
+  infoDesc.value = from + auth;
+});
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.imageGrid {
+  grid-template-columns: repeat(v-bind(imageLength), minmax(0, 1fr));
+}
+</style>

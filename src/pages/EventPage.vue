@@ -10,47 +10,63 @@
       @click-left="onClickLeft" />
     <div class="event">
       <div class="event-image">
-        <Image
-          src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
-          fit="cover"
-          class="image" />
+        <Image :src="event.icon" fit="cover" class="image" />
       </div>
       <div class="event-content">
-        <div class="event-content__title">考研</div>
+        <div class="event-content__title">{{event.eventName}}</div>
 
         <div class="event-content__detail">
-          <div class="event-content__detaila">68.4万热度 61.3万讨论</div>
-          <div class="event-content__detailb">6531万关注</div>
+          <div class="event-content__detaila">{{ event.hotIndex +' 热度 ' +  event.discussCount +' 讨论' }}</div>
+          <div class="event-content__detailb">{{'关注数据'}}</div>
         </div>
       </div>
       <div class="event-button">
         <Button type="primary" size="small" round>已关注</Button>
       </div>
     </div>
-    <div class="event-intro">这是一段简单的事件介绍你好</div>
-      <Tabs
-        v-model:active="activeTab"
-        sticky
-        offset-top="46"
-        animated
-        swipeable>
-        <Tab title="节点" name="a"><NodeFlowPage /></Tab>
-        <Tab title="信息" name="b">内容2</Tab>
-        <Tab title="经验" name="c">内容3</Tab>
-        <Tab title="资源" name="d">内容3</Tab>
-        <Tab title="问答" name="e">内容3</Tab>
-      </Tabs>
+    <div class="event-intro">{{ event.eventDesc}}</div>
+    <Tabs v-model:active="activeTab" sticky offset-top="46" animated swipeable>
+      <Tab title="节点" name="a"><NodeFlowPage /></Tab>
+      <Tab title="信息" name="b">内容2</Tab>
+      <Tab title="经验" name="c">内容3</Tab>
+      <Tab title="资源" name="d">内容3</Tab>
+      <Tab title="问答" name="e">内容3</Tab>
+    </Tabs>
   </div>
 </template>
 
 <script setup lang="ts">
 import { NavBar, Image, Button, Tab, Tabs } from "vant";
 import NodeFlowPage from "./NodeFlowPage.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+import { getEvent } from "@/api/event";
+import { useRouter } from "vue-router";
 const activeTab = ref("a");
+const event = ref({
+  id: "",
+  eventName: "",
+  eventDesc: "",
+  icon: "",
+  sort: 0,
+  createTime: "",
+  updateTime: "",
+  hotIndex: 0,
+  discussCount: 0,
+  userId: "",
+  managerIds: null,
+  largeId: 0,
+});
+const router = useRouter();
 const onClickLeft = () => {
   history.back();
 };
+onMounted(() => {
+  getEvent({ eventId: router.currentRoute.value.params.id }).then((res) => {
+    if (res.code == 200) {
+      event.value = res.data;
+    }
+  });
+});
 </script>
 
 <style lang="scss" scoped>
@@ -104,7 +120,6 @@ const onClickLeft = () => {
     justify-content: flex-end;
   }
 }
-
 </style>
 <style scoped>
 :deep(.van-tabs) {

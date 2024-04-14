@@ -38,7 +38,7 @@ import InfoExpsPage from "@/pages/InfoExpsPage.vue";
 import { Tab, Tabs, Tabbar, TabbarItem } from "vant";
 import { useRouter } from "vue-router";
 import { ref,onMounted } from "vue";
-const tabActiveName = ref("home");
+const tabActiveName = ref("info");
 const router = useRouter();
 onMounted(() => {
 })

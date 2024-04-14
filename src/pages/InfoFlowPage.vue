@@ -1,5 +1,5 @@
 <template>
-  <InfoCard v-for="item in records" :info="item"/>
+  <InfoCard v-for="item in records" :info="item" type="info"/>
 </template>
 
 <script setup lang="ts">

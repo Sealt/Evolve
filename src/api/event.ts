@@ -24,9 +24,8 @@ export const getNodes = async (data: any) => {
     params: data,
   });
 };
-export const getSorts = async (data: any) => {
+export const getSorts = async () => {
   return await request.get({
-    url: "/event/getSorts",
-    params: data,
+    url: "/event/getSorts"
   });
 };

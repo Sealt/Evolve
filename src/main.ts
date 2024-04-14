@@ -5,10 +5,16 @@ import "./style.css";
 import "vant/lib/index.css";
 import App from "./App.vue";
 import router from "./router";
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime'
+import 'dayjs/locale/zh-cn'
+dayjs.extend(relativeTime);
+dayjs.locale('zh-cn')
 const app = createApp(App);
 const pinia = createPinia();
 pinia.use(piniaPluginPersistedstate);
 app.use(pinia);
 app.use(router);
 
+app.config.globalProperties.$dayjs = dayjs;
 app.mount("#app");

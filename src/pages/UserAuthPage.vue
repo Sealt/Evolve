@@ -28,7 +28,19 @@ import { ref, reactive, onMounted } from "vue";
 import { useUserStore } from "@/stores/user";
 const router = useRouter();
 const userStore = useUserStore();
-const authData: any = ref({ realAuth: {} });
+const authData: any = ref({
+  university: "",
+  realAuth: {
+    status: -1,
+    campus: "",
+    collage: "",
+    major: "",
+    clazz: "",
+    name: "",
+    cardid: "",
+    fileUrl: "",
+  },
+});
 const authStatus = ref("");
 const canDoAuth = ref(true);
 const submitButton = ref<HTMLDivElement>();
@@ -39,21 +51,27 @@ const onClick = () => {
 };
 onMounted(() => {
   getUserInfo({ id: userStore.userId, infoType: "auth" }).then((res) => {
-    authData.value = res.data;
-    switch (authData.value.realAuth.status) {
-      case 0:
-        authStatus.value = "立即认证";
-        submitButton.value!.style.backgroundColor = "#1989fa";
-        break;
-      case 1:
-        authStatus.value = "已认证";
-        canDoAuth.value = false;
-        break;
-      case 2:
-        authStatus.value = "审核中";
-        canDoAuth.value = false;
-        submitButton.value!.style.color = "gray";
-        break;
+    if (res.data.realAuth != null) {
+      authData.value = res.data;
+      switch (authData.value.realAuth.status) {
+        case 0:
+          authStatus.value = "立即认证";
+          submitButton.value!.style.backgroundColor = "#1989fa";
+          break;
+        case 1:
+          authStatus.value = "已认证";
+          canDoAuth.value = false;
+          break;
+        case 2:
+          authStatus.value = "审核中";
+          canDoAuth.value = false;
+          submitButton.value!.style.color = "gray";
+          break;
+      }
+    } else {
+      authData.value.university = res.data.university;
+      authStatus.value = "立即认证";
+      submitButton.value!.style.backgroundColor = "#1989fa";
     }
   });
 });
