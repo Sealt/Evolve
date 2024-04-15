@@ -7,14 +7,13 @@
             :src="info.user.avatar"
             fit="cover"
             class="size-[32px]"
-            round />
+            round
+            @click.stop="router.push('/user/'+info.userId)" v-lazy="Image.src" />
         </div>
         <div class="flex flex-col justify-between ml-10 shrink-0">
           <div class="text-[14px]">{{ info.user.userName }}</div>
           <div class="text-vant-t2 text-[10px]">
-            {{
-              infoDesc
-            }}
+            {{ infoDesc }}
           </div>
         </div>
         <div class="flex justify-end self-center w-full">
@@ -53,7 +52,7 @@
           </div>
         </div>
       </div>
-      <div v-show="type == 'res'" class="flex flex-col gap-5">
+      <div v-show="cardType == 'res'" class="flex flex-col gap-5">
         <LittleCard
           v-for="item in info.fileList"
           type="res"
@@ -80,6 +79,7 @@
           :src="info.imageList[0]"
           fit="cover"
           radius="0"
+          lazy-load
           class="min-h-[28vw] min-w-[28vw] max-w-[25vh]" />
       </div>
       <div
@@ -87,14 +87,16 @@
         class="grid imageGrid gap-4 overflow-hidden rounded-[5px]">
         <Image
           v-for="image in info.imageList"
-          :src="image"
           fit="cover"
           radius="0"
-          class="min-h-[28vw] min-w-[28vw] max-h-[20vh]" />
+          lazy-load
+          class="min-h-[28vw] min-w-[28vw] max-h-[20vh]" :src="image"/>
       </div>
-      <div class="flex gap-5 flex-wrap">
+      <div
+        class="flex gap-5 flex-wrap"
+        v-if="info.event != null || info.project != null">
         <TinyCard
-          v-if="type == 'info'"
+          v-if="cardType == 'info'"
           :icon="info.event.icon"
           :cardname="info.event.eventName" />
         <TinyCard
@@ -152,12 +154,12 @@ const likeOn = () => {
 const props = defineProps<{
   info?: any;
   from?: string;
-  type?: string;
+  cardType?: string;
   HotIndex?: string;
 }>();
 
 const cardOnClick = () => {
-  router.push("/post/" + props.type + "/" + props.info.id);
+  router.push("/post/" + props.cardType + "/" + props.info.id);
 };
 onMounted(() => {
   if (props.info.imageList.length == 2) {
@@ -165,13 +167,14 @@ onMounted(() => {
   } else if (props.info.imageList.length >= 3) {
     imageLength.value = 3;
   }
-  var from = ''
+  var from = "";
   if (props.from != null) {
     from = props.from;
   }
-  var auth = '暂未认证'
+  var auth = "暂未认证";
   if (props.info.user.realAuth != null) {
-    auth = props.info.user.realAuth.campus + ' '+props.info.user.realAuth.collage;
+    auth =
+      props.info.user.realAuth.campus + " " + props.info.user.realAuth.collage;
   }
   infoDesc.value = from + auth;
 });

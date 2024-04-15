@@ -5,7 +5,7 @@
     :items="treeItems"
     v-on:click-nav="onClickNav">
     <template #content>
-      <div v-if="type == 'event'">
+      <div v-if="treeType == 'event'">
         <LittleCard
           v-for="item in contentItems.items"
           class="m-5"
@@ -17,7 +17,7 @@
           follow="1"
           :to="item.id" />
       </div>
-      <div v-if="type == 'project'">
+      <div v-if="treeType == 'project'">
         <LittleCard
           v-for="item in contentItems.items"
           class="m-5"
@@ -29,7 +29,7 @@
           follow="0"
           :to="item.id" />
       </div>
-      <div v-if="type == 'database'">
+      <div v-if="treeType == 'database'">
         <LittleCard
           v-for="item in contentItems.items"
           class="m-5"
@@ -58,27 +58,27 @@ const activeIndex = ref(0);
 const treeItems: any = ref([]);
 const contentItems: any = ref({});
 const props = defineProps<{
-  type?: string;
+  treeType?: string;
 }>();
 const onClickNav = (index: number) => {
-  if (props.type == "event") {
+  if (props.treeType == "event") {
     getEvents({ largeId: treeItems.value[index].id }).then((res) => {
       contentItems.value = { items: res.data };
     });
   }
-  if (props.type == "project") {
+  if (props.treeType == "project") {
     getProjects({ largeId: treeItems.value[index].id }).then((res) => {
       contentItems.value = { items: res.data };
     });
   }
-  if (props.type == "database") {
+  if (props.treeType == "database") {
     getFiles({ subId: treeItems.value[index].id }).then((res) => {
       contentItems.value = { items: res.data };
     });
   }
 };
 onMounted(() => {
-  if (props.type == "event") {
+  if (props.treeType == "event") {
     getEventSort().then((res) => {
       if (res.code == 200) {
         res.data.forEach((item: any) => {
@@ -88,7 +88,7 @@ onMounted(() => {
       }
     });
   }
-  if (props.type == "project") {
+  if (props.treeType == "project") {
     getResSort().then((res) => {
       if (res.code == 200) {
         res.data.forEach((item: any) => {
@@ -98,7 +98,7 @@ onMounted(() => {
       }
     });
   }
-  if (props.type == "database") {
+  if (props.treeType == "database") {
     getDatabase({projectId:router.currentRoute.value.params.id}).then((res) => {
       if (res.code == 200) {
         res.data.forEach((item: any) => {

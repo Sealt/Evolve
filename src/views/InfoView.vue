@@ -1,7 +1,7 @@
 <template>
   <div class="CurrentView h-screen flex flex-col">
     <TopBar />
-    <Tabs v-model:active="tabActiveName" sticky shrink swipeable>
+    <Tabs v-model:active="tabActiveName" sticky shrink swipeable lazy-render>
       <Tab name="follow" title="关注">关注</Tab>
       <Tab name="home" title="首页">
         <InfoHomePage />
@@ -13,10 +13,10 @@
         <InfoEventPage />
       </Tab>
       <Tab name="info" title="信息">
-        <InfoFlowPage />
+        <InfoFlowPage by="home"/>
       </Tab>
       <Tab name="experience" title="经验">
-        <InfoExpsPage />
+        <InfoExpsPage by="home"/>
       </Tab>
     </Tabs>
     <Tabbar route placeholder class="shrink-0">

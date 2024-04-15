@@ -5,7 +5,7 @@
       is-link
       :value="projectId == '' ? '为资源添加分类' : projectValue"
       @click="handleProjectPopup" />
-      <Cell
+    <Cell
       title="关联事件"
       is-link
       :value="eventId == '' ? '能被更多人看到' : eventValue"
@@ -25,7 +25,7 @@
           v-for="(card, index) in fileList"
           @click="onClickFile(index)">
           <Image
-            src="./icon_pdf.png"
+            :src="iconBaseUrl + '/res/fileicon/file_icon_' + card.type + '.png'"
             fit="cover"
             class="size-40 rounded-[5px] overflow-hidden shrink-0" />
           <div class="flex flex-col grow w-0">
@@ -53,7 +53,7 @@
       :after-read="afterRead"
       multiple
       :max-count="9"
-      :max-size="1024 * 1024"
+      :max-size="10240 * 1024"
       @oversize="onOversize"
       @delete="imgDelete" />
     <Popup v-model:show="showResPopup" class="h-1/2" round position="bottom">
@@ -76,12 +76,14 @@
             v-for="item in targetList"
             @click="onSelectProject(item)">
             <Image
-            :src="item.icon"
+              :src="item.icon"
               fit="cover"
               class="size-40 rounded-[5px] overflow-hidden" />
             <div class="flex flex-col">
               <div class="text-15">{{ item.projectName }}</div>
-              <div class="text-13 text-vant-t2">{{ item.hotIndex + ' & '+item.resourceCount }}</div>
+              <div class="text-13 text-vant-t2">
+                {{ item.hotIndex + " & " + item.resourceCount }}
+              </div>
             </div>
             <div class="flex justify-end grow">
               <Icon class="text-vant-t2" name="arrow" size="5vw" />
@@ -221,16 +223,17 @@ import {
 import LittleCard from "@/components/LittleCard.vue";
 import { ref } from "vue";
 import { clone, cloneDeep, cloneDeepWith } from "lodash";
-import { pubRes,getTargetList } from "@/api/publish";
+import { pubRes, getTargetList } from "@/api/publish";
 import { useUserStore } from "@/stores/user";
 import { useRouter } from "vue-router";
 
+const iconBaseUrl = import.meta.env.VITE_ICON_URL;
 const router = useRouter();
 const userStore = useUserStore();
 const projectValue = ref("");
 const eventValue = ref("");
 const textValue = ref("");
-const targetList:any = ref([]);
+const targetList: any = ref([]);
 const uploader = ref<UploaderInstance>();
 const fileUploader = ref();
 const fileUploadType = ref();
@@ -238,33 +241,33 @@ const searchValue = ref("");
 var currentFileIndex = -1;
 var fileMode = "new";
 const currentFile: any = ref({});
-const fileList:any = ref([]);
+const fileList: any = ref([]);
 const imgList = ref<UploaderFileListItem[]>([]);
 const showResPopup = ref(false);
 const showEventPopup = ref(false);
 const showFilePopup = ref(false);
-var finallyFileList:File[] = [];
+var finallyFileList: File[] = [];
 var projectId = "";
 var eventId = "";
 
 const onPublish = () => {
-  console.log(fileList.value)
+  console.log(fileList.value);
   // 处理一份最终的文件数组
-  fileList.value.forEach((file:any) => {
-    if (file.uploadType == 'upload') {
-      finallyFileList.push(file.file)
+  fileList.value.forEach((file: any) => {
+    if (file.uploadType == "upload") {
+      finallyFileList.push(file.file);
     }
-      file.file = null;
+    file.file = null;
   });
-  console.log(finallyFileList)
+  console.log(finallyFileList);
   // 组装参数
   var formData = new FormData();
   imgList.value.forEach((file) => {
     formData.append("images", file.file as File);
   });
   finallyFileList.forEach((file) => {
-    formData.append("files", file)
-  })
+    formData.append("files", file);
+  });
   var data: any = {
     userId: userStore.userId,
     projectId: projectId,
@@ -283,8 +286,8 @@ const onPublish = () => {
   });
 };
 defineExpose({
-    onPublish,
-  });
+  onPublish,
+});
 const onClickFile = (index: number) => {
   currentFile.value = cloneDeep(fileList.value[index]);
   currentFileIndex = index;
@@ -303,10 +306,10 @@ const saveFile = () => {
   }
   currentFile.value.uploadType = fileUploadType.value;
   if (fileMode == "edit") {
-    Object.assign(fileList.value[currentFileIndex],currentFile.value);
+    Object.assign(fileList.value[currentFileIndex], currentFile.value);
   } else {
     var temp = {};
-    Object.assign(temp,currentFile.value);
+    Object.assign(temp, currentFile.value);
     fileList.value.push(temp);
   }
   showFilePopup.value = false;
@@ -333,28 +336,28 @@ const getFile = (e: any) => {
     source: "",
     point: "0",
     gold: "0",
-    file:File
+    file: File,
   };
   file.name = e.target.files[0].name;
   file.type = e.target.files[0].name.split(".").pop();
   file.size = e.target.files[0].size;
-  file.file = e.target.files[0]
+  file.file = e.target.files[0];
   fileUploader.value.value = null;
-  Object.assign(currentFile.value,file);
+  Object.assign(currentFile.value, file);
   fileMode = "new";
   showFilePopup.value = true;
 };
-const onSelectProject = (item:any) => {
+const onSelectProject = (item: any) => {
   showResPopup.value = false;
   projectId = item.id;
-  projectValue.value = item.projectName
+  projectValue.value = item.projectName;
   showToast("success");
   targetList.value = [];
 };
 const onSelectEvent = (item: any) => {
   showEventPopup.value = false;
   eventId = item.id;
-  eventValue.value = item.eventName
+  eventValue.value = item.eventName;
   showToast("success");
   targetList.value = [];
 };
@@ -424,7 +427,7 @@ const afterRead = (file: any) => {
   }
 };
 const onOversize = (file: any) => {
-  showToast("文件大小不能超过 1mb");
+  showToast("文件大小不能超过 10Mb");
 };
 </script>
 

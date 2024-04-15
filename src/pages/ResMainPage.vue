@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col p-10 gap-10">
     <ResStatistics />
-    <InfoCard v-for="item in records" :info="item" type="res"/>
+    <InfoCard v-for="item in records" :info="item" cardType="res"/>
   </div>
 </template>
 

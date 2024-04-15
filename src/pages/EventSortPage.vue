@@ -1,7 +1,7 @@
 <template>
     <div class="flex h-screen flex-col">
         <NavBar title="事件分类" left-arrow left-text="返回" @click-left="onBack"/>
-        <StockTree type="event"/>
+        <StockTree treeType="event"/>
     </div>
 </template>
 

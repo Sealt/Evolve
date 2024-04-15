@@ -1,15 +1,15 @@
 <template>
   <div class="CurrentView h-screen flex flex-col">
     <TopBar />
-    <Tabs v-model:active="tabActiveName" sticky shrink swipeable>
+    <Tabs v-model:active="tabActiveName" sticky shrink swipeable lazy-render>
       <Tab name="store" title="资料库">
-        <StockTree type="project"/>
+        <StockTree treeType="project" />
       </Tab>
       <Tab name="res" title="资源">
         <ResMainPage />
       </Tab>
       <Tab name="market" title="广场">
-        <ResFlowPage />
+        <div class="flex flex-col gap-10 p-10"><ResFlowPage by="home"/></div>
       </Tab>
     </Tabs>
     <Tabbar route placeholder class="shrink-0">
@@ -32,7 +32,7 @@ const tabActiveName = ref("market");
 </script>
 
 <style scoped>
-:deep(.van-tabs){
+:deep(.van-tabs) {
   display: flex;
   flex-direction: column;
   flex-grow: 1;

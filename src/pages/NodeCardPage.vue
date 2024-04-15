@@ -59,11 +59,15 @@
         </div>
       </div>
     </div>
-    <div class="px-15 text-12 text-gray-500 pt-10">发布于广东</div>
-    <div class="px-15 py-10 flex justify-between">
-      <span class="text-14 text-gray-600">共 202 回复</span>
+    <div class="px-15 text-12 text-gray-500 pt-10">
+      {{ "发布于" + node.publishIp }}
     </div>
-    <div class="px-15" v-for="comment in [1, 1]">
+    <div class="px-15 py-10 flex justify-between">
+      <span class="text-14 text-gray-600">{{
+        "共 " + node.commentCount + " 评论"
+      }}</span>
+    </div>
+    <div class="px-15">
       <Comment />
     </div>
     <div class="grow"></div>
@@ -73,19 +77,19 @@
         class="flex grow bg-vant-n2 text-vant-t3 text-13 rounded-full pl-10 py-3 items-center gap-5"
         @click="handleComment">
         <Icon name="records-o" size="4vw" />
-        <div class="text-13">写回复...</div>
+        <div class="text-13">写评论...</div>
       </div>
       <div class="flex gap-5 items-center">
         <Icon name="comment-o" size="4vw" class="text-vant-t3" />
-        <div class="text-vant-t3 text-13">648</div>
+        <div class="text-vant-t3 text-13">{{ node.commentCount }}</div>
       </div>
       <div class="flex gap-5 items-center">
         <Icon name="good-job-o" size="4vw" class="text-vant-t3" />
-        <div class="text-vant-t3 text-13">6245</div>
+        <div class="text-vant-t3 text-13">{{ node.likeCount }}</div>
       </div>
       <div class="flex gap-5 items-center">
         <Icon name="star-o" size="4vw" class="text-vant-t3" />
-        <div class="text-vant-t3 text-13">6867</div>
+        <div class="text-vant-t3 text-13">{{ node.starCount }}</div>
       </div>
     </div>
   </div>
@@ -96,13 +100,13 @@
     round>
     <div class="flex flex-col gap-10 h-full">
       <div class="flex items-center justify-between">
-        <div class="text-14">回复</div>
-        <div class="text-14 text-vant">发布</div>
+        <div class="text-14">评论</div>
+        <div class="text-14 text-vant" @click="onComment">发布</div>
       </div>
       <div class="flex grow">
         <Field
           v-model="commentText"
-          placeholder="回复: 计科211史诗琪"
+          :placeholder="'评论: ' + node.user.userName"
           maxlength="400"
           type="textarea"
           show-word-limit
@@ -113,13 +117,17 @@
 </template>
 
 <script setup lang="ts">
-import { Icon, Image, Button, Field, Popup, Tag } from "vant";
+import { Icon, Image, Button, Field, Popup, Tag, showToast } from "vant";
 import TinyCard from "@/components/TinyCard.vue";
 import Comment from "@/components/Comment.vue";
 import LittleCard from "@/components/LittleCard.vue";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { getNode } from "@/api/event";
+import { useUserStore } from "@/stores/user";
+import { comment } from "@/api/action";
+
+const userStore = useUserStore();
 const router = useRouter();
 const onBack = () => {
   router.back();
@@ -172,6 +180,21 @@ onMounted(() => {
     }
   });
 });
+const onComment = () => {
+  comment({
+    userId: userStore.userId,
+    targetId: router.currentRoute.value.params.id,
+    content: commentText.value,
+    targetType: 3,
+    replyUserId: null,
+    replyCommentId: null,
+  }).then((res) => {
+    if (res.code == 200) {
+      showCommentPop.value = false;
+      showToast("评论成功");
+    }
+  });
+};
 </script>
 
 <style lang="scss" scoped>

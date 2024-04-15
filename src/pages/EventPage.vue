@@ -1,5 +1,5 @@
 <template>
-  <div class="father h-screen flex flex-col">
+  <div class="CurrentView father h-screen flex flex-col">
     <NavBar
       :border="false"
       :fixed="true"
@@ -25,12 +25,12 @@
       </div>
     </div>
     <div class="event-intro">{{ event.eventDesc}}</div>
-    <Tabs v-model:active="activeTab" sticky offset-top="46" animated swipeable>
+    <Tabs v-model:active="activeTab" sticky offset-top="46" animated swipeable lazy-render>
       <Tab title="节点" name="a"><NodeFlowPage /></Tab>
-      <Tab title="信息" name="b">内容2</Tab>
-      <Tab title="经验" name="c">内容3</Tab>
-      <Tab title="资源" name="d">内容3</Tab>
-      <Tab title="问答" name="e">内容3</Tab>
+      <Tab title="信息" name="b"><InfoFlowPage by="event"/></Tab>
+      <Tab title="经验" name="c"><InfoExpsPage by="event"/></Tab>
+      <Tab title="资源" name="d"><ResFlowPage by="event"/></Tab>
+      <Tab title="问答" name="e">TO BE CONTINUE</Tab>
     </Tabs>
   </div>
 </template>
@@ -38,6 +38,9 @@
 <script setup lang="ts">
 import { NavBar, Image, Button, Tab, Tabs } from "vant";
 import NodeFlowPage from "./NodeFlowPage.vue";
+import InfoFlowPage from "./InfoFlowPage.vue";
+import InfoExpsPage from "./InfoExpsPage.vue";
+import ResFlowPage from "./ResFlowPage.vue";
 import { ref, onMounted } from "vue";
 import { getEvent } from "@/api/event";
 import { useRouter } from "vue-router";

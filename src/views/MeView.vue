@@ -6,7 +6,7 @@
       <Icon size="6vw" name="good-job-o" />
       <Icon size="6vw" name="add" />
     </div>
-    <div class="flex gap-10 px-5" @click="router.push('/user/test')">
+    <div class="flex gap-10 px-5" @click="router.push('/user/'+userStore.userId)">
       <Image
       :src="data.avatar"
         fit="cover"

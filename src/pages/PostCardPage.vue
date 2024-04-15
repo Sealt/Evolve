@@ -7,7 +7,9 @@
         :src="data.user.avatar"
         fit="cover"
         class="shrink-0 size-32"
-        round />
+        round
+        lazy-load
+        @click.stop="router.push('/user/'+data.userId)"/>
       <div class="flex flex-col justify-between ml-10 shrink-0">
         <div class="text-14">{{ data.user.userName }}</div>
         <div class="text-10 text-gray-500">
@@ -29,7 +31,8 @@
           :src="image"
           fit="contain"
           class="*:max-h-450 shrink-0"
-          width="100vw" />
+          width="100vw"
+           />
       </SwipeItem>
     </Swipe>
     <div
@@ -57,7 +60,7 @@
       {{ data.content }}
     </div>
     <div class="px-15 pt-10 pb-5">
-      <div class="flex gap-5 flex-wrap">
+      <div class="flex gap-5 flex-wrap" v-if="data.event != null || data.project != null">
         <TinyCard
           v-if="$router.currentRoute.value.params.type == 'info'"
           :icon="data.event.icon"
@@ -73,10 +76,10 @@
     </div>
     <div class="px-15 py-10 flex justify-between">
       <span class="text-14 text-gray-600">{{
-        "共 " + data.commentCount + " 回复"
+        "共 " + data.commentCount + " 评论"
       }}</span>
     </div>
-    <div class="px-15" v-for="comment in [1, 1]">
+    <div class="px-15">
       <Comment />
     </div>
     <div class="grow"></div>
@@ -86,7 +89,7 @@
         class="flex grow bg-vant-n2 text-vant-t3 text-13 rounded-full pl-10 py-3 items-center gap-5"
         @click="handleComment">
         <Icon name="records-o" size="4vw" />
-        <div class="text-13">写回复...</div>
+        <div class="text-13">写评论...</div>
       </div>
       <div class="flex gap-5 items-center">
         <Icon name="comment-o" size="4vw" class="text-vant-t3" />
@@ -110,13 +113,13 @@
     round>
     <div class="flex flex-col gap-10 h-full">
       <div class="flex items-center justify-between">
-        <div class="text-14">回复</div>
-        <div class="text-14 text-vant">发布</div>
+        <div class="text-14">评论</div>
+        <div class="text-14 text-vant" @click="onComment">发布</div>
       </div>
       <div class="flex grow">
         <Field
           v-model="commentText"
-          placeholder="回复: 计科211史诗琪"
+          :placeholder="'评论: '+data.user.userName"
           maxlength="400"
           type="textarea"
           show-word-limit
@@ -127,15 +130,18 @@
 </template>
 
 <script setup lang="ts">
-import { Swipe, SwipeItem, Icon, Image, Button, Field, Popup } from "vant";
+import { Swipe, SwipeItem, Icon, Image, Button, Field, Popup,showToast } from "vant";
 import TinyCard from "@/components/TinyCard.vue";
 import Comment from "@/components/Comment.vue";
 import LittleCard from "@/components/LittleCard.vue";
 import { getInfo } from "@/api/info";
 import { getResource } from "@/api/res";
+import { comment } from "@/api/action";
 import { ref, onMounted,getCurrentInstance } from "vue";
 import { useRouter } from "vue-router";
+import { useUserStore } from "@/stores/user";
 
+const userStore = useUserStore();
 const router = useRouter();
 var data: any = ref({
   id: "",
@@ -210,6 +216,33 @@ onMounted(() => {
     });
   }
 });
+const onComment = () => {
+  var targetT = 0;
+  switch (router.currentRoute.value.params.type) {
+    case "info":
+      targetT = 0;
+      break;
+    case "exp":
+      targetT = 1;
+      break;
+    case "res":
+      targetT = 5;
+      break;
+  }
+  comment({
+    userId: userStore.userId,
+    targetId: router.currentRoute.value.params.id,
+    content: commentText.value,
+    targetType: targetT,
+    replyUserId: null,
+    replyCommentId: null,
+  }).then((res) => {
+    if (res.code == 200) {
+      showCommentPop.value = false;
+      showToast("评论成功");
+    }
+  });
+};
 </script>
 
 <style></style>

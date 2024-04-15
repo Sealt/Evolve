@@ -20,13 +20,13 @@
       @delete="imgDelete" />
     <Field
       v-model="sourceText"
-      label="信息来源"
-      placeholder="信息从何而来"
+      label="经验来源"
+      placeholder="经验从何而来"
       input-align="right" />
     <Field
       v-model="scopeText"
       label="有效范围"
-      placeholder="信息对哪些群体有效"
+      placeholder="经验对哪些群体有效"
       input-align="right" />
     <Popup v-model:show="showEventPopup" class="h-1/2" round position="bottom">
       <div class="flex flex-col p-15 gap-15">
@@ -105,7 +105,7 @@ const onPublish = () => {
   var data: IInfoType = {
     userId: userStore.userId,
     eventId: eventId.value,
-    typed: 0,
+    typed: 1,
     content: textValue.value,
     infoSource: sourceText.value,
     scopeDetail: scopeText.value,
@@ -184,7 +184,7 @@ const afterRead = (file: any) => {
 };
 const onOversize = (file: any) => {
   console.log(file);
-  showToast("文件大小不能超过 1mb");
+  showToast("文件大小不能超过 10Mb");
 };
 </script>
 

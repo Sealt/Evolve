@@ -48,13 +48,14 @@
           {{ data.realAuth == null ? "暂无认证" : data.realAuth.collage }}
         </div>
       </div>
-      <Tabs v-model:active="tabActiveName" sticky swipeable class="pt-10">
-        <Tab name="info" title="信息"> </Tab>
-        <Tab name="exp" title="经验"></Tab>
-        <Tab name="event" title="事件"></Tab>
-        <Tab name="node" title="节点"></Tab>
-        <Tab name="project" title="项目"></Tab>
-        <Tab name="res" title="资源"></Tab>
+      <Tabs v-model:active="tabActiveName" sticky swipeable class="pt-10" lazy-render>
+        <Tab name="info" title="信息"> <InfoFlowPage by="user" /></Tab>
+        <Tab name="exp" title="经验">
+          <InfoExpsPage by="user" />
+        </Tab>
+        <Tab name="res" title="资源">
+          <ResFlowPage by="user" />
+        </Tab>
       </Tabs>
     </div>
   </div>
@@ -69,10 +70,13 @@ const router = useRouter();
 const tabActiveName = ref("a");
 import { getUserInfo } from "@/api/user";
 import { useUserStore } from "@/stores/user";
+import InfoFlowPage from "./InfoFlowPage.vue";
+import InfoExpsPage from "./InfoExpsPage.vue";
+import ResFlowPage from "./ResFlowPage.vue";
 const userStore = useUserStore();
 const data: any = ref({ realAuth: { collage: "" } });
 onMounted(() => {
-  getUserInfo({ id: userStore.userId, infoType: "all" }).then((res) => {
+  getUserInfo({ id: router.currentRoute.value.params.id, infoType: "all" }).then((res) => {
     data.value = res.data;
   });
 });

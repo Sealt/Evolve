@@ -1,24 +1,24 @@
 <template>
-  <div class="father flex flex-col h-screen">
+  <div class="CurrentView father flex flex-col h-screen">
     <NavBar
       :border="false"
       :fixed="true"
       left-arrow
       left-text="返回"
       :placeholder="true"
+      class="shrink-0"
       @click-left="onClickLeft" />
     <div class="event">
       <div class="event-image">
-        <Image
-          :src="project.icon"
-          fit="cover"
-          class="image" />
+        <Image :src="project.icon" fit="cover" class="image" />
       </div>
       <div class="event-content">
         <div class="event-content__title">{{ project.projectName }}</div>
 
         <div class="event-content__detail">
-          <div class="event-content__detaila">{{ project.hotIndex +' 热度 ' +  project.resourceCount +' 讨论' }}</div>
+          <div class="event-content__detaila">
+            {{ project.hotIndex + " 热度 " + project.resourceCount + " 讨论" }}
+          </div>
           <div class="event-content__detailb">531万关注</div>
         </div>
       </div>
@@ -27,11 +27,15 @@
       </div>
     </div>
     <div class="event-intro">{{ project.projectDesc }}</div>
-    <Tabs v-model:active="activeTab" sticky offset-top="46" animated swipeable>
+    <Tabs v-model:active="activeTab" sticky offset-top="46" animated swipeable lazy-render>
       <Tab title="资料库" name="a">
-        <StockTree type="database"/>
+        <StockTree treeType="database" />
       </Tab>
-      <Tab title="校友分享" name="b">内容2</Tab>
+      <Tab title="校友分享" name="b">
+        <div class="flex flex-col gap-10 p-10">
+          <ResFlowPage by="project" />
+        </div>
+      </Tab>
     </Tabs>
   </div>
 </template>
@@ -39,6 +43,7 @@
 <script setup lang="ts">
 import StockTree from "@/components/StockTree.vue";
 import { NavBar, Image, Button, Tab, Tabs } from "vant";
+import ResFlowPage from "./ResFlowPage.vue";
 import { ref, onMounted } from "vue";
 import { getProject } from "@/api/res";
 import { useRouter } from "vue-router";

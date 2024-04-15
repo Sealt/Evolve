@@ -7,9 +7,9 @@
       right-text="发布"
       @click-left="onBack"
       @click-right="onPublish" />
-    <Tabs v-model:active="activeTab">
+    <Tabs v-model:active="activeTab" lazy-render>
       <Tab title="信息"><PublishInfoPage ref="info" /></Tab>
-      <Tab title="经验">信息建设完毕后直接移用</Tab>
+      <Tab title="经验"><PublishExpPage ref="exp"/></Tab>
       <Tab title="资源"><PublishResPage ref="res" /></Tab>
       <Tab title="项目"><PublishProjectPage ref="proj" /></Tab>
       <Tab title="事件"><PublishEventPage ref="event" /> </Tab>
@@ -21,6 +21,7 @@
 
 <script setup lang="ts">
 import PublishInfoPage from "@/pages/PublishInfoPage.vue";
+import PublishExpPage from "@/pages/PublishExpPage.vue";
 import PublishResPage from "@/pages/PublishResPage.vue";
 import { Tab, Tabs, NavBar } from "vant";
 import PublishProjectPage from "@/pages/PublishProjectPage.vue";
@@ -48,6 +49,7 @@ const onPublish = () => {
       info.value.onPublish();
       break;
     case 1:
+      exp.value.onPublish();
       break;
     case 2:
       res.value.onPublish();
