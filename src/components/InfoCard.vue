@@ -8,7 +8,8 @@
             fit="cover"
             class="size-[32px]"
             round
-            @click.stop="router.push('/user/'+info.userId)" v-lazy="Image.src" />
+            @click.stop="router.push('/user/'+info.userId)"
+            lazy-load/>
         </div>
         <div class="flex flex-col justify-between ml-10 shrink-0">
           <div class="text-[14px]">{{ info.user.userName }}</div>
@@ -47,7 +48,7 @@
               {{ HotIndex }}
             </div>
           </div>
-          <div v-els class="flex justify-center items-center size-[32px]">
+          <div v-else class="flex justify-center items-center size-[32px]">
             <Icon e name="arrow-down" @click.stop="actionOn" />
           </div>
         </div>
@@ -96,7 +97,7 @@
         class="flex gap-5 flex-wrap"
         v-if="info.event != null || info.project != null">
         <TinyCard
-          v-if="cardType == 'info'"
+          v-if="cardType == 'info' || cardType == 'exp'"
           :icon="info.event.icon"
           :cardname="info.event.eventName" />
         <TinyCard
@@ -107,16 +108,24 @@
       <HotCommentCard v-show="info.hotCommentId" />
     </div>
     <div class="flex justify-around">
-      <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
-        <Icon name="share-o" size="5vw" color="gray" />
+      <div class="flex items-center gap-5 p-10 text-15 text-gray-500" v-if="info.isStar == null">
+        <Icon name="star-o" size="5vw" @click.stop="starOn"/>
+        <div>{{ info.starCount }}</div>
+      </div>
+      <div class="flex items-center gap-5 p-10 text-15 text-vant" v-if="info.isStar == true">
+        <Icon name="star-o" size="5vw" @click.stop="starOff"/>
         <div>{{ info.starCount }}</div>
       </div>
       <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
         <Icon name="comment-o" size="5vw" color="gray" />
         <div>{{ info.commentCount }}</div>
       </div>
-      <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
-        <Icon name="good-job-o" size="5vw" color="gray" @click.stop="likeOn" />
+      <div class="flex items-center gap-5 p-10 text-15 text-gray-500" v-if="info.isLike == null">
+        <Icon name="good-job-o" size="5vw" @click.stop="likeOn" />
+        <div>{{ info.likeCount }}</div>
+      </div>
+      <div class="flex items-center gap-5 p-10 text-15 text-vant" v-if="info.isLike == true">
+        <Icon name="good-job-o" size="5vw" @click.stop="likeOff" />
         <div>{{ info.likeCount }}</div>
       </div>
     </div>
@@ -138,19 +147,64 @@ import LittleCard from "./LittleCard.vue";
 
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import {like, unLike} from "@/api/action";
 const router = useRouter();
 const showInfoAction = ref(false);
 const infoActions = [{ name: "1" }, { name: "2" }];
 const iconBaseUrl = import.meta.env.VITE_ICON_URL;
 const imageLength = ref(3);
 const infoDesc = ref("");
+
 const actionOnCancel = () => {};
 const actionOn = () => {
   showInfoAction.value = true;
 };
 const likeOn = () => {
-  alert("gaag");
+  let currentType = null;
+  switch (props.cardType){
+    case 'info':
+      currentType = 0;break;
+    case 'exp':
+      currentType = 1;break;
+    case 'res':
+      currentType = 5;break;
+  }
+  like({
+    targetId:props.info.id,
+    typed:currentType
+  }).then(res => {
+    if (res.code == 200){
+      props.info.likeCount = res.data;
+      props.info.isLike = true;
+    }
+  })
 };
+const likeOff = () => {
+  let currentType = null;
+  switch (props.cardType){
+    case 'info':
+      currentType = 0;break;
+    case 'exp':
+      currentType = 1;break;
+    case 'res':
+      currentType = 5;break;
+  }
+  unLike({
+    targetId:props.info.id,
+    typed:currentType
+  }).then(res => {
+    if (res.code == 200){
+      props.info.likeCount = res.data;
+      props.info.isLike = null;
+    }
+  })
+}
+const starOn = () => {
+  props.info.isStar = true;
+}
+const starOff = () => {
+  props.info.isStar = null;
+}
 const props = defineProps<{
   info?: any;
   from?: string;
@@ -159,7 +213,8 @@ const props = defineProps<{
 }>();
 
 const cardOnClick = () => {
-  router.push("/post/" + props.cardType + "/" + props.info.id);
+  let type = props.cardType;
+  router.push("/post/" + type + "/" + props.info.id);
 };
 onMounted(() => {
   if (props.info.imageList.length == 2) {

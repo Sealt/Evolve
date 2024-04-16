@@ -12,3 +12,15 @@ export const getComment = async (data: any) => {
     params: data,
   });
 };
+export const like = async (data: any) => {
+  return await request.get({
+    url: "/action/like",
+    params: data,
+  });
+};
+export const unLike = async (data: any) => {
+  return await request.get({
+    url: "/action/unLike",
+    params: data,
+  });
+};

@@ -68,7 +68,7 @@
       }}</span>
     </div>
     <div class="px-15">
-      <Comment />
+      <Comment ref="commentRef"/>
     </div>
     <div class="grow"></div>
     <div
@@ -83,7 +83,11 @@
         <Icon name="comment-o" size="4vw" class="text-vant-t3" />
         <div class="text-vant-t3 text-13">{{ node.commentCount }}</div>
       </div>
-      <div class="flex gap-5 items-center">
+      <div class="flex gap-5 items-center text-vant" v-if="node.isLike == true" @click.stop="likeOff">
+        <Icon name="good-job-o" size="4vw" />
+        <div class="text-13">{{ node.likeCount }}</div>
+      </div>
+      <div class="flex gap-5 items-center" v-if="node.isLike == null" @click.stop="likeOn">
         <Icon name="good-job-o" size="4vw" class="text-vant-t3" />
         <div class="text-vant-t3 text-13">{{ node.likeCount }}</div>
       </div>
@@ -122,18 +126,18 @@ import TinyCard from "@/components/TinyCard.vue";
 import Comment from "@/components/Comment.vue";
 import LittleCard from "@/components/LittleCard.vue";
 import { ref, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import {onBeforeRouteLeave, useRouter} from "vue-router";
 import { getNode } from "@/api/event";
 import { useUserStore } from "@/stores/user";
-import { comment } from "@/api/action";
+import {comment, getComment, like, unLike} from "@/api/action";
 
+const commentRef = ref()
 const userStore = useUserStore();
 const router = useRouter();
 const onBack = () => {
   router.back();
 };
-const images = ["../test.jpg", "../1.png", "../2.png"];
-const activeCommentType = ref(0);
+
 const showCommentPop = ref(false);
 const commentText = ref("");
 const node = ref({
@@ -166,6 +170,8 @@ const node = ref({
   publishIp: null,
   viewCount: 0,
   likeCount: 0,
+  isLike:null,
+  isStar:null,
   starCount: 0,
   commentStatus: 0,
   commentCount: 0,
@@ -173,6 +179,12 @@ const node = ref({
 const handleComment = () => {
   showCommentPop.value = true;
 };
+onBeforeRouteLeave((to, from) => {
+  if (showCommentPop.value == true) {
+    showCommentPop.value = false;
+    return false;
+  }
+})
 onMounted(() => {
   getNode({ nodeId: router.currentRoute.value.params.id }).then((res) => {
     if (res.code == 200) {
@@ -192,9 +204,34 @@ const onComment = () => {
     if (res.code == 200) {
       showCommentPop.value = false;
       showToast("评论成功");
+      commentText.value = '';
+      commentRef.value.reloadComment();
+      node.value.commentCount++;
     }
   });
 };
+const likeOn = () => {
+  like({
+    targetId:router.currentRoute.value.params.id,
+    typed:3
+  }).then(res => {
+    if (res.code == 200){
+      node.value.likeCount = res.data;
+      node.value.isLike = true;
+    }
+  })
+};
+const likeOff = () => {
+  unLike({
+    targetId:router.currentRoute.value.params.id,
+    typed:3
+  }).then(res => {
+    if (res.code == 200){
+      node.value.likeCount = res.data;
+      node.value.isLike = null;
+    }
+  })
+}
 </script>
 
 <style lang="scss" scoped>

@@ -16,9 +16,9 @@ import { ref, onMounted } from "vue";
 const router = useRouter();
 const nodes = ref({items:[]});
 onMounted(() => {
-  getNodes({ eventId: router.currentRoute.value.params.id }).then((res) => {
+  getNodes({ current:1,size:10,eventId: router.currentRoute.value.params.id }).then((res) => {
     if (res.code == 200) {
-      nodes.value = { items: res.data };
+      nodes.value = { items: res.data.records };
     }
   });
 });
