@@ -20,8 +20,11 @@
           <div class="event-content__detailb">{{'关注数据'}}</div>
         </div>
       </div>
-      <div class="event-button">
-        <Button type="primary" size="small" round>已关注</Button>
+      <div class="event-button" v-if="event.isFollow == true">
+        <Button type="primary" size="small" round @click.stop="followOff">已关注</Button>
+      </div>
+      <div class="event-button" v-if="event.isFollow == null">
+        <Button type="primary" size="small" round @click.stop="followOn">{{ ' 关注 ' }}</Button>
       </div>
     </div>
     <div class="event-intro">{{ event.eventDesc}}</div>
@@ -36,16 +39,17 @@
 </template>
 
 <script setup lang="ts">
-import { NavBar, Image, Button, Tab, Tabs } from "vant";
+import { NavBar, Image, Button, Tab, Tabs, showToast } from "vant";
 import NodeFlowPage from "./NodeFlowPage.vue";
 import InfoFlowPage from "./InfoFlowPage.vue";
 import InfoExpsPage from "./InfoExpsPage.vue";
 import ResFlowPage from "./ResFlowPage.vue";
 import { ref, onMounted } from "vue";
 import { getEvent } from "@/api/event";
+import { follow,unFollow } from "@/api/action";
 import { useRouter } from "vue-router";
 const activeTab = ref("a");
-const event = ref({
+const event:any = ref({
   id: "",
   eventName: "",
   eventDesc: "",
@@ -58,6 +62,7 @@ const event = ref({
   userId: "",
   managerIds: null,
   largeId: 0,
+  isFollow:null
 });
 const router = useRouter();
 const onClickLeft = () => {
@@ -70,6 +75,28 @@ onMounted(() => {
     }
   });
 });
+const followOn = () => {
+  follow({
+    targetId:router.currentRoute.value.params.id,
+    typed:2
+  }).then(res=>{
+    if(res.code == 200){
+      showToast('success')
+      event.value.isFollow = true;
+    }
+  })
+}
+const followOff = () => {
+  unFollow({
+    targetId:router.currentRoute.value.params.id,
+    typed:2
+  }).then(res=>{
+    if(res.code == 200){
+      showToast('success')
+      event.value.isFollow = null;
+    }
+  })
+}
 </script>
 
 <style lang="scss" scoped>

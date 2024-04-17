@@ -11,16 +11,13 @@
       <div class="flex flex-col justify-between ml-10 shrink-0">
         <div class="text-14">{{ node.event.eventName }}</div>
       </div>
-      <div class="flex justify-end w-full pr-10 items-center">
-        <Button plain round size="small" type="primary">关注</Button>
-        <Icon name="ellipsis" size="5vw" />
-      </div>
     </div>
     <div class="flex px-15 pt-10 flex-col gap-10">
       <div class="flex grow justify-between">
         <div class="text-15">{{ node.title }}</div>
         <Tag type="primary">进行中</Tag>
       </div>
+      <div class="text-14">{{ node.content }}</div>
       <div class="flex gap-10 items-center">
         <Tag plain type="primary" class="shrink-0 h-25">时间</Tag>
         <span class="text-14">{{ node.startTime + " - " + node.endTime }}</span>

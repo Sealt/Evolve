@@ -20,6 +20,8 @@
 
 <script setup lang="ts">
 import { Image, Badge, Tag } from "vant";
+import { getCurrentInstance } from 'vue'
+const dayjs = getCurrentInstance()?.appContext.config.globalProperties.$dayjs;
 const dot = true;
 </script>
 

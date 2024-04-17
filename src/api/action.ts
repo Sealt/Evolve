@@ -24,3 +24,15 @@ export const unLike = async (data: any) => {
     params: data,
   });
 };
+export const follow = async (data: any) => {
+  return await request.get({
+    url: "/action/follow",
+    params: data,
+  });
+};
+export const unFollow = async (data: any) => {
+  return await request.get({
+    url: "/action/unFollow",
+    params: data,
+  });
+};

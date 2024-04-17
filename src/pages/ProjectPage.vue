@@ -22,8 +22,11 @@
           <div class="event-content__detailb">531万关注</div>
         </div>
       </div>
-      <div class="event-button">
-        <Button type="primary" size="small" round>已关注</Button>
+      <div class="event-button" v-if="project.isFollow == true">
+        <Button type="primary" size="small" round @click.stop="followOff">已关注</Button>
+      </div>
+      <div class="event-button" v-if="project.isFollow == null">
+        <Button type="primary" size="small" round @click.stop="followOn">{{ ' 关注 ' }}</Button>
       </div>
     </div>
     <div class="event-intro">{{ project.projectDesc }}</div>
@@ -42,14 +45,15 @@
 
 <script setup lang="ts">
 import StockTree from "@/components/StockTree.vue";
-import { NavBar, Image, Button, Tab, Tabs } from "vant";
+import { NavBar, Image, Button, Tab, Tabs,showToast } from "vant";
 import ResFlowPage from "./ResFlowPage.vue";
 import { ref, onMounted } from "vue";
 import { getProject } from "@/api/res";
 import { useRouter } from "vue-router";
+import { follow,unFollow } from "@/api/action";
 const router = useRouter();
 const activeTab = ref("a");
-const project = ref({
+const project:any = ref({
   id: "",
   userId: "",
   managerIds: null,
@@ -60,6 +64,7 @@ const project = ref({
   largeId: 0,
   hotIndex: null,
   resourceCount: null,
+  isFollow:null,
   createTime: "",
 });
 const onClickLeft = () => {
@@ -72,6 +77,28 @@ onMounted(() => {
     }
   });
 });
+const followOn = () => {
+  follow({
+    targetId:router.currentRoute.value.params.id,
+    typed:4
+  }).then(res=>{
+    if(res.code == 200){
+      showToast('success')
+      project.value.isFollow = true;
+    }
+  })
+}
+const followOff = () => {
+  unFollow({
+    targetId:router.currentRoute.value.params.id,
+    typed:4
+  }).then(res=>{
+    if(res.code == 200){
+      showToast('success')
+      project.value.isFollow = null;
+    }
+  })
+}
 </script>
 
 <style lang="scss" scoped>

@@ -1,10 +1,12 @@
 <template>
   <div class="flex items-center" @click="handleClick">
     <Image :src="props.avatar" fit="cover" class="size-40 shrink-0" round />
-    <div class="flex flex-col grow pl-10 w-0">
+    <div class="flex flex-col grow pl-10 w-0" v-if="type != 'comment'">
       <div class="flex grow justify-between items-center">
         <div class="text-15 truncate">{{ props.userName }}</div>
-        <div class="shrink-0 text-12 text-vant-t2">{{ props.createTime }}</div>
+        <div class="shrink-0 text-12 text-vant-t2">
+          {{ dayjs(props.createTime).fromNow() }}
+        </div>
       </div>
       <div v-if="dot" class="flex items-center">
         <div class="text-13 text-vant truncate">
@@ -29,20 +31,41 @@
         </div>
       </div>
     </div>
+
+    <div class="flex flex-col grow pl-10 w-0" v-if="type == 'comment'">
+      <div class="flex grow justify-between items-center">
+        <div class="text-15 truncate">{{ props.userName }}</div>
+        <div class="shrink-0 text-12 text-vant-t2">
+          {{ dayjs(props.createTime).fromNow() }}
+        </div>
+      </div>
+      <div v-if="dot" class="flex items-center">
+        <div class="text-13 text-vant truncate">
+          {{ "回复了你：" + content }}
+        </div>
+      </div>
+      <div v-else class="flex items-center">
+        <div class="text-13 text-vant-t2 truncate">
+          {{ "回复了你：" + content }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Image, Badge, Tag } from "vant";
+import { Image, Badge, Tag, showToast } from "vant";
 import { useRouter } from "vue-router";
+import { getCurrentInstance } from "vue";
 const router = useRouter();
-
+const dayjs = getCurrentInstance()?.appContext.config.globalProperties.$dayjs;
 const props = defineProps<{
   type: string;
   id?: string;
   userName?: string;
   avatar?: string;
   bio?: string;
+  content?: string;
   gender?: number;
   createTime?: string;
   noRead?: string;
@@ -62,6 +85,8 @@ const handleClick = () => {
     router.push({
       path: "/user/" + props.id,
     });
+  } else if (props.type == "comment") {
+    showToast("comment");
   }
 };
 </script>

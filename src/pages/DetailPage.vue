@@ -9,7 +9,7 @@
       class="z-10"
       @click-left="router.back()" />
     <div v-show="detailType == '赞和收藏'" class="flex flex-col m-15 gap-15">
-      <NotifyLikeItem v-for="a in [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3]" />
+      <NotifyLikeItem v-for="a in [1, 1]" />
     </div>
     <div class="flex flex-col m-15 gap-15">
       <NotifyItem

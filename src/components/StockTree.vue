@@ -14,7 +14,7 @@
           hot="1"
           :detail="item.hotIndex + ' 热度 ' + item.discussCount + ' 讨论 '"
           :title="item.eventName"
-          follow="1"
+          :follow="item.isFollow ? '1' : '0'"
           :to="item.id" />
       </div>
       <div v-if="treeType == 'project'">
@@ -26,7 +26,7 @@
           hot="0"
           :detail="item.hotIndex + ' 热度 ' + item.discussCount + ' 讨论 '"
           :title="item.projectName"
-          follow="0"
+          :follow="item.isFollow ? '1' : '0'"
           :to="item.id" />
       </div>
       <div v-if="treeType == 'database'">

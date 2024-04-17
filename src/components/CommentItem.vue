@@ -100,6 +100,7 @@ const handleComment = () => {
 };
 const beforeClosePop = () => {
   emits('closeCommentPop');
+  return true;
 }
 onBeforeRouteLeave((to, from) => {
   if (showCommentPop.value == true){

@@ -40,6 +40,7 @@ import { useRouter } from "vue-router";
 import { ref,onMounted } from "vue";
 const tabActiveName = ref("info");
 const router = useRouter();
+
 onMounted(() => {
 })
 </script>

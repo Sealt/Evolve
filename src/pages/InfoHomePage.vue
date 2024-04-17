@@ -9,45 +9,26 @@
         <img :src="image" />
       </SwipeItem>
     </Swipe>
-    <Row class="bannerButton" justify="space-around">
-      <Col span="4">
-        <div class="col">
-          <Icon name="newspaper" size="7vw" />
-          实况
-        </div></Col
-      >
-      <Col span="4">
-        <div class="col">
-          <Icon name="newspaper" size="7vw" />
-          实况
-        </div>
-      </Col>
-      <Col span="4">
-        <div class="col">
-          <Icon name="label" size="7vw" />
-          状态
-        </div>
-      </Col>
-      <Col span="4">
-        <div class="col">
-          <Icon name="notes" size="7vw" />
-          日程
-        </div>
-      </Col>
-      <Col span="4">
-        <div class="col">
-          <Icon name="records" size="7vw" />
-          咨询
-        </div>
-      </Col>
-    </Row>
+    <div
+      class="grid grid-cols-5 bg-white rounded-bl[10px] rounded-br[10px] py-10 gap-y-10">
+      <div class="flex flex-col items-center gap-5" v-for="item in funcItems" @click="showToast('Coding')">
+        <Icon :name="item.icon" size="7vw" :class="item.color"/>
+        <div class="text-12">{{ item.text }}</div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Swipe, SwipeItem, Row, Col, Icon } from "vant";
+import { Swipe, SwipeItem, Icon,showToast } from "vant";
 import InfoCard from "@/components/InfoCard.vue";
 const swiperImages = ["/1.png", "/2.png", "/3.png"];
+const funcItems = [
+  { icon: "fire", text: "必看",color:'text-red-400' },
+  { icon: "clock", text: "实况",color:'text-blue-400' },
+  { icon: "info", text: "状态" ,color:'text-pink-300'},
+  { icon: "notes", text: "日程",color:'text-orange-300' },
+  { icon: "question", text: "咨询" ,color:'text-purple-400'}]
 </script>
 
 <style scoped>

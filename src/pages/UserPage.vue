@@ -15,10 +15,20 @@
       <div class="flex p-15 items-center">
         <Image :src="data.avatar" fit="cover" class="size-64 shrink-0" round />
         <div class="flex grow justify-end gap-5">
-          <div
+          <div v-if="userStore.userId == data.id"
             @click="router.push('/user/edit')"
             class="text-white bg-white/30 rounded-full text-14 w-90 h-30 flex items-center justify-center">
             编辑资料
+          </div>
+          <div v-if="userStore.userId != data.id && data.isFollow == true"
+            @click="followOff"
+            class="text-white bg-white/30 rounded-full text-14 w-90 h-30 flex items-center justify-center">
+            已关注
+          </div>
+          <div v-if="userStore.userId != data.id && data.isFollow == null"
+            @click="followOn"
+            class="text-white bg-vant rounded-full text-14 w-90 h-30 flex items-center justify-center">
+            关注
           </div>
           <div
             class="text-white bg-white/30 rounded-full w-32 flex items-center justify-center">
@@ -62,9 +72,10 @@
 </template>
 
 <script setup lang="ts">
-import { Tabs, Tab, Image, Icon, Button } from "vant";
+import { Tabs, Tab, Image, Icon, Button,showToast } from "vant";
 import { useRouter } from "vue-router";
 import { ref, onMounted } from "vue";
+import { follow,unFollow } from "@/api/action";
 import InfoCard from "@/components/InfoCard.vue";
 const router = useRouter();
 const tabActiveName = ref("a");
@@ -80,6 +91,28 @@ onMounted(() => {
     data.value = res.data;
   });
 });
+const followOn = () => {
+  follow({
+    targetId:router.currentRoute.value.params.id,
+    typed:7
+  }).then(res=>{
+    if(res.code == 200){
+      showToast('success')
+      data.value.isFollow = true;
+    }
+  })
+}
+const followOff = () => {
+  unFollow({
+    targetId:router.currentRoute.value.params.id,
+    typed:7
+  }).then(res=>{
+    if(res.code == 200){
+      showToast('success')
+      data.value.isFollow = null;
+    }
+  })
+}
 </script>
 
 <style scoped></style>

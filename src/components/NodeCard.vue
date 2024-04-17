@@ -6,14 +6,14 @@
       <Icon class="text-vant" name="circle" size="4vw"/>
     </div>
     <div class="flex justify-between">
-      <div class="text-15">{{ node.content }}</div>
+      <div class="text-15">{{ node.title }}</div>
       <Tag type="primary">进行中</Tag>
     </div>
     <div class="text-14">{{ node.startTime + " - " + node.endTime }}</div>
     <div class="flex gap-5">
-      <Tag plain type="primary">{{ "信息 " }}</Tag>
-      <Tag plain type="primary">{{ "经验 " }}</Tag>
-      <Tag plain type="primary">{{ "资源 " }}</Tag>
+      <Tag plain type="primary">{{ "信息 "+node.targetIds.infos.length }}</Tag>
+      <Tag plain type="primary">{{ "经验 "+node.targetIds.exps.length }}</Tag>
+      <Tag plain type="primary">{{ "资源 "+node.targetIds.resources.length }}</Tag>
     </div>
     <div class="flex gap-5 items-center justify-end">
       <div class="flex gap-5 items-center" v-if="node.isLike == null" @click.stop="likeOn(node.id)">
