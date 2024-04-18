@@ -31,7 +31,7 @@
             关注
           </div>
           <div
-            class="text-white bg-white/30 rounded-full w-32 flex items-center justify-center">
+            class="text-white bg-white/30 rounded-full w-32 flex items-center justify-center" @click.stop="router.push('/message?toUid='+data.id)">
             <Icon name="envelop-o" size="6vw" />
           </div>
         </div>

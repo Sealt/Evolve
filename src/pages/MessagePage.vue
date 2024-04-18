@@ -54,14 +54,18 @@
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { NavBar, Field, Image } from "vant";
+import { NavBar, Field, Image, showToast } from "vant";
 import { ref, onMounted } from "vue";
 const router = useRouter();
 const targetUser: any = ref("");
 const messageText = ref("");
 onMounted(() => {
   targetUser.value = router.currentRoute.value.query.nickname;
+  window.addEventListener('onmessageWS', getSocketData)
 });
+const getSocketData = (res:any) =>{
+  showToast(res.data);
+}
 </script>
 
 <style scoped>
