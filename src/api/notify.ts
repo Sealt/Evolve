@@ -21,3 +21,20 @@ export const getFans = async () => {
     url: "/notify/getFans",
   });
 };
+export const getChats = async () => {
+  return await request.get({
+    url: "/notify/getChats",
+  });
+};
+export const getMessages = async (data:any) => {
+  return await request.get({
+    url: "/notify/getMessages",
+    params: data
+  });
+};
+export const getChat = async (data:any) => {
+  return await request.get({
+    url: "/notify/getChat",
+    params: data
+  });
+};

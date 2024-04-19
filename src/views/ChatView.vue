@@ -46,7 +46,7 @@
         :create-time="item.notifyTime"
         :content="item.content"
         :noRead="item.count"
-        dot
+        :dot="item.count != 0"
         v-for="item in notifyData.items" />
       <NotifyItem
         type="comment"
@@ -86,7 +86,29 @@ onMounted(() => {
       commentData.value = notifyData.value.comments;
     }
   });
+  window.addEventListener("onNotifyWs", updateNotify);
+  window.addEventListener("onMessageWs", updateChat);
 });
+function updateNotify(e: any) {
+  var returnData = e.detail;
+  if (returnData.msgVariety == 1) {
+    notifyData.value.likes++;
+  }
+  if (returnData.msgVariety == 2) {
+    getNotify().then((res) => {
+      if (res.code == 200) {
+        notifyData.value = res.data;
+        commentData.value = notifyData.value.comments;
+      }
+    });
+  }
+  if (returnData.msgVariety == 3) {
+    notifyData.value.follow++;
+  }
+}
+function updateChat() {
+  notifyData.value.chat++;
+}
 const typeTextOn = (item: any) => {
   switch (item.comment.targetType) {
     case 0:

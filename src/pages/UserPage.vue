@@ -31,7 +31,8 @@
             关注
           </div>
           <div
-            class="text-white bg-white/30 rounded-full w-32 flex items-center justify-center" @click.stop="router.push('/message?toUid='+data.id)">
+            class="text-white bg-white/30 rounded-full w-32 flex items-center justify-center" @click.stop="router.push('/message?userid='+data.id+'&username='+data.userName)"
+            v-if="userStore.userId != data.id">
             <Icon name="envelop-o" size="6vw" />
           </div>
         </div>

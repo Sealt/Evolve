@@ -92,13 +92,36 @@
         </div>
       </div>
     </div>
+
+    <div class="flex flex-col grow pl-10 w-0" v-if="type == 'chat'">
+      <div class="flex grow justify-between items-center">
+        <div class="text-15 truncate">{{ userName }}</div>
+        <div class="shrink-0 text-12 text-vant-t2">
+          {{ dayjs(createTime).fromNow() }}
+        </div>
+      </div>
+      <div v-if="dot" class="flex items-center justify-between">
+        <div class="text-13 text-vant truncate">
+          {{ content }}
+        </div>
+        <div
+          class="shrink-0 flex items-center justify-center text-12 bg-vant text-white rounded-[50%] size-14">
+          {{ noRead }}
+        </div>
+      </div>
+      <div v-else class="flex items-center">
+        <div class="text-13 text-vant-t2 truncate">
+          {{ content }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Image, Badge, Icon, showToast } from "vant";
 import { useRouter } from "vue-router";
-import { getCurrentInstance } from "vue";
+import { getCurrentInstance,onMounted } from "vue";
 import { checkComment } from "@/api/notify";
 const router = useRouter();
 const dayjs = getCurrentInstance()?.appContext.config.globalProperties.$dayjs;
@@ -121,10 +144,10 @@ const props = defineProps<{
 }>();
 
 const handleClick = () => {
-  if (props.type == "message") {
+  if (props.type == "chat") {
     router.push({
       path: "/message",
-      query: { uid: "23123", nickname: "helloworld" },
+      query: { userid:props.jumpId,username:props.userName },
     });
   } else if (props.type == "push") {
     router.push({

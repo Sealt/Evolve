@@ -14,7 +14,7 @@
     <div class="flex flex-col m-15 gap-15" v-else>
       <NotifyItem
         type="user_notify"
-        v-if="fatherPage == 'notify'"
+        v-if="fatherPage == 'notify' && detailType == '被关注'"
         v-for="list in listData"
         :jumpId="list.fromId"
         :user-name="list.user.userName"
@@ -33,6 +33,25 @@
         :bio="list.bio"
         :gender="list.gender"
         :create-time="list.createTime" />
+      <NotifyItem
+        type="chat"
+        v-if="fatherPage == 'notify' && detailType == '私信'"
+        v-for="list in listData"
+        :jumpId="list.fromUid == userStore.userId ? list.toUid : list.fromUid"
+        :user-name="
+          list.fromUid == userStore.userId
+            ? list.toUser.userName
+            : list.fromUser.userName
+        "
+        :avatar="
+          list.fromUid == userStore.userId
+            ? list.toUser.avatar
+            : list.fromUser.avatar
+        "
+        :content="list.lastMsgNote"
+        :no-read="list.unReadCount"
+        :dot="list.unReadCount != 0"
+        :create-time="list.updateTime" />
     </div>
   </div>
 </template>
@@ -44,13 +63,16 @@ import NotifyLikeItem from "@/components/NotifyLikeItem.vue";
 import NotifyItem from "@/components/NotifyItem.vue";
 import { ref, onMounted } from "vue";
 import { getFollow as getUserFollow, getFans as getUserFans } from "@/api/user";
-import { getLikesAndGains, getFans } from "@/api/notify";
+import { getLikesAndGains, getFans, getChats } from "@/api/notify";
+import { useUserStore } from "@/stores/user";
 const router = useRouter();
+const userStore = useUserStore();
 var page = { size: 10, current: 1 };
 const listData: any = ref([]);
 let detailType: any = ref("");
 let fatherPage = ref("");
 onMounted(() => {
+  window.addEventListener("onMessageWs", getNewMessage);
   switch (router.currentRoute.value.params.type) {
     case "follow":
       detailType.value = "关注";
@@ -86,9 +108,22 @@ onMounted(() => {
       break;
     case "chat":
       detailType.value = "私信";
+      fatherPage.value = "notify";
+      getChats().then((res) => {
+        if (res.code == 200) {
+          listData.value = res.data;
+        }
+      });
       break;
   }
 });
+function getNewMessage() {
+  getChats().then((res) => {
+    if (res.code == 200) {
+      listData.value = res.data;
+    }
+  });
+}
 </script>
 
 <style scoped></style>
