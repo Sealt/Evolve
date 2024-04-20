@@ -4,9 +4,9 @@
 
 <script setup lang="ts">
 import { RouterView, useRouter } from "vue-router";
-import { onMounted } from "vue";
+import { onMounted,onBeforeUnmount } from "vue";
 import { useUserStore } from "./stores/user";
-import { showToast, showDialog, showNotify } from "vant";
+import { showToast, showDialog, showNotify, showLoadingToast } from "vant";
 const userStore = useUserStore();
 const router = useRouter();
 const wsConnect = {
@@ -37,7 +37,16 @@ var websocket: any = null;
 onMounted(() => {
   initWebSocket();
   window.addEventListener("pushMessageWs", onPushMessage);
+  window.addEventListener("visibilitychange", handleVisibility);
 });
+function handleVisibility() {
+  if (document.visibilityState === 'hidden') {
+    closeWebSocket();
+
+  } else if(document.visibilityState === 'visible'){
+    initWebSocket();
+  }
+}
 function onPushMessage(e: any) {
   console.log("即将发送WS消息：" + e.detail);
   websocket.send(e.detail);
@@ -170,12 +179,6 @@ function websocketclose(e: any) {
   websocket.close();
   clearTimeout(timeoutObj);
   clearTimeout(serverTimeoutObj);
-  showDialog({
-    title: "ERROR",
-    message: "服务器关闭了连接，点击重新连接服务器",
-  }).then(() => {
-    initWebSocket();
-  });
 }
 
 function closeWebSocket() {

@@ -12,14 +12,14 @@
       ref="scrollPanel">
       <div class="flex flex-col" v-for="(item, index) in messageHistory">
         <div
-          class="flex text-13 text-vant-t2 justify-center"
+          class="flex text-13 text-vant-t2 justify-center pb-10"
           v-if="showTime(item, index)">
           {{
             dayjs(item.createTime).calendar(null, {
               sameDay: "HH:mm", // The same day ( Today at 2:30 AM )
-              lastDay: "[昨天]", // The day before ( Yesterday at 2:30 AM )
+              lastDay: "[昨天] HH:mm", // The day before ( Yesterday at 2:30 AM )
               lastWeek: "[上周] dddd", // Last week ( Last Monday at 2:30 AM )
-              sameElse: "YYYY/MM/DD", // Everything else ( 7/10/2011 )
+              sameElse: "YYYY/MM/DD HH:mm", // Everything else ( 7/10/2011 )
             })
           }}
         </div>
@@ -135,11 +135,12 @@ const showTime = (item: any, index: any) => {
   if (index == 0) {
     return true;
   } else {
+
     if (
       dayjs(item.createTime).diff(
-        messageHistory[index - 1]?.createTime,
+        messageHistory.value[index - 1]?.createTime,
         "minute"
-      ) >= 5
+      ) >= 2
     ) {
       return true;
     } else return false;
