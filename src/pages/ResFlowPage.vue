@@ -2,6 +2,7 @@
   <Loading v-if="loadingStatus"/>
   <lazy-component class="flex flex-col gap-10">
     <InfoCard v-for="item in records" :info="item" cardType="res" />
+    <Empty v-if="records.length == 0" image="search" description="没有找到搜索结果" />
   </lazy-component>
 </template>
 
@@ -9,13 +10,15 @@
 import InfoCard from "@/components/InfoCard.vue";
 import { getRes, getByProject, getByEvent, getByUser } from "@/api/flow";
 import { onMounted, ref } from "vue";
-import { showToast,Loading } from "vant";
+import { showToast,Loading,Empty } from "vant";
 import { useRouter } from "vue-router";
+import { searchRes } from "@/api/search";
 const records: any = ref([]);
 const loadingStatus = ref(true)
 const router = useRouter();
 const props = defineProps<{
   by: string;
+  keyword?:string;
 }>();
 onMounted(() => {
   if (props.by == "home") {
@@ -62,6 +65,18 @@ onMounted(() => {
       size: 10,
       type: "res",
       userId: router.currentRoute.value.params.id,
+    }).then((res) => {
+      loadingStatus.value = false
+      if (res.code == 200) {
+        records.value = res.data.records;
+      }
+    });
+  }
+  if (props.by == "searchres") {
+    searchRes({
+      current: 1,
+      size: 10,
+      keyword: props.keyword,
     }).then((res) => {
       loadingStatus.value = false
       if (res.code == 200) {

@@ -119,6 +119,11 @@ const router = createRouter({
       component: () => import("../pages/SearchPage.vue"),
     },
     {
+      path: "/search/detail",
+      name: "searchDetailPage",
+      component: () => import("../pages/SearchDetailPage.vue"),
+    },
+    {
       path: "/events",
       name: "eventsPage",
       component: () => import("../pages/EventSortPage.vue"),

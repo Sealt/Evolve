@@ -6,6 +6,7 @@
       <NodeCard v-for="item in nodes.items" :node="item" />
     </div>
   </div>
+  <Empty v-if="nodes.items.length == 0" image="search" description="没有找到搜索结果" />
 </template>
 
 <script setup lang="ts">
@@ -13,14 +14,31 @@ import NodeCard from "@/components/NodeCard.vue";
 import { useRouter } from "vue-router";
 import { getNodes } from "@/api/event";
 import { ref, onMounted } from "vue";
+import { Empty } from "vant";
+import { searchNode } from "@/api/search";
 const router = useRouter();
-const nodes = ref({items:[]});
+const nodes = ref({ items: [] });
+const props = defineProps<{
+  keyword?: string;
+}>();
 onMounted(() => {
-  getNodes({ current:1,size:10,eventId: router.currentRoute.value.params.id }).then((res) => {
-    if (res.code == 200) {
-      nodes.value = { items: res.data.records };
-    }
-  });
+  if (props.keyword != null) {
+    searchNode({ current: 1, size: 10, keyword: props.keyword }).then((res) => {
+      if (res.code == 200) {
+        nodes.value = { items: res.data.records };
+      }
+    });
+  } else {
+    getNodes({
+      current: 1,
+      size: 10,
+      eventId: router.currentRoute.value.params.id,
+    }).then((res) => {
+      if (res.code == 200) {
+        nodes.value = { items: res.data.records };
+      }
+    });
+  }
 });
 </script>
 
