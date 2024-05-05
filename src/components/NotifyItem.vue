@@ -165,7 +165,7 @@ const handleClick = () => {
       router.push("/post/exp/" + props.jumpId);
     }
     if (props.jumpType == 3) {
-      router.push("/post/node/" + props.jumpId);
+      router.push("/node/" + props.jumpId);
     }
     if (props.jumpType == 5) {
       router.push("/post/res/" + props.jumpId);

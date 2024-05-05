@@ -13,7 +13,7 @@
         <InfoEventPage />
       </Tab>
       <Tab name="info" title="信息">
-        <InfoFlowPage by="home"/>
+        <InfoFlowPage by="info"/>
       </Tab>
       <Tab name="experience" title="经验">
         <InfoExpsPage by="home"/>
@@ -38,7 +38,7 @@ import InfoExpsPage from "@/pages/InfoExpsPage.vue";
 import { Tab, Tabs, Tabbar, TabbarItem } from "vant";
 import { useRouter } from "vue-router";
 import { ref,onMounted } from "vue";
-const tabActiveName = ref("info");
+const tabActiveName = ref("home");
 const router = useRouter();
 
 onMounted(() => {

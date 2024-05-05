@@ -36,6 +36,7 @@
         <div class="text-14">私信</div>
       </div>
     </div>
+    <Loading class="pt-20" v-if="loadStatus" vertical>加载中</Loading>
     <div class="flex flex-col mx-15 mb-15 gap-15">
       <NotifyItem
         type="push"
@@ -61,6 +62,13 @@
         :dot="!item.isRead"
         v-for="item in commentData" />
     </div>
+    <Empty
+      v-if="
+        notifyData.items.length == 0 &&
+        commentData.length == 0 &&
+        loadStatus == false
+      "
+      description="暂无通知" />
     <Tabbar route placeholder>
       <TabbarItem name="info" to="/" icon="info-o">信息</TabbarItem>
       <TabbarItem name="res" to="/res" icon="apps-o">资源</TabbarItem>
@@ -72,15 +80,17 @@
 
 <script setup lang="ts">
 import NotifyItem from "@/components/NotifyItem.vue";
-import { Tabbar, TabbarItem, NavBar, Image, Badge, Icon } from "vant";
+import { Tabbar, TabbarItem, NavBar, Loading, Badge, Icon } from "vant";
 import { getNotify } from "@/api/notify";
 import { onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
-const notifyData: any = ref({});
-const commentData: any = ref({});
+const notifyData: any = ref({items:[]});
+const loadStatus = ref(true);
+const commentData: any = ref([]);
 onMounted(() => {
   getNotify().then((res) => {
+    loadStatus.value = false;
     if (res.code == 200) {
       notifyData.value = res.data;
       commentData.value = notifyData.value.comments;

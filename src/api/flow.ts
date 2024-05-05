@@ -1,5 +1,10 @@
 import request from "@/axios"
 
+export const getHeadLines = async () => {
+  return await request.get({
+    url: "/flow/getHeadLines"
+  });
+};
 export const getInfos = async (data: any) => {
   return await request.get({
     url: "/flow/getInfos",

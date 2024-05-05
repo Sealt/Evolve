@@ -1,27 +1,76 @@
 <template>
-  <InfoCard v-for="item in records" :info="item" cardType="info" />
-  <Empty v-if="records.length == 0" image="search" description="没有找到搜索结果" />
+  <Loading class="pt-20" v-if="loadStatus" vertical>加载中</Loading>
+  <InfoCard
+    v-for="item in records"
+    :info="item"
+    :cardType="item.typed == 0 ? 'info' : 'exp'" />
+  <Empty
+    v-if="records.length == 0 && loadStatus == false"
+    description="这里空空如也" />
 </template>
 
 <script setup lang="ts">
 import InfoCard from "@/components/InfoCard.vue";
-import { getInfos, getByEvent, getByUser } from "@/api/flow";
-import { onMounted, ref } from "vue";
-import { Empty, showToast } from "vant";
+import { getInfos, getByEvent, getByUser, getHeadLines } from "@/api/flow";
+import { onMounted, ref, watch } from "vue";
+import { Empty, showToast, Loading } from "vant";
 import { useRouter } from "vue-router";
 import { searchExp, searchInfo } from "@/api/search";
 const records: any = ref([]);
+const loadStatus = ref(true);
 const router = useRouter();
 const props = defineProps<{
   by: string;
-  keyword?:string;
+  keyword?: string;
 }>();
+defineExpose({
+  reload,
+});
+function reload(keyword: string) {
+  if (props.by == "searchinfo") {
+    searchInfo({
+      current: 1,
+      size: 10,
+      keyword: keyword,
+    }).then((res) => {
+      loadStatus.value = false;
+      if (res.code == 200) {
+        records.value = res.data.records;
+      } else {
+        records.value = [];
+      }
+    });
+  }
+  if (props.by == "searchexp") {
+    searchExp({
+      current: 1,
+      size: 10,
+      keyword: keyword,
+    }).then((res) => {
+      loadStatus.value = false;
+      if (res.code == 200) {
+        records.value = res.data.records;
+      } else {
+        records.value = [];
+      }
+    });
+  }
+}
 onMounted(() => {
   if (props.by == "home") {
+    getHeadLines().then((res) => {
+      loadStatus.value = false;
+      if (res.code == 200) {
+        records.value = res.data.records;
+      }
+    });
+  }
+  if (props.by == "info") {
     getInfos({
       current: 1,
       size: 10,
     }).then((res) => {
+      loadStatus.value = false;
       if (res.code == 200) {
         records.value = res.data.records;
       }
@@ -31,11 +80,13 @@ onMounted(() => {
     getByEvent({
       current: 1,
       size: 10,
-      type:'info',
-      eventId:router.currentRoute.value.params.id
+      type: "info",
+      eventId: router.currentRoute.value.params.id,
     }).then((res) => {
+      loadStatus.value = false;
       if (res.code == 200) {
         records.value = res.data.records;
+        loadStatus.value = false;
       }
     });
   }
@@ -43,33 +94,13 @@ onMounted(() => {
     getByUser({
       current: 1,
       size: 10,
-      type:'info',
-      userId:router.currentRoute.value.params.id
+      type: "info",
+      userId: router.currentRoute.value.params.id,
     }).then((res) => {
+      loadStatus.value = false;
       if (res.code == 200) {
         records.value = res.data.records;
-      }
-    });
-  }
-  if (props.by == "searchinfo") {
-    searchInfo({
-      current: 1,
-      size: 10,
-      keyword:props.keyword,
-    }).then((res) => {
-      if (res.code == 200) {
-        records.value = res.data.records;
-      }
-    });
-  }
-  if (props.by == "searchexp") {
-    searchExp({
-      current: 1,
-      size: 10,
-      keyword:props.keyword,
-    }).then((res) => {
-      if (res.code == 200) {
-        records.value = res.data.records;
+        loadStatus.value = false;
       }
     });
   }

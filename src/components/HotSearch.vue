@@ -8,20 +8,23 @@
     </div>
     <ul
       class="*:text-13 *:mt-10 *:mr-5 *:inline-block *:rounded-full *:border *:border-vant-n2 *:bg-vant-n2 *:px-12 *:py-3">
-      <li>考研</li>
-      <li>保研</li>
-      <li>创新创业学分</li>
-      <li>学习哈</li>
-      <li>高等数学</li>
-      <li>大学英语</li>
-      <li>C语言</li>
-      <li>机械</li>
+      <li v-for="item in data" >{{ item }}</li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
 import { Icon } from "vant";
+import { getHotSearch } from "@/api/hot";
+import { ref, onMounted } from "vue";
+const data: any = ref();
+onMounted(() => {
+  getHotSearch().then((res) => {
+    if (res.code == 200) {
+      data.value = res.data;
+    }
+  });
+});
 </script>
 
 <style scoped></style>

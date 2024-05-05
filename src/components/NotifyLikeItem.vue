@@ -63,7 +63,7 @@ const clickOn = (item: any) => {
       router.push("/post/exp/" + props.item.targetId);
       break;
     case 3:
-      router.push("/post/node/" + props.item.targetId);
+      router.push("/node/" + props.item.targetId);
       break;
     case 5:
       router.push("/post/res/" + props.item.targetId);

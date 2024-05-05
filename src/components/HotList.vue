@@ -8,34 +8,31 @@
     </div>
     <div
       class="flex items-center h-30 active:bg-vant-n2 gap-5"
-      v-for="i in [
-        { index: 0 },
-        { index: 1 },
-        { index: 2 },
-        { index: 3 },
-        { index: 4 },
-      ]">
+      v-for="item,index in data">
       <div
-        v-if="i.index < 2 || i.index == 0"
+        v-if="index < 2 || index == 0"
         class="text-red-600 font-bold italic px-5 w-20 flex justify-center text-14">
-        {{ i.index }}
+        {{ index }}
       </div>
       <div
-        v-else-if="i.index < 4"
+        v-else-if="index < 4"
         class="text-red-500 font-bold italic px-5 w-20 flex justify-center text-14">
-        {{ i.index }}
+        {{ index }}
       </div>
       <div
         v-else
         class="text-black italic px-5 w-20 flex justify-center text-14">
-        {{ i.index }}
+        {{ index }}
       </div>
-      <div class="flex grow w-0 items-center">
-        <div class="text-14 truncate">中国国际大学生创新大赛（2066662624）</div>
-        <div class="text-12 text-gray-500">6454</div>
+      <div class="flex grow w-0 items-center justify-between">
+        <div class="text-14 truncate">{{ item.title }}</div>
+        <div class="text-12 text-gray-500">{{item.sort}}</div>
       </div>
       <div class="flex justify-end shrink-0">
-        <Tag type="success" class="shrink-0">资源</Tag>
+        <Tag v-if="item.typed == 2" color="#f87171" class="shrink-0">事件</Tag>
+        <Tag v-if="item.typed == 3" color="#60a5fa" class="shrink-0">节点</Tag>
+        <Tag v-if="item.typed == 4" color="#fdba74" class="shrink-0">项目</Tag>
+        <Tag v-if="item.typed == 8" color="#c084fc" class="shrink-0">文件</Tag>
       </div>
     </div>
   </div>
@@ -43,6 +40,16 @@
 
 <script setup lang="ts">
 import { Icon, Tag } from "vant";
+import { getHotList } from "@/api/hot";
+import { ref,onMounted } from 'vue'
+const data:any = ref();
+onMounted(() => {
+  getHotList().then(res =>{
+    if (res.code == 200) {
+      data.value = res.data.slice(0,4);
+    }
+  })
+})
 </script>
 
 <style scoped></style>

@@ -2,8 +2,19 @@
   <div class="flex flex-col bg-vant-n2 p-10 gap-15">
     <div class="flex justify-end gap-10">
       <Icon size="6vw" name="setting-o" />
-      <Icon size="6vw" name="info-o" @click="showToast('高校研学服务平台 V1.0 \n 江理一起来学 荣誉出品 \n Copyright ©️Benin')"/>
-      <Icon size="6vw" name="add" class="text-vant" @click="router.push('/publish')"/>
+      <Icon
+        size="6vw"
+        name="info-o"
+        @click="
+          showToast(
+            '高校研学服务平台 V1.0 \n 江理一起来学 荣誉出品 \n Copyright ©️Benin'
+          )
+        " />
+      <Icon
+        size="6vw"
+        name="add"
+        class="text-vant"
+        @click="router.push('/publish')" />
     </div>
     <div
       class="flex gap-10 px-5"
@@ -40,14 +51,20 @@
     </div>
     <div
       class="grid grid-cols-4 grid-rows-2 bg-white rounded-[10px] py-10 gap-y-10">
-      <div class="flex flex-col items-center gap-5" v-for="item in funcItems" @click="showToast('Coding')">
+      <div
+        class="flex flex-col items-center gap-5"
+        v-for="item in funcItems"
+        @click="showToast('Coding')">
         <Icon :name="item.icon" size="7vw" />
         <div class="text-12">{{ item.text }}</div>
       </div>
     </div>
     <div
       class="grid grid-cols-4 grid-rows-1 bg-white rounded-[10px] py-10 gap-y-10">
-      <div class="flex flex-col items-center gap-5" v-for="item in adminItems" @click="showToast('Coding')">
+      <div
+        class="flex flex-col items-center gap-5"
+        v-for="item in adminItems"
+        @click="showToast('Coding')">
         <Icon :name="item.icon" size="7vw" />
         <div class="text-12">{{ item.text }}</div>
       </div>
@@ -75,7 +92,15 @@ import { useUserStore } from "@/stores/user";
 import { ref, onMounted } from "vue";
 const tabActiveName = ref("a");
 import { getUserInfo } from "@/api/user";
-const data: any = ref({ realAuth: {} });
+const data: any = ref({
+  userName: "",
+  score: 0,
+  coin: 0,
+  follow: 0,
+  posts: 0,
+  fans: 0,
+  realAuth: {},
+});
 const router = useRouter();
 const userStore = useUserStore();
 const funcItems = [
@@ -86,7 +111,7 @@ const funcItems = [
   { icon: "comment-o", text: "我的回复" },
   { icon: "question-o", text: "我的问答" },
   { icon: "gold-coin-o", text: "金币充值" },
-  { icon: "balance-list-o", text: "我的下载" }
+  { icon: "balance-list-o", text: "我的下载" },
 ];
 const adminItems = [
   { icon: "shield-o", text: "内容审核" },
@@ -95,7 +120,7 @@ const adminItems = [
   { icon: "apps-o", text: "入口管理" },
   { icon: "filter-o", text: "类目管理" },
   { icon: "user-o", text: "用户管理" },
-  { icon: "certificate", text: "权限管理" }
+  { icon: "certificate", text: "权限管理" },
 ];
 const onLogout = () => {
   // localStorage.removeItem("user");

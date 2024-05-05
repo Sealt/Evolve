@@ -67,9 +67,10 @@
 </template>
 
 <script setup lang="ts">
-import { Image, Icon, Tag, Popup } from "vant";
+import { Image, Icon, Tag, Popup, showToast } from "vant";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { gain } from "@/api/action";
 const router = useRouter();
 const props = defineProps<{
   type?: string;
@@ -94,6 +95,9 @@ const handleClick = () => {
     router.push("/post/res/" + props.to);
   }
   if (props.type == "res") {
+    gain({ fileId: props.fileItem.id }).then((res) => {
+      showToast("gain success");
+    });
     showResPopup.value = true;
   }
 };

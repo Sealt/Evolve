@@ -6,12 +6,17 @@
       right-icon="search"
       @click-left-icon="onBack"
       @click-right-icon="onSearch" />
-    <Tabs v-model:active="activeTab" lazy-render shrink swipeable>
-      <Tab title="信息"><InfoFlowPage by="searchinfo" :keyword="searchValue"/></Tab>
-      <Tab title="经验"><InfoFlowPage by="searchexp" :keyword="searchValue"/></Tab>
-      <Tab title="资源"><ResFlowPage by="searchres" :keyword="searchValue"/></Tab>
-      <Tab title="节点"><NodeFlowPage :keyword="searchValue"/></Tab>
-      <Tab title="用户"><UserFlowPage :keyword="searchValue"/></Tab>
+    <Tabs
+      v-model:active="activeTab"
+      :lazy-render="false"
+      shrink
+      swipeable
+      @change="onTabsChange">
+      <Tab title="信息"><InfoFlowPage by="searchinfo" ref="infoflow" /></Tab>
+      <Tab title="经验"><InfoFlowPage by="searchexp" ref="expflow" /></Tab>
+      <Tab title="资源"><ResFlowPage by="searchres" ref="resflow" /></Tab>
+      <Tab title="节点"><NodeFlowPage by="search" ref="nodeflow" /></Tab>
+      <Tab title="用户"><UserFlowPage ref="userflow" /></Tab>
     </Tabs>
   </div>
 </template>
@@ -23,23 +28,63 @@ import InfoFlowPage from "./InfoFlowPage.vue";
 import ResFlowPage from "./ResFlowPage.vue";
 import NodeFlowPage from "./NodeFlowPage.vue";
 import UserFlowPage from "./UserFlowPage.vue";
-import { ref,onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 const activeTab = ref(0);
 const router = useRouter();
-const searchValue:any = ref("");
+const searchValue: any = ref("");
+const infoflow = ref();
+const expflow = ref();
+const resflow = ref();
+const nodeflow = ref();
+const userflow = ref();
 const onBack = () => {
   router.back();
 };
 const onSearch = () => {
-  showToast("hello");
+  if (searchValue.value == '') {
+    showToast('搜索内容为空')
+    return;
+  }
+  router.replace("/search/detail?query=" + searchValue.value);
+  onTabsChange();
+};
+const onTabsChange = () => {
+  if (searchValue.value == '') {
+    return;
+  }
+  router.currentRoute.value.query.query = searchValue.value;
+  switch (activeTab.value) {
+    case 0:
+      infoflow.value.reload(searchValue.value);
+      break;
+    case 1:
+      expflow.value.reload(searchValue.value);
+      break;
+    case 2:
+      resflow.value.reload(searchValue.value);
+      break;
+    case 3:
+      nodeflow.value.reload(searchValue.value);
+      break;
+    case 4:
+      userflow.value.reload(searchValue.value);
+      break;
+    default:
+      break;
+  }
 };
 onMounted(() => {
-  searchValue.value = router.currentRoute.value.query.query
-})
+  searchValue.value = router.currentRoute.value.query.query;
+});
+watch(infoflow, (newVal, oldVal) => {
+  if (newVal != null) {
+    infoflow.value.reload(searchValue.value);
+  }
+});
 </script>
 
 <style scoped>
-:deep(.van-search){
+:deep(.van-search) {
   padding: 10px 12px 0px 12px;
 }
 :deep(.van-search__content) {

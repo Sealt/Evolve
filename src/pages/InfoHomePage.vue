@@ -1,5 +1,5 @@
 <template>
-  <div class="firstCard">
+  <div class="firstCard flex flex-col">
     <Swipe
       class="my-swipe"
       :autoplay="3000"
@@ -17,11 +17,12 @@
       </div>
     </div>
   </div>
+  <InfoFlowPage by="home"/>
 </template>
 
 <script setup lang="ts">
 import { Swipe, SwipeItem, Icon,showToast } from "vant";
-import InfoCard from "@/components/InfoCard.vue";
+import InfoFlowPage from "./InfoFlowPage.vue";
 const swiperImages = ["/1.png", "/2.png", "/3.png"];
 const funcItems = [
   { icon: "fire", text: "必看",color:'text-red-400' },

@@ -14,7 +14,7 @@ const wsConnect = {
   msgId: "CONNECT",
   salt: {
     userId: userStore.userId,
-    loginLabel: "no logic",
+    loginLabel: userStore.token,
   },
   data: null,
 };
@@ -23,7 +23,7 @@ const wsKeepAlive = {
   msgId: "KEEPALIVE",
   salt: {
     userId: userStore.userId,
-    loginLabel: "no logic",
+    loginLabel: 'nologic',
   },
   data: null,
 };
@@ -122,7 +122,7 @@ async function setOnmessageMessage(event: any) {
     if (messageData.msgType == 1 && messageData.msgVariety == 0) {
       showDialog({
         title: "注意",
-        message: "您已被迫下线，请重新登录",
+        message: "登录已过期，请重新登录",
       }).then(() => {
         userStore.clear();
         router.push("/login");

@@ -36,3 +36,9 @@ export const unFollow = async (data: any) => {
     params: data,
   });
 };
+export const gain = async (data: any) => {
+  return await request.get({
+    url: "/action/gain",
+    params: data,
+  });
+};
