@@ -2,9 +2,9 @@
   <Loading class="pt-20" v-if="loadStatus" vertical>加载中</Loading>
   <InfoCard
     v-for="(item, index) in records"
-    :info="item"
+    :info="getItem(item)"
     :cardType="selectCardType(item)"
-    :HotIndex="index < 9 ? '0' + (index + 1) : '' + (index + 1)" />
+    :HotIndex="getHotIndex(item,index)" />
   <Empty
     v-if="records.length == 0 && loadStatus == false"
     description="这里空空如也" />
@@ -17,6 +17,7 @@ import { onMounted, ref } from "vue";
 import { showToast, Loading, Empty } from "vant";
 import { useRouter } from "vue-router";
 import { getHotFlow } from "@/api/hot";
+import { getFollow } from "@/api/flow";
 const records: any = ref([]);
 const loadStatus = ref(true);
 const router = useRouter();
@@ -30,7 +31,7 @@ const selectCardType = (item: any) => {
   if (item.typed == 1) {
     return "exp";
   }
-  if (item.typed == null) {
+  if (item.typed == null || item.typed == 5) {
     return "res";
   }
 };
@@ -43,7 +44,33 @@ onMounted(() => {
       }
     });
   }
+  if (props.by == "follow") {
+    getFollow({ current: 1, size: 10 }).then((res) => {
+      loadStatus.value = false;
+      if (res.code == 200) {
+        records.value = res.data.data;
+      }
+    });
+  }
 });
+const getItem = (item: any) => {
+  if (item.id != null) {
+    return item;
+  } else {
+    if (item.info == null) {
+      return item.res;
+    } else {
+      return item.info;
+    }
+  }
+};
+const getHotIndex = (item: any,index:number) => {
+  if (item.id != null) {
+    return index < 9 ? '0' + (index + 1) : '' + (index + 1);
+  } else {
+    return undefined;
+  }
+};
 </script>
 
 <style scoped></style>

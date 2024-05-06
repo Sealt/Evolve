@@ -8,7 +8,7 @@
     </div>
     <ul
       class="*:text-13 *:mt-10 *:mr-5 *:inline-block *:rounded-full *:border *:border-vant-n2 *:bg-vant-n2 *:px-12 *:py-3">
-      <li v-for="item in data" >{{ item }}</li>
+      <li v-for="item in data" @click="onClick(item)">{{ item }}</li>
     </ul>
   </div>
 </template>
@@ -17,7 +17,9 @@
 import { Icon } from "vant";
 import { getHotSearch } from "@/api/hot";
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 const data: any = ref();
+const router = useRouter();
 onMounted(() => {
   getHotSearch().then((res) => {
     if (res.code == 200) {
@@ -25,6 +27,9 @@ onMounted(() => {
     }
   });
 });
+const onClick = (item: string) => {
+  router.push({ path: "/search/detail", query: { query: item } });
+};
 </script>
 
 <style scoped></style>

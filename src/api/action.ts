@@ -42,3 +42,30 @@ export const gain = async (data: any) => {
     params: data,
   });
 };
+// star
+export const star = async (data: any) => {
+  return await request.get({
+    url: "/action/star",
+    params: data,
+  });
+};
+export const unStar = async (data: any) => {
+  return await request.get({
+    url: "/action/unStar",
+    params: data,
+  });
+};
+// linkToNode
+export const linkToNode = async (data: any) => {
+  return await request.get({
+    url: "/action/linkToNode",
+    params: data,
+  });
+};
+// unLinkFromNode
+export const unLinkFromNode = async (data: any) => {
+  return await request.get({
+    url: "/action/unLinkFromNode",
+    params: data,
+  });
+};

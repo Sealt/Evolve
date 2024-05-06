@@ -13,7 +13,7 @@
       class="flex justify-center items-center bg-vant-n3 text-white p-10 w-[40vw] rounded-[10px] h-40 mt-20"
       @click="onClick"
       ref="submitButton">
-      <div>
+      <div class="text-14">
         {{ authStatus }}
       </div>
     </div>

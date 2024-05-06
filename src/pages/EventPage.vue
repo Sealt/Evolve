@@ -13,26 +13,40 @@
         <Image :src="event.icon" fit="cover" class="image" />
       </div>
       <div class="event-content">
-        <div class="event-content__title">{{event.eventName}}</div>
+        <div class="event-content__title">{{ event.eventName }}</div>
 
         <div class="event-content__detail">
-          <div class="event-content__detaila">{{ event.hotIndex +' 热度 ' +  event.discussCount +' 讨论' }}</div>
-          <div class="event-content__detailb">{{'关注数据'}}</div>
+          <div class="event-content__detaila">
+            {{ event.hotIndex + " 热度 " + event.discussCount + " 讨论" }}
+          </div>
+          <div class="event-content__detailb">
+            {{ event.followCount + " 人关注" }}
+          </div>
         </div>
       </div>
       <div class="event-button" v-if="event.isFollow == true">
-        <Button type="primary" size="small" round @click.stop="followOff">已关注</Button>
+        <Button type="primary" size="small" round @click.stop="followOff"
+          >已关注</Button
+        >
       </div>
       <div class="event-button" v-if="event.isFollow == null">
-        <Button type="primary" size="small" round @click.stop="followOn">{{ ' 关注 ' }}</Button>
+        <Button type="primary" size="small" round @click.stop="followOn">{{
+          " 关注 "
+        }}</Button>
       </div>
     </div>
-    <div class="event-intro">{{ event.eventDesc}}</div>
-    <Tabs v-model:active="activeTab" sticky offset-top="46" animated swipeable lazy-render>
+    <div class="event-intro">{{ event.eventDesc }}</div>
+    <Tabs
+      v-model:active="activeTab"
+      sticky
+      offset-top="46"
+      animated
+      swipeable
+      lazy-render>
       <Tab title="节点" name="a"><NodeFlowPage /></Tab>
-      <Tab title="信息" name="b"><InfoFlowPage by="event"/></Tab>
-      <Tab title="经验" name="c"><InfoExpsPage by="event"/></Tab>
-      <Tab title="资源" name="d"><ResFlowPage by="event"/></Tab>
+      <Tab title="信息" name="b"><InfoFlowPage by="event" /></Tab>
+      <Tab title="经验" name="c"><InfoExpsPage by="event" /></Tab>
+      <Tab title="资源" name="d"><ResFlowPage by="event" /></Tab>
       <Tab title="问答" name="e">TO BE CONTINUE</Tab>
     </Tabs>
   </div>
@@ -46,10 +60,10 @@ import InfoExpsPage from "./InfoExpsPage.vue";
 import ResFlowPage from "./ResFlowPage.vue";
 import { ref, onMounted } from "vue";
 import { getEvent } from "@/api/event";
-import { follow,unFollow } from "@/api/action";
+import { follow, unFollow } from "@/api/action";
 import { useRouter } from "vue-router";
 const activeTab = ref("a");
-const event:any = ref({
+const event: any = ref({
   id: "",
   eventName: "",
   eventDesc: "",
@@ -62,7 +76,7 @@ const event:any = ref({
   userId: "",
   managerIds: null,
   largeId: 0,
-  isFollow:null
+  isFollow: null,
 });
 const router = useRouter();
 const onClickLeft = () => {
@@ -77,26 +91,26 @@ onMounted(() => {
 });
 const followOn = () => {
   follow({
-    targetId:router.currentRoute.value.params.id,
-    typed:2
-  }).then(res=>{
-    if(res.code == 200){
-      showToast('success')
+    targetId: router.currentRoute.value.params.id,
+    typed: 2,
+  }).then((res) => {
+    if (res.code == 200) {
+      showToast("success");
       event.value.isFollow = true;
     }
-  })
-}
+  });
+};
 const followOff = () => {
   unFollow({
-    targetId:router.currentRoute.value.params.id,
-    typed:2
-  }).then(res=>{
-    if(res.code == 200){
-      showToast('success')
+    targetId: router.currentRoute.value.params.id,
+    typed: 2,
+  }).then((res) => {
+    if (res.code == 200) {
+      showToast("success");
       event.value.isFollow = null;
     }
-  })
-}
+  });
+};
 </script>
 
 <style lang="scss" scoped>

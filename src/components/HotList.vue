@@ -8,7 +8,8 @@
     </div>
     <div
       class="flex items-center h-30 active:bg-vant-n2 gap-5"
-      v-for="item,index in data">
+      v-for="(item, index) in data"
+      @click="onClick(item)">
       <div
         v-if="index < 2 || index == 0"
         class="text-red-600 font-bold italic px-5 w-20 flex justify-center text-14">
@@ -26,7 +27,7 @@
       </div>
       <div class="flex grow w-0 items-center justify-between">
         <div class="text-14 truncate">{{ item.title }}</div>
-        <div class="text-12 text-gray-500">{{item.sort}}</div>
+        <div class="text-12 text-gray-500">{{ item.sort }}</div>
       </div>
       <div class="flex justify-end shrink-0">
         <Tag v-if="item.typed == 2" color="#f87171" class="shrink-0">事件</Tag>
@@ -41,15 +42,28 @@
 <script setup lang="ts">
 import { Icon, Tag } from "vant";
 import { getHotList } from "@/api/hot";
-import { ref,onMounted } from 'vue'
-const data:any = ref();
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const data: any = ref();
 onMounted(() => {
-  getHotList().then(res =>{
+  getHotList({ typed: 0 }).then((res) => {
     if (res.code == 200) {
-      data.value = res.data.slice(0,4);
+      data.value = res.data.slice(0, 4);
     }
-  })
-})
+  });
+});
+const onClick = (item: any) => {
+  if (item.typed == 2) {
+    router.push(`/event/${item.targetId}`);
+  } else if (item.typed == 3) {
+    router.push(`/node/${item.targetId}`);
+  } else if (item.typed == 4) {
+    router.push(`/project/${item.targetId}`);
+  } else if (item.typed == 8) {
+    router.push(`/post/res/${item.targetId}`);
+  }
+};
 </script>
 
 <style scoped></style>

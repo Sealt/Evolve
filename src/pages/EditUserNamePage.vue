@@ -6,7 +6,7 @@
       class="flex flex-col grow items-center px-15 py-30 gap-10">
       <div class="flex flex-col items-center gap-5">
         <div class="text-20 font-bold">修改用户名</div>
-        <div>
+        <div class="text-14">
           您当前的用户名为：{{ router.currentRoute.value.query.username }}
         </div>
       </div>
@@ -18,7 +18,7 @@
         placeholder="请输入用户名"
         border />
       <div
-        class="flex justify-center bg-vant text-white p-10 w-[50vw] rounded-[10px]"
+        class="flex text-14 justify-center bg-vant text-white p-10 w-[50vw] rounded-[10px]"
         @click="onEdit">
         确认修改
       </div>

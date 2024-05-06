@@ -2,7 +2,9 @@
   <div class="CurrentView h-screen flex flex-col">
     <TopBar />
     <Tabs v-model:active="tabActiveName" sticky shrink swipeable lazy-render>
-      <Tab name="follow" title="关注">关注</Tab>
+      <Tab name="follow" title="关注">
+        <FlowPage by="follow" />
+      </Tab>
       <Tab name="home" title="首页">
         <InfoHomePage />
       </Tab>
@@ -30,6 +32,7 @@
 
 <script setup lang="ts">
 import TopBar from "@/components/TopBar.vue";
+import FlowPage from "@/pages/FlowPage.vue";
 import InfoHomePage from "@/pages/InfoHomePage.vue";
 import InfoHotPage from "@/pages/InfoHotPage.vue";
 import InfoEventPage from "@/pages/InfoEventPage.vue";
@@ -38,6 +41,7 @@ import InfoExpsPage from "@/pages/InfoExpsPage.vue";
 import { Tab, Tabs, Tabbar, TabbarItem } from "vant";
 import { useRouter } from "vue-router";
 import { ref,onMounted } from "vue";
+import { FlowFlags } from "typescript";
 const tabActiveName = ref("home");
 const router = useRouter();
 

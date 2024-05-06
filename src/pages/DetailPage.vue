@@ -8,6 +8,7 @@
       placeholder
       class="z-10"
       @click-left="router.back()" />
+      <Loading class="pt-20" v-if="loadStatus" vertical>加载中</Loading>
     <div v-if="detailType == '收到的赞'" class="flex flex-col m-15 gap-15">
       <NotifyLikeItem :item="a" v-for="a in listData" />
     </div>
@@ -53,12 +54,13 @@
         :dot="list.unReadCount != 0"
         :create-time="list.updateTime" />
     </div>
+    <Empty v-if="listData.length == 0 && loadStatus == false" description="这里空空如也" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useRouter } from "vue-router";
-import { NavBar } from "vant";
+import { NavBar, Empty,Loading } from "vant";
 import NotifyLikeItem from "@/components/NotifyLikeItem.vue";
 import NotifyItem from "@/components/NotifyItem.vue";
 import { ref, onMounted } from "vue";
@@ -67,6 +69,7 @@ import { getLikesAndGains, getFans, getChats } from "@/api/notify";
 import { useUserStore } from "@/stores/user";
 const router = useRouter();
 const userStore = useUserStore();
+const loadStatus = ref(true);
 var page = { size: 10, current: 1 };
 const listData: any = ref([]);
 let detailType: any = ref("");
@@ -78,6 +81,7 @@ onMounted(() => {
       detailType.value = "关注";
       fatherPage.value = "user";
       getUserFollow(page).then((res) => {
+        loadStatus.value = false;
         listData.value = res.data;
       });
       break;
@@ -85,6 +89,7 @@ onMounted(() => {
       detailType.value = "粉丝";
       fatherPage.value = "user";
       getUserFans(page).then((res) => {
+        loadStatus.value = false;
         listData.value = res.data;
       });
       break;
@@ -92,6 +97,7 @@ onMounted(() => {
       detailType.value = "收到的赞";
       fatherPage.value = "notify";
       getLikesAndGains().then((res) => {
+        loadStatus.value = false;
         if (res.code == 200) {
           listData.value = res.data;
         }
@@ -101,6 +107,7 @@ onMounted(() => {
       fatherPage.value = "notify";
       detailType.value = "被关注";
       getFans().then((res) => {
+        loadStatus.value = false;
         if (res.code == 200) {
           listData.value = res.data;
         }
@@ -110,6 +117,7 @@ onMounted(() => {
       detailType.value = "私信";
       fatherPage.value = "notify";
       getChats().then((res) => {
+        loadStatus.value = false;
         if (res.code == 200) {
           listData.value = res.data;
         }
@@ -119,6 +127,7 @@ onMounted(() => {
 });
 function getNewMessage() {
   getChats().then((res) => {
+    loadStatus.value = false;
     if (res.code == 200) {
       listData.value = res.data;
     }

@@ -82,7 +82,7 @@
             <div class="flex flex-col">
               <div class="text-15">{{ item.projectName }}</div>
               <div class="text-13 text-vant-t2">
-                {{ item.hotIndex + " & " + item.resourceCount }}
+                {{ item.hotIndex + " 热度 " + item.resourceCount  + " 资源"}}
               </div>
             </div>
             <div class="flex justify-end grow">
@@ -191,7 +191,7 @@
             <div class="flex flex-col">
               <div class="text-15">{{ item.eventName }}</div>
               <div class="text-13 text-vant-t2">
-                {{ item.hotIndex + " & " + item.discussCount }}
+                {{ item.hotIndex + " 热度 " + item.discussCount  + " 讨论"}}
               </div>
             </div>
             <div class="flex justify-end grow">

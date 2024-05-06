@@ -1,11 +1,10 @@
 <template>
-  <div
-    class="flex flex-col gap-5 bg-white rounded-[10px] py-10 px-15">
+  <div class="flex flex-col gap-5 bg-white rounded-[10px] py-10 px-15">
     <div class="flex items-center justify-between pb-5">
       <div class="text-15">最新事件</div>
       <div class="flex items-center">
-        <div class="text-13 text-gray-300 inline-flex">更多</div>
-        <Icon name="arrow" class="text-gray-300" />
+        <div class="text-13 text-gray-300 inline-flex hidden" >更多</div>
+        <Icon size="4vw" name="arrow" class="text-gray-300" />
       </div>
     </div>
     <div
@@ -13,16 +12,17 @@
       @touchstart="handleStart"
       class="flex flex-nowrap overflow-scroll">
       <div
-        v-for="a in [1, 1]"
+        @click.stop="onClick(item)"
+        v-for="item in newEvents"
         class="flex bg-sky-600 w-230 h-80 rounded-[5px] items-center px-15 justify-between shrink-0 mr-10">
         <div class="flex flex-col grow w-0">
-          <div class="text-15 text-white truncate">事件名称</div>
+          <div class="text-15 text-white truncate">{{ item.eventName }}</div>
           <div class="text-12 text-white truncate">
-            事件介绍介绍介绍介绍介绍介绍
+            {{ item.eventDesc }}
           </div>
         </div>
         <Image
-          src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+          :src="item.icon"
           fit="cover"
           class="size-48 shrink-0"
           radius="3" />
@@ -32,8 +32,20 @@
 </template>
 
 <script setup lang="ts">
-import TinyCard from "./TinyCard.vue";
 import { Image, Icon } from "vant";
+import { getNewEvents } from "@/api/event";
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+const newEvents: any = ref();
+const router = useRouter();
+onMounted(() => {
+  getNewEvents().then((res) => {
+    newEvents.value = res.data;
+  });
+});
+const onClick = (item: any) => {
+  router.push("/event/" + item.id);
+};
 let startX = 0;
 let startY = 0;
 const handleStart = (event: TouchEvent) => {

@@ -6,7 +6,7 @@
       class="flex flex-col items-center px-15 py-30 gap-10 h-screen">
       <div class="flex flex-col items-center gap-5">
         <div class="text-20 font-bold">身份校验</div>
-        <div>修改密码需要验证身份</div>
+        <div class="text-14">修改密码需要验证身份</div>
       </div>
       <Field
         class="rounded-[10px] my-10"
@@ -25,7 +25,7 @@
         </template></Field
       >
       <div
-        class="flex justify-center bg-vant text-white p-10 w-[50vw] rounded-[10px]"
+        class="flex text-14 justify-center bg-vant text-white p-10 w-[50vw] rounded-[10px]"
         @click="onCheck">
         验证
       </div>
@@ -36,7 +36,7 @@
       class="flex flex-col grow items-center px-15 py-30 gap-10">
       <div class="flex flex-col items-center gap-5">
         <div class="text-20 font-bold">修改密码</div>
-        <div>请修改密码，可使用手机号和密码登录</div>
+        <div class="text-14">请修改密码，可使用手机号和密码登录</div>
       </div>
       <div class="flex flex-col py-20 w-full">
         <Field
@@ -55,7 +55,7 @@
           border />
       </div>
       <div
-        class="flex justify-center bg-vant text-white p-10 w-[50vw] rounded-[10px]"
+        class="flex text-14 justify-center bg-vant text-white p-10 w-[50vw] rounded-[10px]"
         @click="onEdit">
         确认修改
       </div>

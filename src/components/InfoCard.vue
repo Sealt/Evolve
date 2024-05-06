@@ -49,7 +49,7 @@
             </div>
           </div>
           <div v-else class="flex justify-center items-center size-[32px]">
-            <Icon e name="arrow-down" @click.stop="actionOn" />
+            <Icon size="4vw" name="arrow-down" @click.stop="actionOn" />
           </div>
         </div>
       </div>
@@ -147,10 +147,10 @@ import LittleCard from "./LittleCard.vue";
 
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import {like, unLike} from "@/api/action";
+import {like, unLike,star,unStar} from "@/api/action";
 const router = useRouter();
 const showInfoAction = ref(false);
-const infoActions = [{ name: "1" }, { name: "2" }];
+const infoActions = [{ name: "举报" }, { name: "删除" }];
 const iconBaseUrl = import.meta.env.VITE_ICON_URL;
 const imageLength = ref(3);
 const infoDesc = ref("");
@@ -200,10 +200,44 @@ const likeOff = () => {
   })
 }
 const starOn = () => {
-  props.info.isStar = true;
+  let currentType = null;
+  switch (props.cardType){
+    case 'info':
+      currentType = 0;break;
+    case 'exp':
+      currentType = 1;break;
+    case 'res':
+      currentType = 5;break;
+  }
+  star({
+    targetId:props.info.id,
+    typed:currentType
+  }).then(res => {
+    if (res.code == 200){
+      props.info.starCount = res.data;
+      props.info.isStar = true;
+    }
+  })
 }
 const starOff = () => {
-  props.info.isStar = null;
+  let currentType = null;
+  switch (props.cardType){
+    case 'info':
+      currentType = 0;break;
+    case 'exp':
+      currentType = 1;break;
+    case 'res':
+      currentType = 5;break;
+  }
+  unStar({
+    targetId:props.info.id,
+    typed:currentType
+  }).then(res => {
+    if (res.code == 200){
+      props.info.starCount = res.data;
+      props.info.isStar = null;
+    }
+  })
 }
 const props = defineProps<{
   info?: any;

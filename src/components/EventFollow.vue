@@ -4,25 +4,38 @@
       <div class="text-15">我的关注</div>
       <div class="flex items-center">
         <div class="text-13 text-gray-300 inline-flex">更多</div>
-        <Icon name="arrow" class="text-gray-300" />
+        <Icon size="4vw" name="arrow" class="text-gray-300" />
       </div>
     </div>
-    <div class="grid grid-cols-2 grid-rows-2 gap-10">
-      <div class="flex items-center gap-10 active:bg-vant-n2 rounded-[5px]" v-for="a in [1, 1, 1, 1]">
+    <div class="text-vant-t1 text-14" v-if="followList.length == 0">暂无关注</div>
+    <div class="grid grid-cols-2 gap-10" v-if="followList.length != 0">
+      <div class="flex items-center gap-10 active:bg-vant-n2 rounded-[5px]"  v-for="item in followList" @click.stop="onClick(item)">
         <Image
-          src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+          :src="item.icon"
           fit="cover"
           class="size-20 inline-flex"
           radius="3" />
-        <div class="text-14 inline">高等数学一</div>
+        <div class="text-14 inline">{{ item.eventName }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import TinyCard from "./TinyCard.vue";
 import { Image, Icon } from "vant";
+import { getFollowByUser } from "@/api/event";
+import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+const followList:any = ref([]);
+onMounted(() => {
+  getFollowByUser().then((res) => {
+    followList.value = res.data;
+  });
+});
+const onClick = (item:any) => {
+  router.push("/event/"+item.id);
+};
 </script>
 
 <style scoped></style>

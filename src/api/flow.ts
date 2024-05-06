@@ -41,3 +41,10 @@ export const getByProject = async (data: any) => {
     params: data,
   });
 };
+// getFollow
+export const getFollow = async (data: any) => {
+  return await request.get({
+    url: "/flow/getFollow",
+    params: data,
+  });
+};

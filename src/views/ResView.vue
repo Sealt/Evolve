@@ -28,7 +28,7 @@ import { Tab, Tabs, Tabbar, TabbarItem } from "vant";
 import { ref } from "vue";
 import ResMainPage from "@/pages/ResMainPage.vue";
 import ResFlowPage from "@/pages/ResFlowPage.vue";
-const tabActiveName = ref("market");
+const tabActiveName = ref("res");
 </script>
 
 <style scoped>

@@ -26,9 +26,11 @@
         <Tag plain type="primary" class="shrink-0 h-25">信息</Tag>
         <div class="flex flex-col gap-5">
           <div
-            v-for="item in node.targetIds.infos"
-            :key="item.id"
-            class="rounded-[5px] bg-vant-n2 text-13 p-5">
+            v-for="(item, index) in node.targetIds.infos"
+            :key="index"
+            class="rounded-[5px] bg-vant-n2 text-13 p-5"
+            @touchstart="onTouchStart(item, 0)"
+            @touchend="onTouchEnd">
             {{ "@" + item.user.userName + ":" + item.content }}
           </div>
         </div>
@@ -37,9 +39,11 @@
         <Tag plain type="primary" class="shrink-0 h-25">经验</Tag>
         <div class="flex flex-col gap-5">
           <div
-            v-for="item in node.targetIds.exps"
-            :key="item.id"
-            class="rounded-[5px] bg-vant-n2 text-13 p-5">
+            v-for="(item, index) in node.targetIds.exps"
+            :key="index"
+            class="rounded-[5px] bg-vant-n2 text-13 p-5"
+            @touchstart="onTouchStart(item, 1)"
+            @touchend="onTouchEnd">
             {{ "@" + item.user.userName + ":" + item.content }}
           </div>
         </div>
@@ -48,9 +52,11 @@
         <Tag plain type="primary" class="shrink-0 h-25">资源</Tag>
         <div class="flex flex-col gap-5">
           <div
-            v-for="item in node.targetIds.resources"
-            :key="item.id"
-            class="rounded-[5px] bg-vant-n2 text-13 p-5">
+            v-for="(item, index) in node.targetIds.resources"
+            :key="index"
+            class="rounded-[5px] bg-vant-n2 text-13 p-5"
+            @touchstart="onTouchStart(item, 5)"
+            @touchend="onTouchEnd">
             {{ "@" + item.user.userName + ":" + item.content }}
           </div>
         </div>
@@ -65,7 +71,7 @@
       }}</span>
     </div>
     <div class="px-15">
-      <Comment ref="commentRef"/>
+      <Comment ref="commentRef" />
     </div>
     <div class="grow"></div>
     <div
@@ -76,19 +82,35 @@
         <Icon name="records-o" size="4vw" />
         <div class="text-13">写评论...</div>
       </div>
-      <div class="flex gap-5 items-center">
+      <div class="flex gap-5 items-center" @click="handleComment">
         <Icon name="comment-o" size="4vw" class="text-vant-t3" />
         <div class="text-vant-t3 text-13">{{ node.commentCount }}</div>
       </div>
-      <div class="flex gap-5 items-center text-vant" v-if="node.isLike == true" @click.stop="likeOff">
+      <div
+        class="flex gap-5 items-center text-vant"
+        v-if="node.isLike == true"
+        @click.stop="likeOff">
         <Icon name="good-job-o" size="4vw" />
         <div class="text-13">{{ node.likeCount }}</div>
       </div>
-      <div class="flex gap-5 items-center" v-if="node.isLike == null" @click.stop="likeOn">
+      <div
+        class="flex gap-5 items-center"
+        v-if="node.isLike == null"
+        @click.stop="likeOn">
         <Icon name="good-job-o" size="4vw" class="text-vant-t3" />
         <div class="text-vant-t3 text-13">{{ node.likeCount }}</div>
       </div>
-      <div class="flex gap-5 items-center">
+      <div
+        class="flex gap-5 items-center text-vant"
+        v-if="node.isStar == true"
+        @click.stop="starOff">
+        <Icon name="star-o" size="4vw" />
+        <div class="text-13">{{ node.starCount }}</div>
+      </div>
+      <div
+        class="flex gap-5 items-center"
+        v-if="node.isStar == null"
+        @click.stop="starOn">
         <Icon name="star-o" size="4vw" class="text-vant-t3" />
         <div class="text-vant-t3 text-13">{{ node.starCount }}</div>
       </div>
@@ -118,23 +140,38 @@
 </template>
 
 <script setup lang="ts">
-import { Icon, Image, Button, Field, Popup, Tag, showToast } from "vant";
+import {
+  Icon,
+  Image,
+  showConfirmDialog,
+  Field,
+  Popup,
+  Tag,
+  showToast,
+} from "vant";
 import TinyCard from "@/components/TinyCard.vue";
 import Comment from "@/components/Comment.vue";
 import LittleCard from "@/components/LittleCard.vue";
 import { ref, onMounted } from "vue";
-import {onBeforeRouteLeave, useRouter} from "vue-router";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { getNode } from "@/api/event";
 import { useUserStore } from "@/stores/user";
-import {comment, getComment, like, unLike} from "@/api/action";
+import {
+  comment,
+  like,
+  unLike,
+  star,
+  unStar,
+  unLinkFromNode,
+} from "@/api/action";
 
-const commentRef = ref()
+const commentRef = ref();
 const userStore = useUserStore();
 const router = useRouter();
 const onBack = () => {
   router.back();
 };
-
+let timer = null;
 const showCommentPop = ref(false);
 const commentText = ref("");
 const node = ref({
@@ -145,9 +182,9 @@ const node = ref({
     icon: "",
   },
   targetIds: {
-    infos: [{ id: "", userId: "", user: { userName: "" }, content: "" }],
-    exps: [{ id: "", userId: "", user: { userName: "" }, content: "" }],
-    resources: [{ id: "", userId: "", user: { userName: "" }, content: "" }],
+    infos: [{ targetId: "", user: { userName: "" }, content: "" }],
+    exps: [{ targetId: "",  user: { userName: "" }, content: "" }],
+    resources: [{ targetId: "", user: { userName: "" }, content: "" }],
   },
   userId: "",
   user: {
@@ -167,8 +204,8 @@ const node = ref({
   publishIp: null,
   viewCount: 0,
   likeCount: 0,
-  isLike:null,
-  isStar:null,
+  isLike: null,
+  isStar: null,
   starCount: 0,
   commentStatus: 0,
   commentCount: 0,
@@ -181,7 +218,7 @@ onBeforeRouteLeave((to, from) => {
     showCommentPop.value = false;
     return false;
   }
-})
+});
 onMounted(() => {
   getNode({ nodeId: router.currentRoute.value.params.id }).then((res) => {
     if (res.code == 200) {
@@ -201,7 +238,7 @@ const onComment = () => {
     if (res.code == 200) {
       showCommentPop.value = false;
       showToast("评论成功");
-      commentText.value = '';
+      commentText.value = "";
       commentRef.value.reloadComment();
       node.value.commentCount++;
     }
@@ -209,26 +246,90 @@ const onComment = () => {
 };
 const likeOn = () => {
   like({
-    targetId:router.currentRoute.value.params.id,
-    typed:3
-  }).then(res => {
-    if (res.code == 200){
+    targetId: router.currentRoute.value.params.id,
+    typed: 3,
+  }).then((res) => {
+    if (res.code == 200) {
       node.value.likeCount = res.data;
       node.value.isLike = true;
     }
-  })
+  });
 };
 const likeOff = () => {
   unLike({
-    targetId:router.currentRoute.value.params.id,
-    typed:3
-  }).then(res => {
-    if (res.code == 200){
+    targetId: router.currentRoute.value.params.id,
+    typed: 3,
+  }).then((res) => {
+    if (res.code == 200) {
       node.value.likeCount = res.data;
       node.value.isLike = null;
     }
-  })
-}
+  });
+};
+const starOn = () => {
+  star({
+    targetId: router.currentRoute.value.params.id,
+    typed: 3,
+  }).then((res) => {
+    if (res.code == 200) {
+      node.value.starCount = res.data;
+      node.value.isStar = true;
+    }
+  });
+};
+const starOff = () => {
+  unStar({
+    targetId: router.currentRoute.value.params.id,
+    typed: 3,
+  }).then((res) => {
+    if (res.code == 200) {
+      node.value.starCount = res.data;
+      node.value.isStar = null;
+    }
+  });
+};
+const onTouchStart = (item: any, typed: number) => {
+  timer = setTimeout(() => {
+    timer = null;
+    showConfirmDialog({
+      message: "确认从节点中移除",
+    })
+      .then(() => {
+        unLinkFromNode({
+          nodeId: router.currentRoute.value.params.id,
+          typed: typed,
+          targetId: item.targetId,
+        }).then((res) => {
+          if (res.code == 200) {
+            showToast("移除成功");
+            if (typed == 0) {
+              node.value.targetIds.infos = node.value.targetIds.infos.filter(
+                (i) => i.targetId != item.targetId
+              );
+            }
+            if (typed == 1) {
+              node.value.targetIds.exps = node.value.targetIds.exps.filter(
+                (i) => i.targetId != item.targetId
+              );
+            }
+            if (typed == 5) {
+              node.value.targetIds.resources =
+                node.value.targetIds.resources.filter((i) => i.targetId != item.targetId);
+            }
+          }
+        });
+      })
+      .catch(() => {
+        // on cancel
+      });
+  }, 500);
+};
+const onTouchEnd = () => {
+  if (timer) {
+    clearTimeout(timer);
+    timer = null;
+  }
+};
 </script>
 
 <style lang="scss" scoped>

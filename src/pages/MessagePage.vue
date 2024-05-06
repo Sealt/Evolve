@@ -36,7 +36,7 @@
             class="size-40 shrink-0"
             round />
           <div
-            class="bg-white rounded-tl-[5px] rounded-tr-[15px] rounded-bl-[15px] rounded-br-[15px] p-10 min-h-40 max-w-300 break-all">
+            class="bg-white text-14 rounded-tl-[5px] rounded-tr-[15px] rounded-bl-[15px] rounded-br-[15px] p-10 min-h-40 max-w-300 break-all">
             {{ item.body.text }}
           </div>
           <div class="w-40 shrink-0"></div>
@@ -44,7 +44,7 @@
         <div class="flex items-start gap-10 justify-end" v-else>
           <div class="w-40 shrink-0"></div>
           <div
-            class="flex items-center bg-vant rounded-tl-[15px] rounded-tr-[5px] rounded-bl-[15px] rounded-br-[15px] text-white p-10 min-h-40 max-w-300 break-all">
+            class="flex text-14 items-center bg-vant rounded-tl-[15px] rounded-tr-[5px] rounded-bl-[15px] rounded-br-[15px] text-white p-10 min-h-40 max-w-300 break-all">
             {{ item.body.text }}
           </div>
           <Image

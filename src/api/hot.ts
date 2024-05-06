@@ -1,8 +1,9 @@
 import request from "@/axios"
 
-export const getHotList = async () => {
+export const getHotList = async (data:any) => {
   return await request.get({
     url: "/hot/getHotList",
+    params: data
   });
 };
 

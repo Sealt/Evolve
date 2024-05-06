@@ -29,3 +29,33 @@ export const getSorts = async () => {
     url: "/event/getSorts"
   });
 };
+// getFollowByUser
+export const getFollowByUser = async () => {
+  return await request.get({
+    url: "/event/getFollowByUser"
+  });
+};
+// getSortCard
+export const getSortCard = async () => {
+  return await request.get({
+    url: "/event/getSortCard"
+  });
+};
+// getNewNodes
+export const getNewNodes = async () => {
+  return await request.get({
+    url: "/event/getNewNodes"
+  });
+};
+// getNewEvents
+export const getNewEvents = async () => {
+  return await request.get({
+    url: "/event/getNewEvents"
+  });
+};
+// getHotEvents
+export const getHotEvents = async () => {
+  return await request.get({
+    url: "/event/getHotEvents"
+  });
+};

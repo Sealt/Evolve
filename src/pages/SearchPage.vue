@@ -11,9 +11,10 @@
       <SearchHistory />
       <HotSearch />
       <div class="flex gap-10 overflow-scroll">
-        <SearchHotList />
-        <SearchHotList />
-        <SearchHotList />
+        <SearchHotList typed="event"/>
+        <SearchHotList typed="node"/>
+        <SearchHotList typed="project"/>
+        <SearchHotList typed="file"/>
       </div>
     </div>
   </div>
