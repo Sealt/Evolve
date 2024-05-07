@@ -32,7 +32,9 @@
       </div>
     </div>
     <div class="grid grid-cols-3 bg-white rounded-[10px] py-5">
-      <div class="flex flex-col items-center">
+      <div
+        class="flex flex-col items-center"
+        @click="router.push('/user/' + userStore.userId)">
         <div class="text-16 font-bold">{{ data.posts }}</div>
         <div class="text-13 text-vant-t2">动态</div>
       </div>

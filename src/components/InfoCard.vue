@@ -8,8 +8,8 @@
             fit="cover"
             class="size-[32px]"
             round
-            @click.stop="router.push('/user/'+info.userId)"
-            lazy-load/>
+            @click.stop="router.push('/user/' + info.userId)"
+            lazy-load />
         </div>
         <div class="flex flex-col justify-between ml-10 shrink-0">
           <div class="text-[14px]">{{ info.user.userName }}</div>
@@ -57,7 +57,12 @@
         <LittleCard
           v-for="item in info.fileList"
           type="res"
-          :image="iconBaseUrl + '/res/fileicon/file_icon_' + item.type + '.png'"
+          :image="
+            iconBaseUrl +
+            '/res/fileicon/file_icon_' +
+            getFileType(item.type) +
+            '.png'
+          "
           hot="0"
           :detail="
             item.gainCount +
@@ -91,7 +96,8 @@
           fit="cover"
           radius="0"
           lazy-load
-          class="min-h-[28vw] min-w-[28vw] max-h-[20vh]" :src="image"/>
+          class="min-h-[28vw] min-w-[28vw] max-h-[20vh]"
+          :src="image" />
       </div>
       <div
         class="flex gap-5 flex-wrap"
@@ -108,23 +114,31 @@
       <HotCommentCard v-show="info.hotCommentId" />
     </div>
     <div class="flex justify-around">
-      <div class="flex items-center gap-5 p-10 text-15 text-gray-500" v-if="info.isStar == null">
-        <Icon name="star-o" size="5vw" @click.stop="starOn"/>
+      <div
+        class="flex items-center gap-5 p-10 text-15 text-gray-500"
+        v-if="info.isStar == null">
+        <Icon name="star-o" size="5vw" @click.stop="starOn" />
         <div>{{ info.starCount }}</div>
       </div>
-      <div class="flex items-center gap-5 p-10 text-15 text-vant" v-if="info.isStar == true">
-        <Icon name="star-o" size="5vw" @click.stop="starOff"/>
+      <div
+        class="flex items-center gap-5 p-10 text-15 text-vant"
+        v-if="info.isStar == true">
+        <Icon name="star-o" size="5vw" @click.stop="starOff" />
         <div>{{ info.starCount }}</div>
       </div>
       <div class="flex items-center gap-5 p-10 text-15 text-gray-500">
         <Icon name="comment-o" size="5vw" color="gray" />
         <div>{{ info.commentCount }}</div>
       </div>
-      <div class="flex items-center gap-5 p-10 text-15 text-gray-500" v-if="info.isLike == null">
+      <div
+        class="flex items-center gap-5 p-10 text-15 text-gray-500"
+        v-if="info.isLike == null">
         <Icon name="good-job-o" size="5vw" @click.stop="likeOn" />
         <div>{{ info.likeCount }}</div>
       </div>
-      <div class="flex items-center gap-5 p-10 text-15 text-vant" v-if="info.isLike == true">
+      <div
+        class="flex items-center gap-5 p-10 text-15 text-vant"
+        v-if="info.isLike == true">
         <Icon name="good-job-o" size="5vw" @click.stop="likeOff" />
         <div>{{ info.likeCount }}</div>
       </div>
@@ -147,7 +161,7 @@ import LittleCard from "./LittleCard.vue";
 
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import {like, unLike,star,unStar} from "@/api/action";
+import { like, unLike, star, unStar } from "@/api/action";
 const router = useRouter();
 const showInfoAction = ref(false);
 const infoActions = [{ name: "举报" }, { name: "删除" }];
@@ -161,84 +175,96 @@ const actionOn = () => {
 };
 const likeOn = () => {
   let currentType = null;
-  switch (props.cardType){
-    case 'info':
-      currentType = 0;break;
-    case 'exp':
-      currentType = 1;break;
-    case 'res':
-      currentType = 5;break;
+  switch (props.cardType) {
+    case "info":
+      currentType = 0;
+      break;
+    case "exp":
+      currentType = 1;
+      break;
+    case "res":
+      currentType = 5;
+      break;
   }
   like({
-    targetId:props.info.id,
-    typed:currentType
-  }).then(res => {
-    if (res.code == 200){
+    targetId: props.info.id,
+    typed: currentType,
+  }).then((res) => {
+    if (res.code == 200) {
       props.info.likeCount = res.data;
       props.info.isLike = true;
     }
-  })
+  });
 };
 const likeOff = () => {
   let currentType = null;
-  switch (props.cardType){
-    case 'info':
-      currentType = 0;break;
-    case 'exp':
-      currentType = 1;break;
-    case 'res':
-      currentType = 5;break;
+  switch (props.cardType) {
+    case "info":
+      currentType = 0;
+      break;
+    case "exp":
+      currentType = 1;
+      break;
+    case "res":
+      currentType = 5;
+      break;
   }
   unLike({
-    targetId:props.info.id,
-    typed:currentType
-  }).then(res => {
-    if (res.code == 200){
+    targetId: props.info.id,
+    typed: currentType,
+  }).then((res) => {
+    if (res.code == 200) {
       props.info.likeCount = res.data;
       props.info.isLike = null;
     }
-  })
-}
+  });
+};
 const starOn = () => {
   let currentType = null;
-  switch (props.cardType){
-    case 'info':
-      currentType = 0;break;
-    case 'exp':
-      currentType = 1;break;
-    case 'res':
-      currentType = 5;break;
+  switch (props.cardType) {
+    case "info":
+      currentType = 0;
+      break;
+    case "exp":
+      currentType = 1;
+      break;
+    case "res":
+      currentType = 5;
+      break;
   }
   star({
-    targetId:props.info.id,
-    typed:currentType
-  }).then(res => {
-    if (res.code == 200){
+    targetId: props.info.id,
+    typed: currentType,
+  }).then((res) => {
+    if (res.code == 200) {
       props.info.starCount = res.data;
       props.info.isStar = true;
     }
-  })
-}
+  });
+};
 const starOff = () => {
   let currentType = null;
-  switch (props.cardType){
-    case 'info':
-      currentType = 0;break;
-    case 'exp':
-      currentType = 1;break;
-    case 'res':
-      currentType = 5;break;
+  switch (props.cardType) {
+    case "info":
+      currentType = 0;
+      break;
+    case "exp":
+      currentType = 1;
+      break;
+    case "res":
+      currentType = 5;
+      break;
   }
   unStar({
-    targetId:props.info.id,
-    typed:currentType
-  }).then(res => {
-    if (res.code == 200){
+    targetId: props.info.id,
+    typed: currentType,
+  }).then((res) => {
+    if (res.code == 200) {
       props.info.starCount = res.data;
       props.info.isStar = null;
     }
-  })
-}
+  });
+};
 const props = defineProps<{
   info?: any;
   from?: string;
@@ -267,6 +293,32 @@ onMounted(() => {
   }
   infoDesc.value = from + auth;
 });
+const fileTypes = [
+  "aac",
+  "apk",
+  "doc",
+  "docx",
+  "jpg",
+  "mp3",
+  "ogg",
+  "pdf",
+  "png",
+  "ppt",
+  "pptx",
+  "rar",
+  "txt",
+  "wps",
+  "xls",
+  "xlsx",
+  "zip",
+];
+const getFileType = (type: string) => {
+  if (fileTypes.indexOf(type) != -1) {
+    return type;
+  } else {
+    return "default";
+  }
+};
 </script>
 
 <style lang="scss" scoped>

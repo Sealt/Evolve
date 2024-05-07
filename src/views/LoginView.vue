@@ -4,7 +4,7 @@
     class="flex flex-col items-center px-15 py-30 gap-10 bg-vant-n1 h-screen">
     <div class="flex flex-col items-center gap-5">
       <div class="text-20 font-bold">手机短信登录</div>
-      <div>未注册手机号验证后会直接注册为平台账号</div>
+      <div class="text-14">未注册手机号验证后会直接注册为平台账号</div>
     </div>
     <Field
       class="rounded-[10px] my-10"
@@ -16,11 +16,11 @@
     <Checkbox
       v-model="checked"
       class="flex justify-center text-14"
-      icon-size="16"
+      icon-size="4vw"
       >已阅读并同意隐私政策与用户协议</Checkbox
     >
     <div
-      class="flex justify-center bg-vant text-white p-10 w-[80vw] rounded-[10px]"
+      class="flex text-14 justify-center bg-vant text-white p-10 w-[80vw] rounded-[10px]"
       @click="onLogin">
       获取验证码
     </div>
@@ -37,7 +37,7 @@
     class="flex flex-col items-center px-15 py-30 gap-10 bg-vant-n1 h-screen">
     <div class="flex flex-col items-center gap-5">
       <div class="text-20 font-bold">账号密码登录</div>
-      <div>未注册的用户请使用短信验证注册后登录</div>
+      <div class="text-14">未注册的用户请使用短信验证注册后登录</div>
     </div>
     <Field
       class="rounded-[10px] mt-10"
@@ -59,7 +59,7 @@
       >已阅读并同意隐私政策与用户协议</Checkbox
     >
     <div
-      class="flex justify-center bg-vant text-white p-10 w-[80vw] rounded-[10px]"
+      class="flex text-14 justify-center bg-vant text-white p-10 w-[80vw] rounded-[10px]"
       @click="onCheck">
       登录平台
     </div>
@@ -78,7 +78,7 @@
     class="flex flex-col items-center px-15 py-30 gap-10 bg-vant-n1 h-screen">
     <div class="flex flex-col items-center gap-5">
       <div class="text-20 font-bold">输入验证码</div>
-      <div>验证码短信已发送至+86 - {{ tel }}</div>
+      <div class="text-14">验证码短信已发送至+86 - {{ tel }}</div>
     </div>
     <Field
       class="rounded-[10px] my-10"
@@ -99,7 +99,7 @@
       手机号未注册，验证后直接注册
     </div>
     <div
-      class="flex justify-center bg-vant text-white p-10 w-[80vw] rounded-[10px]"
+      class="flex text-14 justify-center bg-vant text-white p-10 w-[80vw] rounded-[10px]"
       @click="onCheck">
       {{ haveTel ? "登录平台" : "注册新账号" }}
     </div>
@@ -113,7 +113,7 @@
     class="flex flex-col items-center px-15 py-30 gap-10 bg-vant-n1 h-screen">
     <div class="flex flex-col items-center gap-5">
       <div class="text-20 font-bold">选择高校</div>
-      <div>请选择你要加入的平台，确认后不可修改</div>
+      <div class="text-14">请选择你要加入的平台，确认后不可修改</div>
     </div>
     <div
       class="flex flex-col bg-white rounded-[10px] w-full my-10 overflow-hidden">
@@ -136,7 +136,7 @@
       </RadioGroup>
     </div>
     <div
-      class="flex justify-center bg-vant text-white p-10 w-[50vw] rounded-[10px]"
+      class="flex text-14 justify-center bg-vant text-white p-10 w-[50vw] rounded-[10px]"
       @click="onCheck">
       进入平台
     </div>
