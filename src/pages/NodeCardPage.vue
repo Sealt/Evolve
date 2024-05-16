@@ -171,7 +171,7 @@ const router = useRouter();
 const onBack = () => {
   router.back();
 };
-let timer = null;
+let timer:any = null;
 const showCommentPop = ref(false);
 const commentText = ref("");
 const node = ref({

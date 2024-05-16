@@ -20,6 +20,7 @@ import { getNodes } from "@/api/event";
 import { ref, onMounted } from "vue";
 import { Empty } from "vant";
 import { searchNode } from "@/api/search";
+import { getStars } from "@/api/user";
 const router = useRouter();
 const loadStatus = ref(true);
 const nodes = ref({ items: [] });
@@ -52,6 +53,18 @@ function reload(keyword?: any) {
         nodes.value = { items: res.data.records };
       } else {
         nodes.value.items.length = 0;
+      }
+    });
+  }
+  if (props.by == "star") {
+    getStars({
+      current: 1,
+      size: 10,
+      typed: 3
+    }).then((res) => {
+      loadStatus.value = false;
+      if (res.code == 200) {
+        nodes.value = { items: res.data };
       }
     });
   }

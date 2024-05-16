@@ -40,13 +40,22 @@ import InfoFlowPage from "@/pages/InfoFlowPage.vue";
 import InfoExpsPage from "@/pages/InfoExpsPage.vue";
 import { Tab, Tabs, Tabbar, TabbarItem } from "vant";
 import { useRouter } from "vue-router";
-import { ref,onMounted } from "vue";
-import { FlowFlags } from "typescript";
+import { useUserStore } from "@/stores/user";
+import { ref,onMounted, onActivated } from "vue";
+
 const tabActiveName = ref("home");
+const userStore = useUserStore();
 const router = useRouter();
+let userId:string = '';
 
 onMounted(() => {
+  userId = userStore.userId;
 })
+onActivated(() => {
+  if (userStore.userId != userId) {
+    location.reload();
+  }
+});
 </script>
 
 <style>

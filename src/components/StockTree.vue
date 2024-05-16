@@ -33,12 +33,19 @@
       </div>
       <div v-if="treeType == 'database'">
         <LittleCard
+          @touchstart="onTouchStart(item)"
+          @touchend="onTouchEnd"
           v-for="item in contentItems.items"
           class="m-5"
-          :image="iconBaseUrl + '/res/fileicon/file_icon_' + item.type + '.png'"
+          :image="
+            iconBaseUrl +
+            '/res/fileicon/file_icon_' +
+            getFileType(item.type) +
+            '.png'
+          "
           type="file"
           hot="0"
-          :detail=" item.gainCount + ' 获取 '"
+          :detail="item.gainCount + ' 获取 '"
           :title="item.fileName"
           follow="0"
           :to="item.resId" />
@@ -51,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { TreeSelect, Loading,Empty } from "vant";
+import { TreeSelect, Loading, Empty,showConfirmDialog, showToast } from "vant";
 import LittleCard from "./LittleCard.vue";
 import { ref, onMounted } from "vue";
 import { getSorts as getEventSort, getEvents } from "@/api/event";
@@ -62,6 +69,7 @@ import {
   getFiles,
 } from "@/api/res";
 import { useRouter } from "vue-router";
+import { unLinkFromDatabase } from "@/api/action";
 const router = useRouter();
 const iconBaseUrl = import.meta.env.VITE_ICON_URL;
 const activeIndex = ref(0);
@@ -128,6 +136,60 @@ onMounted(() => {
     );
   }
 });
+const fileTypes = [
+  "aac",
+  "apk",
+  "doc",
+  "docx",
+  "jpg",
+  "mp3",
+  "ogg",
+  "pdf",
+  "png",
+  "ppt",
+  "pptx",
+  "rar",
+  "txt",
+  "wps",
+  "xls",
+  "xlsx",
+  "zip",
+];
+const getFileType = (type: string) => {
+  if (fileTypes.indexOf(type) != -1) {
+    return type;
+  } else {
+    return "default";
+  }
+};
+let timer: any = null;
+const onTouchStart = (item: any) => {
+  timer = setTimeout(() => {
+    timer = null;
+    showConfirmDialog({
+      message: "确认从资源库中移除",
+    })
+      .then(() => {
+        unLinkFromDatabase({
+          fileId: item.id,
+        }).then((res) => {
+          if (res.code == 200) {
+            showToast("移除成功");
+            contentItems.value.items = contentItems.value.items.filter((i: any) => i.id != item.id);
+          }
+        });
+      })
+      .catch(() => {
+        // on cancel
+      });
+  }, 500);
+};
+const onTouchEnd = () => {
+  if (timer) {
+    clearTimeout(timer);
+    timer = null;
+  }
+};
 </script>
 
 <style>

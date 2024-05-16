@@ -69,3 +69,17 @@ export const unLinkFromNode = async (data: any) => {
     params: data,
   });
 };
+// linkToDatabase
+export const linkToDatabase = async (data: any) => {
+  return await request.get({
+    url: "/action/linkToDatabase",
+    params: data,
+  });
+};
+// unLinkFromDatabase
+export const unLinkFromDatabase = async (data: any) => {
+  return await request.get({
+    url: "/action/unLinkFromDatabase",
+    params: data,
+  });
+};

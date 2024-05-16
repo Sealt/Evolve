@@ -12,6 +12,7 @@ import { getExps, getByEvent, getByUser } from "@/api/flow";
 import { onMounted, ref } from "vue";
 import { showToast, Loading,Empty } from "vant";
 import { useRouter } from "vue-router";
+import { getStars } from "@/api/user";
 const records: any = ref([]);
 const loadStatus = ref(true);
 const router = useRouter();
@@ -53,6 +54,18 @@ onMounted(() => {
       loadStatus.value = false;
       if (res.code == 200) {
         records.value = res.data.records;
+      }
+    });
+  }
+  if (props.by == "star") {
+    getStars({
+      current: 1,
+      size: 10,
+      typed: 1
+    }).then((res) => {
+      loadStatus.value = false;
+      if (res.code == 200) {
+        records.value = res.data;
       }
     });
   }

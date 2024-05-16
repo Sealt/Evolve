@@ -38,3 +38,9 @@ export const getChat = async (data:any) => {
     params: data
   });
 };
+// getSubscribe
+export const getSubscribe = async () => {
+  return await request.get({
+    url: "/notify/getSubscribe",
+  });
+};

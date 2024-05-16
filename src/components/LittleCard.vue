@@ -26,7 +26,7 @@
       position="bottom"
       round
       closeable
-      teleport="body">
+      teleport=".CurrentView">
       <div class="flex m-15 flex-col gap-10">
         <div>资源详情</div>
         <div class="flex">
@@ -61,16 +61,58 @@
             {{ fileItem.url }}
           </div>
         </div>
+        <div class="flex justify-end">
+          <Button
+            v-show="userStore.userRole.includes('admin')"
+            type="warning"
+            @click="showDatabasePop = true"
+            size="small"
+            >加入资源库</Button
+          >
+        </div>
+      </div>
+    </Popup>
+    <Popup v-model:show="showDatabasePop" class="h-1/2" round position="bottom" teleport=".CurrentView">
+      <div class="flex flex-col p-15 gap-15">
+        <div class="flex items-center justify-between gap-10">
+          <Search
+            class="grow"
+            v-model="searchValue"
+            placeholder="搜索"
+            @update:model-value="onSearch" />
+          <Icon
+            class="text-vant-t2"
+            name="cross"
+            size="5vw"
+            @click="onCloseDatabasePopup" />
+        </div>
+        <div class="flex flex-col gap-5">
+          <div
+            class="flex gap-10 items-center"
+            v-for="item in targetList"
+            @click="onSelectDatabase(item)">
+            <div class="flex gap-10">
+              <div class="text-15">{{ item.subName }}</div>
+              <Tag type="primary">{{ item.projectName }}</Tag>
+            </div>
+            <div class="flex justify-end grow">
+              <Icon class="text-vant-t2" name="arrow" size="5vw" />
+            </div>
+          </div>
+        </div>
       </div>
     </Popup>
   </div>
 </template>
 
 <script setup lang="ts">
-import { Image, Icon, Tag, Popup, showToast } from "vant";
+import { Image, Icon, Tag, Popup, showToast, Button,Search } from "vant";
 import { useRouter } from "vue-router";
 import { ref } from "vue";
-import { gain } from "@/api/action";
+import { gain, linkToDatabase } from "@/api/action";
+import { useUserStore } from "@/stores/user";
+import { getProjectSubs } from "@/api/search";
+const userStore = useUserStore();
 const router = useRouter();
 const props = defineProps<{
   type?: string;
@@ -83,6 +125,27 @@ const props = defineProps<{
   fileItem?: any;
 }>();
 const showResPopup = ref(false);
+const showDatabasePop = ref(false);
+const searchValue = ref("");
+const targetList:any = ref([]);
+const onSearch = (value: string) => {
+  getProjectSubs({ query: value }).then((res) => {
+    targetList.value = res.data;
+  });
+};
+const onCloseDatabasePopup = () => {
+  showDatabasePop.value = false;
+};
+const onSelectDatabase = (item: any) => {
+  linkToDatabase({
+    subId: item.id,
+    projectId: item.projectId,
+    fileId: props.fileItem.id,
+  }).then((res) => {
+    showToast("关联成功");
+    showDatabasePop.value = false;
+  });
+};
 
 const handleClick = () => {
   if (props.type == "event") {
@@ -161,5 +224,8 @@ const handleClick = () => {
 }
 .card:active {
   background-color: #ebedf0;
+}
+.van-search {
+  padding: 0px;
 }
 </style>

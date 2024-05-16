@@ -28,7 +28,7 @@ import InfoFlowPage from "./InfoFlowPage.vue";
 import ResFlowPage from "./ResFlowPage.vue";
 import NodeFlowPage from "./NodeFlowPage.vue";
 import UserFlowPage from "./UserFlowPage.vue";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, onActivated } from "vue";
 const activeTab = ref(0);
 const router = useRouter();
 const searchValue: any = ref("");
@@ -41,15 +41,15 @@ const onBack = () => {
   router.back();
 };
 const onSearch = () => {
-  if (searchValue.value == '') {
-    showToast('搜索内容为空')
+  if (searchValue.value == "") {
+    showToast("搜索内容为空");
     return;
   }
   router.replace("/search/detail?query=" + searchValue.value);
   onTabsChange();
 };
 const onTabsChange = () => {
-  if (searchValue.value == '') {
+  if (searchValue.value == "") {
     return;
   }
   router.currentRoute.value.query.query = searchValue.value;
@@ -75,6 +75,10 @@ const onTabsChange = () => {
 };
 onMounted(() => {
   searchValue.value = router.currentRoute.value.query.query;
+});
+onActivated(() => {
+  searchValue.value = router.currentRoute.value.query.query;
+  onTabsChange();
 });
 watch(infoflow, (newVal, oldVal) => {
   if (newVal != null) {

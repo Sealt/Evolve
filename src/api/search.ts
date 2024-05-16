@@ -37,3 +37,10 @@ export const getHistory = async () => {
     url: "/search/history",
   });
 };
+// getProjectSubs
+export const getProjectSubs = async (data: any) => {
+  return await request.get({
+    url: "/search/getProjectSubs",
+    params: data,
+  });
+};

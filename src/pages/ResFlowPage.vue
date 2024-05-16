@@ -13,6 +13,7 @@ import { onMounted, ref } from "vue";
 import { showToast, Loading, Empty } from "vant";
 import { useRouter } from "vue-router";
 import { searchRes } from "@/api/search";
+import { getStars } from "@/api/user";
 const records: any = ref([]);
 const loadStatus = ref(true);
 const router = useRouter();
@@ -88,6 +89,18 @@ onMounted(() => {
       loadStatus.value = false;
       if (res.code == 200) {
         records.value = res.data.records;
+      }
+    });
+  }
+  if (props.by == "star") {
+    getStars({
+      current: 1,
+      size: 10,
+      typed: 5
+    }).then((res) => {
+      loadStatus.value = false;
+      if (res.code == 200) {
+        records.value = res.data;
       }
     });
   }

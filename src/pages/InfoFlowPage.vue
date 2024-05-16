@@ -16,6 +16,7 @@ import { onMounted, ref, watch } from "vue";
 import { Empty, showToast, Loading } from "vant";
 import { useRouter } from "vue-router";
 import { searchExp, searchInfo } from "@/api/search";
+import { getStars } from "@/api/user";
 const records: any = ref([]);
 const loadStatus = ref(true);
 const router = useRouter();
@@ -100,6 +101,19 @@ onMounted(() => {
       loadStatus.value = false;
       if (res.code == 200) {
         records.value = res.data.records;
+        loadStatus.value = false;
+      }
+    });
+  }
+  if (props.by == "star") {
+    getStars({
+      current: 1,
+      size: 10,
+      typed: 0
+    }).then((res) => {
+      loadStatus.value = false;
+      if (res.code == 200) {
+        records.value = res.data;
         loadStatus.value = false;
       }
     });

@@ -6,7 +6,7 @@ export const useUserStore = defineStore(
   "user",
   () => {
     const userId = ref("");
-    const userRole = ref(null);
+    const userRole:any = ref(null);
     const token = ref("");
     const university = ref(0);
 

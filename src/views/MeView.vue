@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col bg-vant-n2 p-10 gap-15">
+  <div class="flex flex-col bg-vant-n2 p-10 gap-15 h-screen overflow-scroll">
     <div class="flex justify-end gap-10">
       <Icon size="6vw" name="setting-o" />
       <Icon
@@ -7,7 +7,7 @@
         name="info-o"
         @click="
           showToast(
-            '高校研学服务平台 V1.0 \n 江理一起来学 荣誉出品 \n Copyright ©️Benin'
+            '高校研学服务平台 V1.0 \n 江理一起来学 史诗琪 荣誉出品 \n Copyright ©️Benin'
           )
         " />
       <Icon
@@ -56,13 +56,14 @@
       <div
         class="flex flex-col items-center gap-5"
         v-for="item in funcItems"
-        @click="showToast('Coding')">
+        @click="item.to ? router.push(item.to) : showToast('Coding')">
         <Icon :name="item.icon" size="7vw" />
         <div class="text-12">{{ item.text }}</div>
       </div>
     </div>
     <div
-      class="grid grid-cols-4 grid-rows-1 bg-white rounded-[10px] py-10 gap-y-10">
+      class="grid grid-cols-4 grid-rows-1 bg-white rounded-[10px] py-10 gap-y-10"
+      v-show="userStore.userRole.includes('admin')">
       <div
         class="flex flex-col items-center gap-5"
         v-for="item in adminItems"
@@ -71,13 +72,13 @@
         <div class="text-12">{{ item.text }}</div>
       </div>
     </div>
-    <div class="flex flex-col rounded-[10px] overflow-hidden shrink-0">
+    <div class="flex flex-col rounded-[10px] overflow-hidden shrink-0 mb-25">
       <Cell title="个人资料" is-link @click="router.push('/user/edit')" />
       <Cell title="校园认证" is-link @click="router.push('/user/auth')" />
       <Cell title="账号设置" is-link @click="router.push('/user/account')" />
       <Cell title="退出登录" is-link @click="onLogout" />
     </div>
-    <div class="grow bg-vant-n2"></div>
+    <div class="grow bg-vant-n2"/>
     <Tabbar route placeholder>
       <TabbarItem name="info" to="/" icon="info-o">信息</TabbarItem>
       <TabbarItem name="res" to="/res" icon="apps-o">资源</TabbarItem>
@@ -106,9 +107,9 @@ const data: any = ref({
 const router = useRouter();
 const userStore = useUserStore();
 const funcItems = [
-  { icon: "star-o", text: "我的收藏" },
-  { icon: "notes-o", text: "关注事件" },
-  { icon: "list-switch", text: "关注项目" },
+  { icon: "star-o", text: "我的收藏",to:"/user/star" },
+  { icon: "notes-o", text: "关注事件",to:"/user/event" },
+  { icon: "list-switch", text: "关注项目",to:"/user/project" },
   { icon: "good-job-o", text: "我的点赞" },
   { icon: "comment-o", text: "我的回复" },
   { icon: "question-o", text: "我的问答" },

@@ -1,5 +1,5 @@
 <template>
-    <div class="flex h-screen flex-col">
+    <div class="CurrentView flex h-screen flex-col">
         <NavBar title="事件分类" left-arrow left-text="返回" @click-left="onBack"/>
         <StockTree treeType="event"/>
     </div>

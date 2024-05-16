@@ -126,3 +126,22 @@ export const getUserInfo = async (data:any) => {
     data: data
   })
 }
+// getUserEvent
+export const getUserEvent = async () => {
+  return await request.get({
+    url: '/user/getUserEvent'
+  })
+}
+// getUserProject
+export const getUserProject = async () => {
+  return await request.get({
+    url: '/user/getUserProject'
+  })
+}
+// getStars
+export const getStars = async (data:any) => {
+  return await request.get({
+    url: '/user/getStars',
+    params: data
+  })
+}

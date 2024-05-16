@@ -89,6 +89,21 @@ const router = createRouter({
       component: () => import("../pages/UserAccountPage.vue"),
     },
     {
+      path: "/user/star",
+      name: "userStarPage",
+      component: () => import("../pages/UserStarPage.vue"),
+    },
+    {
+      path: "/user/event",
+      name: "userEventPage",
+      component: () => import("../pages/UserEventPage.vue"),
+    },
+    {
+      path: "/user/project",
+      name: "userProjectPage",
+      component: () => import("../pages/UserProjectPage.vue"),
+    },
+    {
       path: "/event/:id",
       name: "eventPage",
       component: () => import("../pages/EventPage.vue"),
