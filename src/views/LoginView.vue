@@ -244,7 +244,7 @@ const onCheck = () => {
         userStore.userRole = res.data.userRole;
         userStore.university = res.data.university;
         showToast("登录成功");
-        router.push("/");
+        router.push("/?from=login");
       } else {
         showToast(res.message);
       }
@@ -268,7 +268,7 @@ const onCheck = () => {
         } else {
           showToast("登录成功");
 
-          router.push("/");
+          router.push("/?from=login");
         }
       } else {
         showToast(res.message);
@@ -280,7 +280,7 @@ const onCheck = () => {
       if (res.code == 200) {
         showToast("注册成功");
         userStore.university = Number.parseInt(checked.value);
-        router.push("/");
+        router.push("/?from=login");
       } else {
         showToast("注册失败");
       }

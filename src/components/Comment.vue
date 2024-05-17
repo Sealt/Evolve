@@ -8,7 +8,8 @@
       <CommentItem
         :commentItem="cmt"
         :-head-comment="cmt"
-        @newComment="reloadComment" />
+        @newComment="reloadComment"
+        @newSonComment="reloadSonComment" />
       <div
         v-if="cmt.comment != null"
         class="flex bg-gray-100 rounded-[5px] ml-40 flex-col overflow-hidden">
@@ -52,12 +53,14 @@
             :commentItem="commentPop"
             :-head-comment="commentPop"
             @newComment="reloadComment"
+            @newSonComment="reloadSonComment"
             @showCommentPop="itemCommentPop = true"
             @closeCommentPop="itemCommentPop = false" />
         </div>
         <div class="flex flex-col px-15 gap-10 bg-vant-n2 py-10">
           <CommentItem
             @newComment="reloadComment"
+            @newSonComment="reloadSonComment"
             v-for="c in commentPop.comment"
             :commentItem="c"
             :-head-comment="commentPop"
@@ -100,26 +103,21 @@ onBeforeRouteLeave((to, from) => {
     return false;
   }
 });
-const reloadComment = () => {
-  getComment({
-    current: pageCurrent,
-    size: pageSize,
-    targetId: pageId,
-  }).then((res) => {
-    if (res.code == 200) {
-      commentItems.value.items = res.data.records;
-      if (showMoreComment.value == true) {
-        for (let itemsKey in commentItems.value.items) {
-          if (commentItems.value.items[itemsKey].id == commentPop.value.id) {
-            commentPop.value = commentItems.value.items[itemsKey];
-          }
-        }
-      }
+const reloadComment = (comment:any) => {
+  commentItems.value.items.unshift(comment);
+};
+const reloadSonComment = (comment:any) => {
+  commentItems.value.items = commentItems.value.items.map((item:any) => {
+    if (item.id == comment.id) {
+      return comment; // 如果 id 相同，返回新的 comment
+    } else {
+      return item; // 否则返回原来的 item
     }
   });
+  commentPop.value.comment = comment.comment;
 };
 defineExpose({
-  reloadComment,
+  reloadComment,reloadSonComment
 });
 onMounted(() => {
   getComment({

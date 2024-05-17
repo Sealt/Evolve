@@ -28,17 +28,22 @@
           dayjs(commentItem.commentTime).fromNow()
         }}</span>
         <div class="flex items-center gap-5">
-          <div class="flex items-center" v-if="commentItem.isLike == null" @click.stop="likeOn">
+          <div
+            class="flex items-center"
+            v-if="commentItem.isLike == null"
+            @click.stop="likeOn">
             <Icon name="good-job-o" size="4vw" /><span
               class="text-12 text-gray-500 px-5"
               >{{ commentItem.likeCount }}</span
             >
           </div>
-          <div class="flex items-center text-vant" v-if="commentItem.isLike == true" @click.stop="likeOff">
-            <Icon name="good-job-o" size="4vw" /><span
-              class="text-12 px-5"
-          >{{ commentItem.likeCount }}</span
-          >
+          <div
+            class="flex items-center text-vant"
+            v-if="commentItem.isLike == true"
+            @click.stop="likeOff">
+            <Icon name="good-job-o" size="4vw" /><span class="text-12 px-5">{{
+              commentItem.likeCount
+            }}</span>
           </div>
           <div class="flex items-center" @click.stop="handleComment">
             <Icon name="comment-o" size="4vw" /><span
@@ -55,8 +60,7 @@
     class="p-15 h-1/3"
     position="bottom"
     round
-    :before-close="beforeClosePop"
-    >
+    :before-close="beforeClosePop">
     <div class="flex flex-col gap-10 h-full">
       <div class="flex items-center justify-between">
         <div class="text-14">回复</div>
@@ -77,9 +81,9 @@
 
 <script setup lang="ts">
 import { Image, Icon, showToast, Popup, Field } from "vant";
-import {ref, onMounted, getCurrentInstance, inject, provide} from "vue";
-import {comment, like, unLike} from "@/api/action";
-import {onBeforeRouteLeave, useRouter} from "vue-router";
+import { ref, onMounted, getCurrentInstance, inject, provide } from "vue";
+import { comment, like, unLike } from "@/api/action";
+import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
 const userStore = useUserStore();
 const router = useRouter();
@@ -93,23 +97,32 @@ const showCommentPop = ref(false);
 const pageType = router.currentRoute.value.params.type;
 const pageId = router.currentRoute.value.params.id;
 
-const emits = defineEmits(['newComment','showCommentPop','closeCommentPop'])
+const emits = defineEmits([
+  "newComment",
+  "newSonComment",
+  "showCommentPop",
+  "closeCommentPop",
+]);
 const handleComment = () => {
   showCommentPop.value = true;
-  emits('showCommentPop');
+  emits("showCommentPop");
 };
 const beforeClosePop = () => {
-  emits('closeCommentPop');
+  emits("closeCommentPop");
   return true;
-}
+};
 onBeforeRouteLeave((to, from) => {
-  if (showCommentPop.value == true){
+  if (showCommentPop.value == true) {
     showCommentPop.value = false;
-    emits('closeCommentPop');
+    emits("closeCommentPop");
     return false;
   }
-})
+});
 const onComment = () => {
+  if (commentText.value == "") {
+    showToast("请输入评论内容");
+    return;
+  }
   var targetT = 0;
   switch (router.currentRoute.value.params.type) {
     case "info":
@@ -133,38 +146,45 @@ const onComment = () => {
     replyUserId: props.commentItem.userId,
     replyCommentId: props.HeadComment.id,
     realCommentId: props.commentItem.id,
-  }).then((res) => {
+  }).then((res: any) => {
     if (res.code == 200) {
       showCommentPop.value = false;
       showToast("评论成功");
-      commentText.value = '';
-      emits('newComment');
-      emits('closeCommentPop');
+      commentText.value = "";
+      if (props.HeadComment) {
+        emits("newSonComment", res.data);
+      } else {
+        emits("newComment", res.data);
+      }
+      window.dispatchEvent(new CustomEvent("commentPost",{
+        detail: router.currentRoute.value.params.id
+      }));
+      emits("closeCommentPop");
     }
   });
 };
 const likeOn = () => {
   like({
     targetId: props.commentItem.id,
-    typed: 6
-  }).then(res => {
+    typed: 6,
+  }).then((res) => {
     if (res.code == 200) {
       props.commentItem.likeCount = res.data;
       props.commentItem.isLike = true;
     }
-  })
+  });
 };
 const likeOff = () => {
   unLike({
     targetId: props.commentItem.id,
-    typed: 6
-  }).then(res => {
+    typed: 6,
+  }).then((res) => {
     if (res.code == 200) {
       props.commentItem.likeCount = res.data;
       props.commentItem.isLike = null;
     }
-  })
-}
+  });
+};
 </script>
 
 <style scoped>

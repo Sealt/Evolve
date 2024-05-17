@@ -5,10 +5,10 @@
       <Tab name="store" title="资料库">
         <StockTree treeType="project" />
       </Tab>
-      <Tab name="res" title="资源">
+      <Tab name="res" title="资源" ref="resTab">
         <ResMainPage />
       </Tab>
-      <Tab name="market" title="广场">
+      <Tab name="market" title="广场" ref="marketTab">
         <div class="flex flex-col gap-10 p-10"><ResFlowPage by="home"/></div>
       </Tab>
     </Tabs>
@@ -25,10 +25,29 @@
 import TopBar from "@/components/TopBar.vue";
 import StockTree from "@/components/StockTree.vue";
 import { Tab, Tabs, Tabbar, TabbarItem } from "vant";
-import { ref } from "vue";
+import { ref,onActivated,nextTick } from "vue";
+import { onBeforeRouteLeave } from "vue-router";
 import ResMainPage from "@/pages/ResMainPage.vue";
 import ResFlowPage from "@/pages/ResFlowPage.vue";
+import { useViewStore } from "@/stores/view";
 const tabActiveName = ref("res");
+const resTab: any = ref(null);
+const marketTab: any = ref(null);
+const viewStore = useViewStore();
+
+onActivated(() => {
+  nextTick(() => {
+    resTab.value.$el.scrollTop = viewStore.resScrollTops[1];
+    marketTab.value.$el.scrollTop = viewStore.resScrollTops[2];
+  });
+});
+onBeforeRouteLeave(() => {
+  viewStore.resScrollTops = [
+    0,
+    resTab.value.$el.scrollTop,
+    marketTab.value.$el.scrollTop
+  ];
+});
 </script>
 
 <style scoped>
@@ -36,6 +55,7 @@ const tabActiveName = ref("res");
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  overflow: scroll;
 }
 :deep(.van-tabs__content) {
   display: flex;
@@ -51,5 +71,6 @@ const tabActiveName = ref("res");
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  overflow: scroll;
 }
 </style>

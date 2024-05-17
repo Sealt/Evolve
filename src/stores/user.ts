@@ -1,6 +1,5 @@
 import { ref } from "vue";
 import { defineStore } from "pinia";
-import { findAncestor } from "typescript";
 
 export const useUserStore = defineStore(
   "user",

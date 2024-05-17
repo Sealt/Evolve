@@ -13,6 +13,7 @@ import { useUserStore } from "./stores/user";
 import { showToast, showDialog, showNotify, showLoadingToast } from "vant";
 const userStore = useUserStore();
 const router = useRouter();
+
 const wsConnect = {
   action: 1,
   msgId: "CONNECT",

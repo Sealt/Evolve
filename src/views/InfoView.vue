@@ -1,24 +1,30 @@
 <template>
   <div class="CurrentView h-screen flex flex-col">
     <TopBar />
-    <Tabs v-model:active="tabActiveName" sticky shrink swipeable lazy-render>
-      <Tab name="follow" title="关注">
+    <Tabs
+      v-model:active="tabActiveName"
+      sticky
+      shrink
+      swipeable
+      lazy-render
+      ref="viewTabs">
+      <Tab name="follow" title="关注" ref="followTab">
         <FlowPage by="follow" />
       </Tab>
-      <Tab name="home" title="首页">
+      <Tab name="home" title="首页" ref="homeTab">
         <InfoHomePage />
       </Tab>
-      <Tab name="hot" title="热门">
+      <Tab name="hot" title="热门" ref="hotTab">
         <InfoHotPage />
       </Tab>
-      <Tab name="event" title="事件">
+      <Tab name="event" title="事件" ref="eventTab">
         <InfoEventPage />
       </Tab>
-      <Tab name="info" title="信息">
-        <InfoFlowPage by="info"/>
+      <Tab name="info" title="信息" ref="infoTab">
+        <InfoFlowPage by="info" />
       </Tab>
-      <Tab name="experience" title="经验">
-        <InfoExpsPage by="home"/>
+      <Tab name="experience" title="经验" ref="experienceTab">
+        <InfoExpsPage by="home" />
       </Tab>
     </Tabs>
     <Tabbar route placeholder class="shrink-0">
@@ -39,22 +45,44 @@ import InfoEventPage from "@/pages/InfoEventPage.vue";
 import InfoFlowPage from "@/pages/InfoFlowPage.vue";
 import InfoExpsPage from "@/pages/InfoExpsPage.vue";
 import { Tab, Tabs, Tabbar, TabbarItem } from "vant";
-import { useRouter } from "vue-router";
-import { useUserStore } from "@/stores/user";
-import { ref,onMounted, onActivated } from "vue";
+import { useRouter, onBeforeRouteLeave } from "vue-router";
+import { useViewStore } from "@/stores/view";
+import { ref, onMounted, onActivated, nextTick } from "vue";
 
 const tabActiveName = ref("home");
-const userStore = useUserStore();
 const router = useRouter();
-let userId:string = '';
+const viewStore = useViewStore();
+const homeTab: any = ref(null);
+const followTab: any = ref(null);
+const hotTab: any = ref(null);
+const eventTab: any = ref(null);
+const infoTab: any = ref(null);
+const experienceTab: any = ref(null);
 
-onMounted(() => {
-  userId = userStore.userId;
-})
 onActivated(() => {
-  if (userStore.userId != userId) {
-    location.reload();
+  if (router.currentRoute.value.query.from == "login") {
+    router.push({ path: "/", query: {} }).then(() => {
+      location.reload();
+    });
   }
+  nextTick(() => {
+    followTab.value.$el.scrollTop = viewStore.infoScrollTops[0];
+    homeTab.value.$el.scrollTop = viewStore.infoScrollTops[1];
+    hotTab.value.$el.scrollTop = viewStore.infoScrollTops[2];
+    eventTab.value.$el.scrollTop = viewStore.infoScrollTops[3];
+    infoTab.value.$el.scrollTop = viewStore.infoScrollTops[4];
+    experienceTab.value.$el.scrollTop = viewStore.infoScrollTops[5];
+  });
+});
+onBeforeRouteLeave(() => {
+  viewStore.infoScrollTops = [
+    followTab.value.$el.scrollTop,
+    homeTab.value.$el.scrollTop,
+    hotTab.value.$el.scrollTop,
+    eventTab.value.$el.scrollTop,
+    infoTab.value.$el.scrollTop,
+    experienceTab.value.$el.scrollTop,
+  ];
 });
 </script>
 
@@ -78,6 +106,7 @@ onActivated(() => {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  overflow: scroll;
 }
 :deep(.van-tabs__content) {
   display: flex;
@@ -89,10 +118,12 @@ onActivated(() => {
   flex-direction: column;
   gap: 10px;
   padding: 10px;
+  flex-grow: 1;
 }
 :deep(.van-swipe-item) {
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+  overflow: scroll;
 }
 </style>

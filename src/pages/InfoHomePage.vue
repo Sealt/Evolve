@@ -30,6 +30,7 @@ const funcItems = [
   { icon: "info", text: "状态" ,color:'text-pink-300'},
   { icon: "notes", text: "日程",color:'text-orange-300' },
   { icon: "question", text: "咨询" ,color:'text-purple-400'}]
+
 </script>
 
 <style scoped>

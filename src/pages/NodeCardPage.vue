@@ -227,6 +227,10 @@ onMounted(() => {
   });
 });
 const onComment = () => {
+  if (commentText.value == "") {
+    showToast("请输入评论内容");
+    return;
+  }
   comment({
     userId: userStore.userId,
     targetId: router.currentRoute.value.params.id,
@@ -239,7 +243,7 @@ const onComment = () => {
       showCommentPop.value = false;
       showToast("评论成功");
       commentText.value = "";
-      commentRef.value.reloadComment();
+      commentRef.value.reloadComment(res.data);
       node.value.commentCount++;
     }
   });

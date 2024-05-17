@@ -4,6 +4,9 @@
     v-for="item in records"
     :info="item"
     :cardType="item.typed == 0 ? 'info' : 'exp'" />
+  <div id="loadMore" class="flex justify-center text-13 text-vant-t2">
+    加载更多
+  </div>
   <Empty
     v-if="records.length == 0 && loadStatus == false"
     description="这里空空如也" />

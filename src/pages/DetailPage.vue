@@ -10,70 +10,73 @@
       @click-left="router.back()" />
 
     <Loading class="pt-20" v-if="loadStatus" vertical>加载中</Loading>
-    <div v-if="detailType == '收到的赞'" class="flex flex-col grow">
-      <PullRefresh
-        v-model="pullLoading"
-        @refresh="onRefresh"
-        class="grow"
-        success-text="刷新成功">
-        <div class="flex flex-col m-15 gap-15">
-          <NotifyLikeItem :item="a" v-for="a in listData" />
-        </div>
-      </PullRefresh>
+    <div class="flex flex-col grow" v-if="listData.length != 0 && loadStatus == false">
+      <div v-if="detailType == '收到的赞'" class="flex flex-col grow">
+        <PullRefresh
+          v-model="pullLoading"
+          @refresh="onRefresh"
+          class="grow"
+          success-text="刷新成功">
+          <div class="flex flex-col m-15 gap-15">
+            <NotifyLikeItem :item="a" v-for="a in listData" />
+          </div>
+        </PullRefresh>
+      </div>
+
+      <div v-else class="flex flex-col grow">
+        <PullRefresh
+          v-model="pullLoading"
+          @refresh="onRefresh"
+          class="grow"
+          success-text="刷新成功">
+          <div class="flex flex-col m-15 gap-15">
+            <NotifyItem
+              type="user_notify"
+              v-if="fatherPage == 'notify' && detailType == '被关注'"
+              v-for="list in listData"
+              :jumpId="list.fromId"
+              :user-name="list.user.userName"
+              :avatar="list.user.avatar"
+              :bio="list.bio"
+              :gender="list.gender"
+              :create-time="list.createTime"
+              :dot="list.isRead == 0" />
+            <NotifyItem
+              type="user_list"
+              v-if="fatherPage == 'user'"
+              v-for="list in listData"
+              :jumpId="list.id"
+              :user-name="list.userName"
+              :avatar="list.avatar"
+              :bio="list.bio"
+              :gender="list.gender"
+              :create-time="list.createTime" />
+            <NotifyItem
+              type="chat"
+              v-if="fatherPage == 'notify' && detailType == '私信'"
+              v-for="list in listData"
+              :jumpId="
+                list.fromUid == userStore.userId ? list.toUid : list.fromUid
+              "
+              :user-name="
+                list.fromUid == userStore.userId
+                  ? list.toUser.userName
+                  : list.fromUser.userName
+              "
+              :avatar="
+                list.fromUid == userStore.userId
+                  ? list.toUser.avatar
+                  : list.fromUser.avatar
+              "
+              :content="list.lastMsgNote"
+              :no-read="list.unReadCount"
+              :dot="list.unReadCount != 0"
+              :create-time="list.updateTime" />
+          </div>
+        </PullRefresh>
+      </div>
     </div>
 
-    <div v-else class="flex flex-col grow">
-      <PullRefresh
-        v-model="pullLoading"
-        @refresh="onRefresh"
-        class="grow"
-        success-text="刷新成功">
-        <div class="flex flex-col m-15 gap-15">
-          <NotifyItem
-            type="user_notify"
-            v-if="fatherPage == 'notify' && detailType == '被关注'"
-            v-for="list in listData"
-            :jumpId="list.fromId"
-            :user-name="list.user.userName"
-            :avatar="list.user.avatar"
-            :bio="list.bio"
-            :gender="list.gender"
-            :create-time="list.createTime"
-            :dot="list.isRead == 0" />
-          <NotifyItem
-            type="user_list"
-            v-if="fatherPage == 'user'"
-            v-for="list in listData"
-            :jumpId="list.id"
-            :user-name="list.userName"
-            :avatar="list.avatar"
-            :bio="list.bio"
-            :gender="list.gender"
-            :create-time="list.createTime" />
-          <NotifyItem
-            type="chat"
-            v-if="fatherPage == 'notify' && detailType == '私信'"
-            v-for="list in listData"
-            :jumpId="
-              list.fromUid == userStore.userId ? list.toUid : list.fromUid
-            "
-            :user-name="
-              list.fromUid == userStore.userId
-                ? list.toUser.userName
-                : list.fromUser.userName
-            "
-            :avatar="
-              list.fromUid == userStore.userId
-                ? list.toUser.avatar
-                : list.fromUser.avatar
-            "
-            :content="list.lastMsgNote"
-            :no-read="list.unReadCount"
-            :dot="list.unReadCount != 0"
-            :create-time="list.updateTime" />
-        </div>
-      </PullRefresh>
-    </div>
     <Empty
       v-if="listData.length == 0 && loadStatus == false"
       description="这里空空如也" />
