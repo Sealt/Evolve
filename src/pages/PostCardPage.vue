@@ -74,8 +74,14 @@
           :cardname="data.project.projectName" />
       </div>
     </div>
+    <div v-show="data.infoSource" class="px-15 text-12 text-gray-500">
+      {{ "信息来源 " + data.infoSource }}
+    </div>
+    <div v-show="data.infoSource" class="px-15 text-12 text-gray-500">
+      {{ "有效范围 " + data.scopeDetail }}
+    </div>
     <div class="px-15 text-12 text-gray-500">
-      {{ "发布于" + data.publishIp }}
+      {{ "发布地址 " + data.publishIp }}
     </div>
     <div class="px-15 py-10 flex justify-between">
       <span class="text-14 text-gray-600">{{
@@ -256,6 +262,7 @@ var data: any = ref({
     icon: "",
   },
   infoSource: "",
+  scopeDetail: "",
   content: "",
   infoStatus: 0,
   viewCount: 0,

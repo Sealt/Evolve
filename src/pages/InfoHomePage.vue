@@ -1,5 +1,6 @@
 <template>
-  <div class="firstCard flex flex-col">
+  <div class="flex flex-col gap-10">
+    <div class="firstCard flex flex-col">
     <Swipe
       class="my-swipe"
       :autoplay="3000"
@@ -17,13 +18,16 @@
       </div>
     </div>
   </div>
-  <InfoFlowPage by="home"/>
+  <InfoFlowPage by="home" ref="infoPage"/>
+  </div>
 </template>
 
 <script setup lang="ts">
 import { Swipe, SwipeItem, Icon,showToast } from "vant";
+import { ref } from 'vue'
 import InfoFlowPage from "./InfoFlowPage.vue";
 const swiperImages = ["/1.png", "/2.png", "/3.png"];
+const infoPage:any = ref(null);
 const funcItems = [
   { icon: "fire", text: "必看",color:'text-red-400' },
   { icon: "clock", text: "实况",color:'text-blue-400' },
@@ -31,6 +35,13 @@ const funcItems = [
   { icon: "notes", text: "日程",color:'text-orange-300' },
   { icon: "question", text: "咨询" ,color:'text-purple-400'}]
 
+defineExpose({
+  onRefresh,
+});
+function onRefresh() {
+  infoPage.value.onRefresh();
+
+}
 </script>
 
 <style scoped>

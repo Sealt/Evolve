@@ -9,22 +9,52 @@
       lazy-render
       ref="viewTabs">
       <Tab name="follow" title="关注" ref="followTab">
-        <FlowPage by="follow" />
+          <PullRefresh
+            v-model="pullLoading"
+            @refresh="onRefresh"
+            success-text="刷新成功">
+            <FlowPage by="follow" ref="followPage" />
+          </PullRefresh>
       </Tab>
       <Tab name="home" title="首页" ref="homeTab">
-        <InfoHomePage />
+        <PullRefresh
+          v-model="pullLoading"
+          @refresh="onRefresh"
+          success-text="刷新成功">
+          <InfoHomePage  ref="homePage"/>
+        </PullRefresh>
       </Tab>
       <Tab name="hot" title="热门" ref="hotTab">
-        <InfoHotPage />
+          <PullRefresh
+            v-model="pullLoading"
+            @refresh="onRefresh"
+            success-text="刷新成功">
+            <InfoHotPage  ref="hotPage"/>
+          </PullRefresh>
       </Tab>
       <Tab name="event" title="事件" ref="eventTab">
-        <InfoEventPage />
+        <PullRefresh
+          v-model="pullLoading"
+          @refresh="onRefresh"
+          success-text="刷新成功">
+          <InfoEventPage ref="eventPage"/>
+        </PullRefresh>
       </Tab>
       <Tab name="info" title="信息" ref="infoTab">
-        <InfoFlowPage by="info" />
+        <PullRefresh
+          v-model="pullLoading"
+          @refresh="onRefresh"
+          success-text="刷新成功">
+          <InfoFlowPage by="info"  ref="infoPage"/>
+        </PullRefresh>
       </Tab>
       <Tab name="experience" title="经验" ref="experienceTab">
-        <InfoExpsPage by="home" />
+        <PullRefresh
+          v-model="pullLoading"
+          @refresh="onRefresh"
+          success-text="刷新成功">
+          <InfoExpsPage by="home"  ref="expPage"/>
+        </PullRefresh>
       </Tab>
     </Tabs>
     <Tabbar route placeholder class="shrink-0">
@@ -44,7 +74,7 @@ import InfoHotPage from "@/pages/InfoHotPage.vue";
 import InfoEventPage from "@/pages/InfoEventPage.vue";
 import InfoFlowPage from "@/pages/InfoFlowPage.vue";
 import InfoExpsPage from "@/pages/InfoExpsPage.vue";
-import { Tab, Tabs, Tabbar, TabbarItem } from "vant";
+import { Tab, Tabs, Tabbar, TabbarItem, PullRefresh } from "vant";
 import { useRouter, onBeforeRouteLeave } from "vue-router";
 import { useViewStore } from "@/stores/view";
 import { ref, onMounted, onActivated, nextTick } from "vue";
@@ -58,6 +88,38 @@ const hotTab: any = ref(null);
 const eventTab: any = ref(null);
 const infoTab: any = ref(null);
 const experienceTab: any = ref(null);
+const followPage: any = ref(null);
+const homePage: any = ref(null);
+const hotPage: any = ref(null);
+const eventPage: any = ref(null);
+const infoPage: any = ref(null);
+const expPage: any = ref(null);
+const pullLoading = ref(false);
+
+const onRefresh = () => {
+  pullLoading.value = true;
+  switch (tabActiveName.value) {
+    case "follow":
+      followPage.value.onRefresh();
+      break;
+    case "home":
+      homePage.value.onRefresh();
+      break;
+    case "hot":
+      hotPage.value.onRefresh();
+      break;
+    case "event":
+      eventPage.value.onRefresh();
+      break;
+    case "info":
+      infoPage.value.onRefresh();
+      break;
+    case "experience":
+      expPage.value.onRefresh();
+      break;
+  }
+  pullLoading.value = false;
+};
 
 onActivated(() => {
   if (router.currentRoute.value.query.from == "login") {
@@ -116,9 +178,8 @@ onBeforeRouteLeave(() => {
 :deep(.van-tab__panel) {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding: 10px;
   flex-grow: 1;
+  padding: 10px;
 }
 :deep(.van-swipe-item) {
   display: flex;

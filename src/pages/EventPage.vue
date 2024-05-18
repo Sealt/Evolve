@@ -43,7 +43,7 @@
       animated
       swipeable
       lazy-render>
-      <Tab title="节点" name="a"><NodeFlowPage /></Tab>
+      <Tab title="节点" name="a"><NodeFlowPage by="event" /></Tab>
       <Tab title="信息" name="b"><InfoFlowPage by="event" /></Tab>
       <Tab title="经验" name="c"><InfoExpsPage by="event" /></Tab>
       <Tab title="资源" name="d"><ResFlowPage by="event" /></Tab>

@@ -10,6 +10,12 @@
     :bio="list.bio"
     :gender="list.gender"
     :create-time="list.createTime" />
+  <div
+    v-show="listData.length != 0 && loadStatus == false"
+    ref="loadMoreElement"
+    class="flex justify-center text-13 text-vant-t2">
+    {{ loadMoreContent }}
+  </div>
   <Empty
     v-if="listData.length == 0 && loadStatus == false"
     description="这里空空如也" />
@@ -18,27 +24,72 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router";
 import NotifyItem from "@/components/NotifyItem.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { Empty, Loading } from "vant";
 import { useUserStore } from "@/stores/user";
 import { searchUser } from "@/api/search";
 const router = useRouter();
 const loadStatus = ref(true);
 const userStore = useUserStore();
+const searchQuery: any = ref("");
 const listData: any = ref([]);
-let detailType: any = ref("");
-let fatherPage = ref("");
-const props = defineProps<{
-  keyword?: string;
-}>();
+const loadMoreElement = ref(null);
+const loadMoreContent = ref("加载更多");
+let loadLock = 0;
+const pageInfo = ref({
+  current: 1,
+  size: 10,
+  pages: 0,
+});
+let observer: any = null;
+
 defineExpose({
   reload,
 });
 function reload(keyword: any) {
+  observer.observe(loadMoreElement.value);
+  searchQuery.value = keyword;
+  pageInfo.value.current = 1;
+  pageInfo.value.pages = 0;
+  loadLock = 1;
+  listData.value = [];
   loadStatus.value = true;
-  searchUser({ current: 1, size: 10, keyword: keyword }).then((res) => {
+  loadData(keyword);
+}
+onBeforeUnmount(() => {
+  if (observer) {
+    observer.disconnect();
+  }
+});
+onMounted(() => {
+  observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+      if (loadLock == 0) {
+        loadLock = 1;
+        loadData(searchQuery.value);
+      }
+    }
+  });
+});
+function loadData(keyword: any) {
+  searchUser({
+    current: pageInfo.value.current,
+    size: pageInfo.value.size,
+    keyword: keyword,
+  }).then((res) => {
     loadStatus.value = false;
-    listData.value = res.data;
+    loadLock = 0;
+    if (res.code == 200) {
+      listData.value = [...listData.value, ...res.data];
+      pageInfo.value.pages = res.data.pages;
+      pageInfo.value.current++;
+      if (res.data.length == 0) {
+        loadMoreContent.value = "没有更多了";
+        observer.disconnect();
+      }
+    } else {
+      loadMoreContent.value = "加载失败";
+    }
   });
 }
 </script>

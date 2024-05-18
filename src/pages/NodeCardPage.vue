@@ -4,7 +4,7 @@
       class="flex h-45 border-b bg-white items-center sticky top-0 z-50 shrink-0">
       <Icon class="pl-10 pr-20" size="5vw" name="arrow-left" @click="onBack" />
       <Image
-        src="https://fastly.jsdelivr.net/npm/@vant/assets/cat.jpeg"
+        :src="node.event.icon"
         fit="cover"
         class="shrink-0 size-32"
         radius="5px" />

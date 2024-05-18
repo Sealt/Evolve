@@ -1,5 +1,5 @@
 <template>
-  <div class="CurrentView flex flex-col h-screen">
+  <div class="CurrentView flex flex-col h-screen gap-5">
     <NavBar
       title="关注的项目"
       left-arrow
@@ -11,7 +11,7 @@
     <Loading class="pt-20" v-if="loadStatus" vertical>加载中</Loading>
     <LittleCard
       v-for="item in contentItems"
-      class="m-10"
+      class="mx-10 mt-5"
       :image="item.icon"
       type="project"
       hot="0"
