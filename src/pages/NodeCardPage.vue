@@ -15,9 +15,15 @@
     <div class="flex px-15 pt-10 flex-col gap-10">
       <div class="flex grow justify-between">
         <div class="text-15">{{ node.title }}</div>
-        <Tag type="primary">进行中</Tag>
+        <Tag
+          v-if="dayjs().isBetween(node.startTime, dayjs(node.endTime))"
+          type="primary"
+          >进行中</Tag
+        >
+        <Tag v-if="dayjs().isBefore(node.startTime)" type="success">未开始</Tag>
+        <Tag v-if="dayjs().isAfter(node.endTime)" plain>已结束</Tag>
       </div>
-      <div class="text-14">{{ node.content }}</div>
+      <div class="whitespace-pre-line text-14">{{ node.content }}</div>
       <div class="flex gap-10 items-center">
         <Tag plain type="primary" class="shrink-0 h-25">时间</Tag>
         <span class="text-14">{{ node.startTime + " - " + node.endTime }}</span>
@@ -152,7 +158,7 @@ import {
 import TinyCard from "@/components/TinyCard.vue";
 import Comment from "@/components/Comment.vue";
 import LittleCard from "@/components/LittleCard.vue";
-import { ref, onMounted } from "vue";
+import { ref, onMounted,getCurrentInstance } from "vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { getNode } from "@/api/event";
 import { useUserStore } from "@/stores/user";
@@ -168,10 +174,11 @@ import {
 const commentRef = ref();
 const userStore = useUserStore();
 const router = useRouter();
+const dayjs = getCurrentInstance()?.appContext.config.globalProperties.$dayjs;
 const onBack = () => {
   router.back();
 };
-let timer:any = null;
+let timer: any = null;
 const showCommentPop = ref(false);
 const commentText = ref("");
 const node = ref({
@@ -183,7 +190,7 @@ const node = ref({
   },
   targetIds: {
     infos: [{ targetId: "", user: { userName: "" }, content: "" }],
-    exps: [{ targetId: "",  user: { userName: "" }, content: "" }],
+    exps: [{ targetId: "", user: { userName: "" }, content: "" }],
     resources: [{ targetId: "", user: { userName: "" }, content: "" }],
   },
   userId: "",
@@ -318,7 +325,9 @@ const onTouchStart = (item: any, typed: number) => {
             }
             if (typed == 5) {
               node.value.targetIds.resources =
-                node.value.targetIds.resources.filter((i) => i.targetId != item.targetId);
+                node.value.targetIds.resources.filter(
+                  (i) => i.targetId != item.targetId
+                );
             }
           }
         });

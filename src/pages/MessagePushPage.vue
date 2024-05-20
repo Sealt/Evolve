@@ -7,7 +7,7 @@
       fixed
       class="shrink-0"
       placeholder />
-      <Loading class="pt-20 bg-vant-n2" v-if="loadStatus" vertical>加载中</Loading>
+      <Loading class="pt-20" v-if="loadStatus" vertical>加载中</Loading>
     <div class="flex flex-col grow bg-vant-n2 p-10 gap-10"
     v-if="notifyData.length != 0 && loadStatus == false">
       <div

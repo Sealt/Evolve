@@ -11,6 +11,7 @@
       <Tab name="follow" title="关注" ref="followTab">
           <PullRefresh
             v-model="pullLoading"
+            class="h-full"
             @refresh="onRefresh"
             success-text="刷新成功">
             <FlowPage by="follow" ref="followPage" />
@@ -20,6 +21,7 @@
         <PullRefresh
           v-model="pullLoading"
           @refresh="onRefresh"
+          class="h-full"
           success-text="刷新成功">
           <InfoHomePage  ref="homePage"/>
         </PullRefresh>
@@ -28,6 +30,7 @@
           <PullRefresh
             v-model="pullLoading"
             @refresh="onRefresh"
+            class="h-full"
             success-text="刷新成功">
             <InfoHotPage  ref="hotPage"/>
           </PullRefresh>
@@ -36,6 +39,7 @@
         <PullRefresh
           v-model="pullLoading"
           @refresh="onRefresh"
+          class="h-full"
           success-text="刷新成功">
           <InfoEventPage ref="eventPage"/>
         </PullRefresh>
@@ -44,6 +48,7 @@
         <PullRefresh
           v-model="pullLoading"
           @refresh="onRefresh"
+          class="h-full"
           success-text="刷新成功">
           <InfoFlowPage by="info"  ref="infoPage"/>
         </PullRefresh>
@@ -52,12 +57,13 @@
         <PullRefresh
           v-model="pullLoading"
           @refresh="onRefresh"
+          class="h-full"
           success-text="刷新成功">
           <InfoExpsPage by="home"  ref="expPage"/>
         </PullRefresh>
       </Tab>
     </Tabs>
-    <Tabbar route placeholder class="shrink-0">
+    <Tabbar route placeholder class="flex shrink-0" ref="tabbarRef">
       <TabbarItem name="info" to="/" icon="info-o">信息</TabbarItem>
       <TabbarItem name="res" to="/res" icon="apps-o">资源</TabbarItem>
       <TabbarItem name="chat" to="/chat" icon="chat-o">消息</TabbarItem>
@@ -95,7 +101,11 @@ const eventPage: any = ref(null);
 const infoPage: any = ref(null);
 const expPage: any = ref(null);
 const pullLoading = ref(false);
+const tabbarRef:any = ref(null);
 
+onActivated(() => {
+  tabbarRef.value.$el.style.height = "7vh";
+});
 const onRefresh = () => {
   pullLoading.value = true;
   switch (tabActiveName.value) {

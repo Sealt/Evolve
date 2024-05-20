@@ -14,7 +14,7 @@
       placeholder="请输入中国大陆手机号码"
       border />
     <Checkbox
-      v-model="checked"
+      v-model="agreeCheck"
       class="flex justify-center text-14"
       icon-size="4vw"
       >已阅读并同意隐私政策与用户协议</Checkbox
@@ -53,7 +53,7 @@
       placeholder="请输入密码"
       border />
     <Checkbox
-      v-model="checked"
+      v-model="agreeCheck"
       class="flex justify-center text-14"
       icon-size="16"
       >已阅读并同意隐私政策与用户协议</Checkbox
@@ -137,7 +137,7 @@
     </div>
     <div
       class="flex text-14 justify-center bg-vant text-white p-10 w-[50vw] rounded-[10px]"
-      @click="onCheck">
+      @click="onSign">
       进入平台
     </div>
     <div class="flex grow items-end gap-5 justify-center">
@@ -173,11 +173,12 @@ import {
 const userStore = useUserStore();
 const router = useRouter();
 const status = ref("login");
-const tel = ref("13293750885");
+const tel = ref("");
 const sms = ref("");
 const smstime = ref(60);
 const smsText = ref("发送验证码");
 const userName = ref("");
+const agreeCheck = ref(false);
 const checked = ref("");
 const pwd = ref("");
 const disableSms = ref(true);
@@ -204,14 +205,22 @@ const onSearch = () => {
   });
 };
 const onLogin = () => {
+  if (agreeCheck.value == false) {
+    showToast("请先同意隐私政策与用户协议");
+    return;
+  }
+  if (tel.value == "" || tel.value.length != 11) {
+    showToast("请输入手机号");
+    return;
+  }
   const params: ILoginBySmsType = {
     mobile: tel.value,
-    scene: "signup"
+    scene: "signup",
   };
-  getSms(params).then(res => {
+  getSms(params).then((res) => {
     if (res.code == 200) {
       // todo 测试
-      sms.value = res.message
+      // sms.value = res.message
       status.value = "check";
       disableSms.value = true;
       smsText.value = "发送验证码(" + smstime.value + ")";
@@ -231,7 +240,15 @@ const onLogin = () => {
   });
 };
 const onCheck = () => {
+  if (agreeCheck.value == false) {
+    showToast("请先同意隐私政策与用户协议");
+    return;
+  }
   if (status.value == "pwd") {
+    if (userName.value == "" || pwd.value == "") {
+      showToast("请输入手机号或密码");
+      return;
+    }
     // 密码登录逻辑
     const params: ILoginByAccountType = {
       userAccount: userName.value,
@@ -251,6 +268,10 @@ const onCheck = () => {
     });
   }
   if (status.value == "check") {
+    if (sms.value == "") {
+      showToast("请输入验证码");
+      return;
+    }
     // 验证码登录逻辑
     const params: ILoginBySmsType = {
       code: sms.value,
@@ -275,17 +296,21 @@ const onCheck = () => {
       }
     });
   }
-  if (status.value == "select") {
-    signWithUniversity({ uniId: checked.value }).then((res) => {
-      if (res.code == 200) {
-        showToast("注册成功");
-        userStore.university = Number.parseInt(checked.value);
-        router.push("/?from=login");
-      } else {
-        showToast("注册失败");
-      }
-    });
+};
+const onSign = () => {
+  if (checked.value == "") {
+    showToast("请选择高校");
+    return;
   }
+  signWithUniversity({ uniId: checked.value }).then((res) => {
+    if (res.code == 200) {
+      showToast("注册成功");
+      userStore.university = Number.parseInt(checked.value);
+      router.push("/?from=login");
+    } else {
+      showToast("注册失败");
+    }
+  });
 };
 </script>
 

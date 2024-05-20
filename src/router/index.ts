@@ -104,6 +104,11 @@ const router = createRouter({
       component: () => import("../pages/UserProjectPage.vue"),
     },
     {
+      path: "/mode/code",
+      name: "modeCodePage",
+      component: () => import("../pages/ModeCode.vue"),
+    },
+    {
       path: "/event/:id",
       name: "eventPage",
       component: () => import("../pages/EventPage.vue"),

@@ -85,6 +85,10 @@ onMounted(() => {
   loadData();
 });
 function loadData() {
+  if (pageInfo.value.pages != 0 && pageInfo.value.current > pageInfo.value.pages) {
+    loadMoreContent.value = "没有更多了";
+    return;
+  }
   loadMoreContent.value = "加载中";
   if (props.by == "event") {
     getNodes({
@@ -97,10 +101,7 @@ function loadData() {
         nodes.value.items = [...nodes.value.items, ...res.data.records];
         pageInfo.value.pages = res.data.pages;
         pageInfo.value.current++;
-        if (pageInfo.value.current > pageInfo.value.pages) {
-          loadMoreContent.value = "没有更多了";
-          observer.disconnect();
-        }
+        loadMoreContent.value = "加载更多";
       } else {
         loadMoreContent.value = "加载失败";
         nodes.value.items.length = 0;
@@ -116,13 +117,10 @@ function loadData() {
       loadStatus.value = false;
       loadLock = 0;
       if (res.code == 200) {
-        nodes.value.items = [...nodes.value.items, ...res.data.records];
-        pageInfo.value.pages = res.data.pages;
+        nodes.value.items = [...nodes.value.items, ...res.data.data];
+        pageInfo.value.pages = res.data.pageSize;
         pageInfo.value.current++;
-        if (pageInfo.value.current > pageInfo.value.pages) {
-          loadMoreContent.value = "没有更多了";
-          observer.disconnect();
-        }
+        loadMoreContent.value = "加载更多";
       } else {
         loadMoreContent.value = "加载失败";
         nodes.value.items.length = 0;

@@ -125,8 +125,7 @@ const onGet = () => {
         smstime.value--;
         smsText.value = "发送验证码(" + smstime.value + ")";
       }, 1000);
-
-      sms.value = res.message
+      //sms.value = res.message
     }
   });
 };

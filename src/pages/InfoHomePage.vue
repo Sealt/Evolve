@@ -1,13 +1,13 @@
 <template>
   <div class="flex flex-col gap-10">
-    <div class="firstCard flex flex-col">
+    <div class="firstCard flex flex-col" v-show="showFirstCard">
     <Swipe
       class="my-swipe"
       :autoplay="3000"
       height="130"
       indicator-color="white">
-      <SwipeItem v-for="image in swiperImages" :key="image">
-        <img :src="image" />
+      <SwipeItem v-for="item in swiperImages" :key="item.id">
+        <img :src="item.bannerFile" @click="router.push(item.openUrl)"/>
       </SwipeItem>
     </Swipe>
     <div
@@ -24,23 +24,44 @@
 
 <script setup lang="ts">
 import { Swipe, SwipeItem, Icon,showToast } from "vant";
-import { ref } from 'vue'
+import { ref,onMounted, watch } from 'vue'
 import InfoFlowPage from "./InfoFlowPage.vue";
-const swiperImages = ["/1.png", "/2.png", "/3.png"];
+import { getBanner } from "@/api/mode";
+import { useRouter } from "vue-router";
+const swiperImages:any = ref();
 const infoPage:any = ref(null);
+const router = useRouter();
+const showFirstCard = ref(true);
 const funcItems = [
   { icon: "fire", text: "必看",color:'text-red-400' },
   { icon: "clock", text: "实况",color:'text-blue-400' },
   { icon: "info", text: "状态" ,color:'text-pink-300'},
   { icon: "notes", text: "日程",color:'text-orange-300' },
   { icon: "question", text: "咨询" ,color:'text-purple-400'}]
-
+watch(swiperImages, (val) => {
+  if (val.length == 0) {
+    showFirstCard.value = false;
+  } else {
+    showFirstCard.value = true;
+  }
+})
 defineExpose({
   onRefresh,
 });
 function onRefresh() {
   infoPage.value.onRefresh();
-
+  loadData()
+}
+onMounted(() => {
+  loadData()
+})
+function loadData () {
+  swiperImages.value = [];
+  getBanner().then((res) => {
+    if (res.code == 200) {
+      swiperImages.value = res.data;
+    }
+  });
 }
 </script>
 

@@ -82,7 +82,7 @@
             <div class="flex flex-col">
               <div class="text-15">{{ item.projectName }}</div>
               <div class="text-13 text-vant-t2">
-                {{ item.hotIndex + " 热度 " + item.resourceCount  + " 资源"}}
+                {{ item.hotIndex + " 热度 " + item.resourceCount + " 资源" }}
               </div>
             </div>
             <div class="flex justify-end grow">
@@ -122,10 +122,9 @@
             <Cell
               title="上传文件"
               clickable
-              @click="fileUploadType = 'upload'"
               label="将文件上传至服务器，用户从服务器下载获取文件">
               <template #right-icon>
-                <Radio name="upload" />
+                <Radio name="upload" disabled />
               </template>
             </Cell>
             <Cell
@@ -191,7 +190,7 @@
             <div class="flex flex-col">
               <div class="text-15">{{ item.eventName }}</div>
               <div class="text-13 text-vant-t2">
-                {{ item.hotIndex + " 热度 " + item.discussCount  + " 讨论"}}
+                {{ item.hotIndex + " 热度 " + item.discussCount + " 讨论" }}
               </div>
             </div>
             <div class="flex justify-end grow">
@@ -217,8 +216,10 @@ import {
   showToast,
   Icon,
   Image,
+  showLoadingToast,
   type UploaderFileListItem,
   type UploaderInstance,
+  closeToast,
 } from "vant";
 import LittleCard from "@/components/LittleCard.vue";
 import { ref } from "vue";
@@ -236,7 +237,7 @@ const textValue = ref("");
 const targetList: any = ref([]);
 const uploader = ref<UploaderInstance>();
 const fileUploader = ref();
-const fileUploadType = ref();
+const fileUploadType = ref("third");
 const searchValue = ref("");
 var currentFileIndex = -1;
 var fileMode = "new";
@@ -251,7 +252,6 @@ var projectId = "";
 var eventId = "";
 
 const onPublish = () => {
-  console.log(fileList.value);
   // 处理一份最终的文件数组
   fileList.value.forEach((file: any) => {
     if (file.uploadType == "upload") {
@@ -259,7 +259,6 @@ const onPublish = () => {
     }
     file.file = null;
   });
-  console.log(finallyFileList);
   // 组装参数
   var formData = new FormData();
   imgList.value.forEach((file) => {
@@ -276,11 +275,19 @@ const onPublish = () => {
   };
   formData.append("data", JSON.stringify(data));
   formData.append("fileInfo", JSON.stringify(fileList.value));
+
+  showLoadingToast({
+    duration: 0,
+    message: "发布中",
+    forbidClick: true,
+  });
   pubRes(formData).then((res) => {
     if (res.data.code == 200) {
+      closeToast();
       showToast("发表成功");
       router.back();
     } else {
+      closeToast();
       showToast("发表失败");
     }
   });

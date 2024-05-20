@@ -28,6 +28,14 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 const newNodes:any = ref();
 const router = useRouter();
+const onRefresh = () => {
+  getNewNodes().then((res) => {
+    newNodes.value = res.data;
+  });
+};
+defineExpose({
+  onRefresh
+});
 onMounted(() => {
   getNewNodes().then((res) => {
     newNodes.value = res.data;

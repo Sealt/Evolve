@@ -1,8 +1,9 @@
 import request from "@/axios";
 
-export const getNotify = async () => {
+export const getNotify = async (data: any) => {
   return await request.get({
     url: "/notify/getNotify",
+    params: data,
   });
 };
 export const checkComment = async (data: any) => {
@@ -26,16 +27,16 @@ export const getChats = async () => {
     url: "/notify/getChats",
   });
 };
-export const getMessages = async (data:any) => {
+export const getMessages = async (data: any) => {
   return await request.get({
     url: "/notify/getMessages",
-    params: data
+    params: data,
   });
 };
-export const getChat = async (data:any) => {
+export const getChat = async (data: any) => {
   return await request.get({
     url: "/notify/getChat",
-    params: data
+    params: data,
   });
 };
 // getSubscribe

@@ -28,6 +28,14 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 const router = useRouter();
 const followList:any = ref([]);
+const onRefresh = () => {
+  getFollowByUser().then((res) => {
+    followList.value = res.data;
+  });
+};
+defineExpose({
+  onRefresh
+});
 onMounted(() => {
   getFollowByUser().then((res) => {
     followList.value = res.data;

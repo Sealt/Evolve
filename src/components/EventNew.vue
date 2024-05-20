@@ -38,6 +38,14 @@ import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 const newEvents: any = ref();
 const router = useRouter();
+const onRefresh = () => {
+  getNewEvents().then((res) => {
+    newEvents.value = res.data;
+  });
+};
+defineExpose({
+  onRefresh,
+});
 onMounted(() => {
   getNewEvents().then((res) => {
     newEvents.value = res.data;

@@ -18,13 +18,13 @@
       </div>
       <div v-if="dot" class="flex items-center">
         <div class="text-13 text-vant truncate">
-          {{ (gender == '0' ? "" : gender == '1' ? "男" : "女") + " " + bio }}
+          {{ (gender == "0" ? "" : gender == "1" ? "男" : "女") + " " + bio }}
         </div>
       </div>
       <div v-else class="flex items-center">
         <div class="text-13 text-vant-t2 truncate">
           {{
-            (gender == '0' ? "" : gender == '1' ? "男" : "女") +
+            (gender == "0" ? "" : gender == "1" ? "男" : "女") +
             " " +
             (bio != null ? bio : "用户简介")
           }}
@@ -41,12 +41,12 @@
       </div>
       <div v-if="dot" class="flex items-center">
         <div class="text-13 text-vant truncate">
-          {{ '关注了你' }}
+          {{ "关注了你" }}
         </div>
       </div>
       <div v-else class="flex items-center">
         <div class="text-13 text-vant-t2 truncate">
-          {{ '关注了你' }}
+          {{ "关注了你" }}
         </div>
       </div>
     </div>
@@ -121,7 +121,7 @@
 <script setup lang="ts">
 import { Image, Badge, Icon, showToast } from "vant";
 import { useRouter } from "vue-router";
-import { getCurrentInstance,onMounted } from "vue";
+import { getCurrentInstance, onMounted } from "vue";
 import { checkComment } from "@/api/notify";
 const router = useRouter();
 const dayjs = getCurrentInstance()?.appContext.config.globalProperties.$dayjs;
@@ -142,12 +142,18 @@ const props = defineProps<{
   iconClass?: string;
   typeText?: string;
 }>();
-
+const emits = defineEmits(["check"]);
 const handleClick = () => {
+  if (props.dot && props.type == 'comment') {
+    emits("check", props.notifyId);
+  }
+  if (props.dot && props.type == 'push') {
+    emits("check", props.userName);
+  }
   if (props.type == "chat") {
     router.push({
       path: "/message",
-      query: { userid:props.jumpId,username:props.userName },
+      query: { userid: props.jumpId, username: props.userName },
     });
   } else if (props.type == "push") {
     router.push({
@@ -170,7 +176,7 @@ const handleClick = () => {
     if (props.jumpType == 5) {
       router.push("/post/res/" + props.jumpId);
     }
-    checkComment({notifyId:props.notifyId})
+    checkComment({ notifyId: props.notifyId });
   }
 };
 </script>

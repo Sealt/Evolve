@@ -1,20 +1,20 @@
 <template>
   <div class="flex flex-col gap-10">
     <Loading class="pt-20" v-if="loadStatus" vertical>加载中</Loading>
-  <InfoCard
-    v-for="(item, index) in records"
-    :info="getItem(item)"
-    :cardType="selectCardType(item)"
-    :HotIndex="getHotIndex(item, index)" />
-  <div
-    v-show="records.length != 0 && loadStatus == false"
-    ref="loadMoreElement"
-    class="flex justify-center text-13 text-vant-t2">
-    {{ loadMoreContent }}
-  </div>
-  <Empty
-    v-if="records.length == 0 && loadStatus == false"
-    description="这里空空如也" />
+    <InfoCard
+      v-for="(item, index) in records"
+      :info="getItem(item)"
+      :cardType="selectCardType(item)"
+      :HotIndex="getHotIndex(item, index)" />
+    <div
+      v-show="records.length != 0 && loadStatus == false"
+      ref="loadMoreElement"
+      class="flex justify-center text-13 text-vant-t2">
+      {{ loadMoreContent }}
+    </div>
+    <Empty
+      v-if="records.length == 0 && loadStatus == false"
+      description="这里空空如也" />
   </div>
 </template>
 
@@ -61,39 +61,7 @@ function onRefresh() {
   records.value = [];
   pageInfo.value.current = 1;
   pageInfo.value.pages = 0;
-  if (props.by == "hot") {
-    getHotFlow().then((res) => {
-      loadStatus.value = false;
-      if (res.code == 200) {
-        records.value = res.data;
-        loadMoreContent.value = "没有更多了";
-        observer.disconnect();
-      } else {
-        loadMoreContent.value = "加载失败";
-      }
-    });
-  }
-  if (props.by == "follow") {
-    getFollow({
-      current: pageInfo.value.current,
-      size: pageInfo.value.size,
-    }).then((res) => {
-      loadLock = 0;
-      loadStatus.value = false;
-      if (res.code == 200) {
-        records.value = res.data.data;
-        pageInfo.value.pages = res.data.pageSize;
-        pageInfo.value.current++;
-        if (pageInfo.value.current > pageInfo.value.pages) {
-          loadMoreContent.value = "没有更多了";
-          observer.disconnect();
-        }
-      } else {
-        loadMoreContent.value = "加载失败";
-      }
-    });
-  }
-
+  loadData();
 }
 onBeforeUnmount(() => {
   if (observer) {
@@ -113,14 +81,23 @@ onMounted(() => {
   loadData();
 });
 function loadData() {
+  if (
+    pageInfo.value.pages != 0 &&
+    pageInfo.value.current > pageInfo.value.pages
+  ) {
+    loadMoreContent.value = "没有更多了";
+    return;
+  }
+  loadLock = 1;
   loadMoreContent.value = "加载中";
   if (props.by == "hot") {
     getHotFlow().then((res) => {
       loadStatus.value = false;
+      loadLock = 0;
       if (res.code == 200) {
         records.value = [...records.value, ...res.data];
-        loadMoreContent.value = "没有更多了";
-        observer.disconnect();
+        pageInfo.value.pages = -1;
+        loadMoreContent.value = "加载更多";
       } else {
         loadMoreContent.value = "加载失败";
       }
@@ -137,10 +114,7 @@ function loadData() {
         records.value = [...records.value, ...res.data.data];
         pageInfo.value.pages = res.data.pageSize;
         pageInfo.value.current++;
-        if (pageInfo.value.current > pageInfo.value.pages) {
-          loadMoreContent.value = "没有更多了";
-          observer.disconnect();
-        }
+        loadMoreContent.value = "加载更多";
       } else {
         loadMoreContent.value = "加载失败";
       }

@@ -7,7 +7,9 @@
     </div>
     <div class="flex justify-between">
       <div class="text-15">{{ node.title }}</div>
-      <Tag type="primary">进行中</Tag>
+      <Tag v-if="dayjs().isBetween(node.startTime,dayjs(node.endTime))" type="primary">进行中</Tag>
+      <Tag v-if="dayjs().isBefore(node.startTime)" type="success">未开始</Tag>
+      <Tag v-if="dayjs().isAfter(node.endTime)" plain >已结束</Tag>
     </div>
     <div class="text-14">{{ node.startTime + " - " + node.endTime }}</div>
     <div class="flex gap-5">
@@ -44,8 +46,9 @@
 <script setup lang="ts">
 import {Tag, Icon} from "vant";
 import {useRouter} from "vue-router";
+import { getCurrentInstance } from 'vue'
 import {like, unLike} from "@/api/action";
-
+const dayjs = getCurrentInstance()?.appContext.config.globalProperties.$dayjs;
 const router = useRouter();
 const props = defineProps<{
   node?: any;

@@ -11,10 +11,10 @@
       <SearchHistory />
       <HotSearch />
       <div class="flex gap-10 overflow-scroll">
-        <SearchHotList typed="event"/>
-        <SearchHotList typed="node"/>
-        <SearchHotList typed="project"/>
-        <SearchHotList typed="file"/>
+        <SearchHotList typed="event" />
+        <SearchHotList typed="node" />
+        <SearchHotList typed="project" />
+        <SearchHotList typed="file" />
       </div>
     </div>
   </div>
@@ -23,7 +23,7 @@
 <script setup lang="ts">
 import { Search, showToast } from "vant";
 import { useRouter } from "vue-router";
-import { ref,onMounted } from "vue";
+import { ref, onMounted, nextTick } from "vue";
 import HotSearch from "@/components/HotSearch.vue";
 import SearchHistory from "@/components/SearchHistory.vue";
 import SearchHotList from "@/components/SearchHotList.vue";
@@ -41,8 +41,10 @@ const onSearch = () => {
   router.push("/search/detail?query=" + searchValue.value);
 };
 onMounted(() => {
-  search.value.focus();
-})
+  nextTick(() => {
+    search.value.focus();
+  });
+});
 </script>
 
 <style scoped>

@@ -71,10 +71,7 @@ function reload(keyword: string) {
         records.value = [...records.value, ...res.data.records];
         pageInfo.value.pages = res.data.pages;
         pageInfo.value.current++;
-        if (pageInfo.value.current > pageInfo.value.pages) {
-          loadMoreContent.value = "没有更多了";
-          observer.disconnect();
-        }
+        loadMoreContent.value = "加载更多";
       } else {
         records.value = [];
       }
@@ -92,10 +89,7 @@ function reload(keyword: string) {
         records.value = [...records.value, ...res.data.records];
         pageInfo.value.pages = res.data.pages;
         pageInfo.value.current++;
-        if (pageInfo.value.current > pageInfo.value.pages) {
-          loadMoreContent.value = "没有更多了";
-          observer.disconnect();
-        }
+        loadMoreContent.value = "加载更多";
       } else {
         records.value = [];
       }
@@ -117,6 +111,10 @@ onMounted(() => {
 });
 
 function loadData() {
+  if (pageInfo.value.pages != 0 && pageInfo.value.current > pageInfo.value.pages) {
+    loadMoreContent.value = "没有更多了";
+    return;
+  }
   loadLock = 1;
   loadMoreContent.value = "加载中";
   if (props.by == "home") {
@@ -125,8 +123,8 @@ function loadData() {
       loadLock = 0;
       if (res.code == 200) {
         records.value = res.data.records;
+        pageInfo.value.pages = -1;
         loadMoreContent.value = "没有更多了";
-        observer.disconnect();
       } else {
         loadMoreContent.value = "加载失败";
       }
@@ -143,10 +141,7 @@ function loadData() {
         records.value = [...records.value, ...res.data.records];
         pageInfo.value.pages = res.data.pages;
         pageInfo.value.current++;
-        if (pageInfo.value.current > pageInfo.value.pages) {
-          loadMoreContent.value = "没有更多了";
-          observer.disconnect();
-        }
+        loadMoreContent.value = "加载更多";
       } else {
         loadMoreContent.value = "加载失败";
       }
@@ -166,10 +161,7 @@ function loadData() {
         pageInfo.value.pages = res.data.pages;
         pageInfo.value.current++;
         loadStatus.value = false;
-        if (pageInfo.value.current > pageInfo.value.pages) {
-          loadMoreContent.value = "没有更多了";
-          observer.disconnect();
-        }
+        loadMoreContent.value = "加载更多";
       } else {
         loadMoreContent.value = "加载失败";
       }
@@ -189,10 +181,7 @@ function loadData() {
         pageInfo.value.pages = res.data.pages;
         pageInfo.value.current++;
         loadStatus.value = false;
-        if (pageInfo.value.current > pageInfo.value.pages) {
-          loadMoreContent.value = "没有更多了";
-          observer.disconnect();
-        }
+        loadMoreContent.value = "加载更多";
       } else {
         loadMoreContent.value = "加载失败";
       }
@@ -207,14 +196,11 @@ function loadData() {
       loadStatus.value = false;
       loadLock = 0;
       if (res.code == 200) {
-        records.value = [...records.value, ...res.data];
-        pageInfo.value.pages = res.data.pages;
+        records.value = [...records.value, ...res.data.data];
+        pageInfo.value.pages = res.data.pageSize;
         pageInfo.value.current++;
         loadStatus.value = false;
-        if (res.data.length == 0) {
-          loadMoreContent.value = "没有更多了";
-          observer.disconnect();
-        }
+        loadMoreContent.value = "加载更多";
       } else {
         loadMoreContent.value = "加载失败";
       }

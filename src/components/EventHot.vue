@@ -58,18 +58,27 @@
 </template>
 
 <script setup lang="ts">
-import TinyCard from "./TinyCard.vue";
 import { Image, Icon } from "vant";
 import { getHotEvents } from "@/api/event";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 const hotList: any = ref();
 const router=useRouter();
+
+const onRefresh = () => {
+  getHotEvents().then((res) => {
+    hotList.value = res.data;
+  });
+};
+defineExpose({
+  onRefresh,
+});
 onMounted(() => {
   getHotEvents().then((res) => {
     hotList.value = res.data;
   });
 });
+
 const onClick = (item: any) => {
   router.push("/event/" + item.targetId);
 };

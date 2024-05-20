@@ -21,6 +21,14 @@ const sortList:any = ref();
 const onClick = (item:any) => {
   router.push('/events?id='+item.id)
 }
+const onRefresh = () => {
+  getSortCard().then((res) => {
+    sortList.value = res.data;
+  });
+}
+defineExpose({
+  onRefresh
+});
 onMounted(() => {
   getSortCard().then((res) => {
     sortList.value = res.data;

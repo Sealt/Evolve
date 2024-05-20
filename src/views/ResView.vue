@@ -9,6 +9,7 @@
         <PullRefresh
           v-model="pullLoading"
           @refresh="onRefresh"
+          class="h-full"
           success-text="刷新成功">
           <ResMainPage ref="mainPage" />
         </PullRefresh>
@@ -17,6 +18,7 @@
         <PullRefresh
           v-model="pullLoading"
           @refresh="onRefresh"
+          class="h-full"
           success-text="刷新成功">
           <div class="flex flex-col gap-10 p-10">
             <ResFlowPage by="home" ref="marketPage" />
@@ -24,7 +26,7 @@
         </PullRefresh>
       </Tab>
     </Tabs>
-    <Tabbar route placeholder class="shrink-0">
+    <Tabbar route placeholder class="flex shrink-0" ref="tabbarRef">
       <TabbarItem name="info" to="/" icon="info-o">信息</TabbarItem>
       <TabbarItem name="res" to="/res" icon="apps-o">资源</TabbarItem>
       <TabbarItem name="chat" to="/chat" icon="chat-o">消息</TabbarItem>
@@ -49,7 +51,10 @@ const mainPage: any = ref(null);
 const marketPage: any = ref(null);
 const viewStore = useViewStore();
 const pullLoading = ref(false);
-
+const tabbarRef:any = ref(null);
+onActivated(() => {
+  tabbarRef.value.$el.style.height = "7vh";
+});
 const onRefresh = () => {
   pullLoading.value = true;
   switch (tabActiveName.value) {

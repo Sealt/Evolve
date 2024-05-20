@@ -54,7 +54,7 @@
             <div class="flex flex-col">
               <div class="text-15">{{ item.eventName }}</div>
               <div class="text-13 text-vant-t2">
-                {{ item.hotIndex + " 热度 " + item.discussCount + " 讨论"}}
+                {{ item.hotIndex + " 热度 " + item.discussCount + " 讨论" }}
               </div>
             </div>
             <div class="flex justify-end grow">
@@ -77,6 +77,8 @@ import {
   showToast,
   Icon,
   Image,
+  showLoadingToast,
+  closeToast,
   type UploaderFileListItem,
   type UploaderInstance,
 } from "vant";
@@ -95,7 +97,7 @@ const imgList = ref<UploaderFileListItem[]>([]);
 const showEventPopup = ref(false);
 const uploader = ref<UploaderInstance>();
 const targetList: any = ref([]);
-const eventId = ref('');
+const eventId = ref("");
 
 const onPublish = () => {
   var formData = new FormData();
@@ -111,11 +113,18 @@ const onPublish = () => {
     scopeDetail: scopeText.value,
   };
   formData.append("data", JSON.stringify(data));
+  showLoadingToast({
+    duration: 0,
+    message: "发布中",
+    forbidClick: true,
+  });
   pubInfo(formData).then((res) => {
     if (res.data.code == 200) {
+      closeToast();
       showToast("发表成功");
       router.back();
     } else {
+      closeToast();
       showToast("发表失败");
     }
   });
@@ -126,7 +135,7 @@ defineExpose({
 const onSelectEvent = (item: any) => {
   showEventPopup.value = false;
   eventId.value = item.id;
-  eventValue.value = item.eventName
+  eventValue.value = item.eventName;
   showToast("success");
 };
 const onClosePopup = () => {
@@ -183,7 +192,7 @@ const afterRead = (file: any) => {
   }
 };
 const onOversize = (file: any) => {
-  console.log(file);
+  //console.log(file);
   showToast("文件大小不能超过 1mb");
 };
 </script>

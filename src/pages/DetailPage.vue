@@ -10,16 +10,19 @@
       @click-left="router.back()" />
 
     <Loading class="pt-20" v-if="loadStatus" vertical>加载中</Loading>
-    <div class="flex flex-col grow" v-if="listData.length != 0 && loadStatus == false">
+    <div class="flex flex-col grow">
       <div v-if="detailType == '收到的赞'" class="flex flex-col grow">
         <PullRefresh
           v-model="pullLoading"
           @refresh="onRefresh"
-          class="grow"
+          class="h-full"
           success-text="刷新成功">
           <div class="flex flex-col m-15 gap-15">
             <NotifyLikeItem :item="a" v-for="a in listData" />
           </div>
+          <Empty
+            v-if="listData.length == 0 && loadStatus == false"
+            description="这里空空如也" />
         </PullRefresh>
       </div>
 
@@ -27,7 +30,7 @@
         <PullRefresh
           v-model="pullLoading"
           @refresh="onRefresh"
-          class="grow"
+          class="h-full"
           success-text="刷新成功">
           <div class="flex flex-col m-15 gap-15">
             <NotifyItem
@@ -72,14 +75,13 @@
               :no-read="list.unReadCount"
               :dot="list.unReadCount != 0"
               :create-time="list.updateTime" />
+            <Empty
+              v-if="listData.length == 0 && loadStatus == false"
+              description="这里空空如也" />
           </div>
         </PullRefresh>
       </div>
     </div>
-
-    <Empty
-      v-if="listData.length == 0 && loadStatus == false"
-      description="这里空空如也" />
   </div>
 </template>
 

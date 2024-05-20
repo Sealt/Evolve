@@ -77,8 +77,10 @@ import {
   showToast,
   Icon,
   Image,
+  showLoadingToast,
   type UploaderFileListItem,
   type UploaderInstance,
+  closeToast,
 } from "vant";
 import { ref, onMounted } from "vue";
 import { pubInfo, getTargetList, type IInfoType } from "@/api/publish";
@@ -111,11 +113,18 @@ const onPublish = () => {
     scopeDetail: scopeText.value,
   };
   formData.append("data", JSON.stringify(data));
+  showLoadingToast({
+    duration: 0,
+    message: "发布中",
+    forbidClick: true,
+  });
   pubInfo(formData).then((res) => {
     if (res.data.code == 200) {
+      closeToast();
       showToast("发表成功");
       router.back();
     } else {
+      closeToast();
       showToast("发表失败");
     }
   });
@@ -183,7 +192,7 @@ const afterRead = (file: any) => {
   }
 };
 const onOversize = (file: any) => {
-  console.log(file);
+  //console.log(file);
   showToast("文件大小不能超过 10Mb");
 };
 </script>

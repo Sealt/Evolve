@@ -163,7 +163,7 @@ const getSocketData = (e: any) => {
       router.currentRoute.value.path == "/message" &&
       router.currentRoute.value.query.userid == res.fromUid
     ) {
-      console.log("发送已读信息给服务器", wsMessage);
+      //console.log("发送已读信息给服务器", wsMessage);
       window.dispatchEvent(
         new CustomEvent("pushMessageWs", { detail: JSON.stringify(wsMessage) })
       );

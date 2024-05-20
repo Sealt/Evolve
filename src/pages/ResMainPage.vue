@@ -60,6 +60,10 @@ onMounted(() => {
   loadData();
 });
 function loadData() {
+  if (pageInfo.value.pages != 0 && pageInfo.value.current > pageInfo.value.pages) {
+    loadMoreContent.value = "没有更多了";
+    return;
+  }
   loadMoreContent.value = "加载中";
   getRes({
     current: pageInfo.value.current,
@@ -72,10 +76,7 @@ function loadData() {
       records.value = [...records.value, ...res.data.records];
       pageInfo.value.pages = res.data.pages;
       pageInfo.value.current++;
-      if (pageInfo.value.current > pageInfo.value.pages) {
-        loadMoreContent.value = "没有更多了";
-        observer.disconnect();
-      }
+      loadMoreContent.value = "加载更多";
     } else {
       loadMoreContent.value = "加载失败";
     }

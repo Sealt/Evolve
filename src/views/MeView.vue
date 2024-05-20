@@ -18,7 +18,7 @@
     <PullRefresh
       v-model="pullLoading"
       @refresh="onRefresh"
-      class="h-auto !overflow-visible"
+      class="h-full *:!h-full !overflow-scroll"
       success-text="刷新成功">
       <div class="flex flex-col gap-10">
         <div
@@ -76,13 +76,13 @@
           <div
             class="flex flex-col items-center gap-5"
             v-for="item in adminItems"
-            @click="showToast('Coding')">
+            @click="item.to ? router.push(item.to) : showToast('Coding')">
             <Icon :name="item.icon" size="7vw" />
             <div class="text-12">{{ item.text }}</div>
           </div>
         </div>
         <div
-          class="flex flex-col rounded-[10px] overflow-hidden shrink-0 mb-25">
+          class="flex flex-col rounded-[10px] overflow-hidden shrink-0">
           <Cell title="个人资料" is-link @click="router.push('/user/edit')" />
           <Cell title="校园认证" is-link @click="router.push('/user/auth')" />
           <Cell
@@ -93,7 +93,7 @@
         </div>
       </div>
     </PullRefresh>
-    <Tabbar route placeholder class="shrink-0">
+    <Tabbar route placeholder class="flex shrink-0" ref="tabbarRef">
       <TabbarItem name="info" to="/" icon="info-o">信息</TabbarItem>
       <TabbarItem name="res" to="/res" icon="apps-o">资源</TabbarItem>
       <TabbarItem name="chat" to="/chat" icon="chat-o">消息</TabbarItem>
@@ -114,7 +114,7 @@ import {
 } from "vant";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
-import { ref, onMounted } from "vue";
+import { ref, onMounted,onActivated } from "vue";
 const tabActiveName = ref("a");
 import { getUserInfo } from "@/api/user";
 const data: any = ref({
@@ -128,8 +128,11 @@ const data: any = ref({
 });
 const router = useRouter();
 const userStore = useUserStore();
+const tabbarRef:any = ref(null);
 const pullLoading = ref(false);
-
+onActivated(() => {
+  tabbarRef.value.$el.style.height = "7vh";
+});
 const onRefresh = () => {
   pullLoading.value = true;
   getUserInfo({ id: userStore.userId, infoType: "all" }).then((res) => {
@@ -156,7 +159,7 @@ const adminItems = [
   { icon: "apps-o", text: "入口管理" },
   { icon: "filter-o", text: "类目管理" },
   { icon: "user-o", text: "用户管理" },
-  { icon: "certificate", text: "权限管理" },
+  { icon: "certificate", text: "验证码",to:"/mode/code" },
 ];
 const onLogout = () => {
   // localStorage.removeItem("user");

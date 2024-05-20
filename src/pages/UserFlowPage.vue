@@ -72,6 +72,10 @@ onMounted(() => {
   });
 });
 function loadData(keyword: any) {
+  if (pageInfo.value.pages != 0 && pageInfo.value.current > pageInfo.value.pages) {
+    loadMoreContent.value = "没有更多了";
+    return;
+  }
   searchUser({
     current: pageInfo.value.current,
     size: pageInfo.value.size,
@@ -81,12 +85,9 @@ function loadData(keyword: any) {
     loadLock = 0;
     if (res.code == 200) {
       listData.value = [...listData.value, ...res.data];
-      pageInfo.value.pages = res.data.pages;
+      pageInfo.value.pages = -1;
       pageInfo.value.current++;
-      if (res.data.length == 0) {
-        loadMoreContent.value = "没有更多了";
-        observer.disconnect();
-      }
+      loadMoreContent.value = "加载更多";
     } else {
       loadMoreContent.value = "加载失败";
     }

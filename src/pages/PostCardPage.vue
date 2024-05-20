@@ -54,7 +54,7 @@
         :to="item.id"
         :file-item="item" />
     </div>
-    <div class="px-15 pt-10 text-15">
+    <div class="whitespace-pre-line px-15 pt-10 text-15">
       {{ data.content }}
     </div>
     <div class="px-15 pt-10 pb-5">
@@ -219,14 +219,12 @@ import {
   star,
   unStar,
   linkToNode,
-  unLinkFromNode,
 } from "@/api/action";
 import { searchNode } from "@/api/search";
 import { ref, onMounted, getCurrentInstance } from "vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
-import { EmitFlags } from "typescript";
-import { emit } from "process";
+
 const commentRef = ref();
 const showNodePopup = ref(false);
 const searchValue = ref("");

@@ -53,12 +53,12 @@ function handleVisibility() {
   }
 }
 function onPushMessage(e: any) {
-  console.log("即将发送WS消息：" + e.detail);
+  //console.log("即将发送WS消息：" + e.detail);
   websocket.send(e.detail);
 }
 function initWebSocket() {
   // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
-  let wsUrl = `ws://192.168.3.246:8082/ws`;
+  let wsUrl = `wss://evolve.ntrun.com:8082/ws`;
   websocket = new WebSocket(wsUrl);
   websocket.onopen = websocketonopen;
   websocket.onerror = websocketonerror;
@@ -69,7 +69,7 @@ function initWebSocket() {
 }
 
 function firstConnect() {
-  console.log("firstConnect");
+  //console.log("firstConnect");
   if (websocket && websocket.readyState == 1) {
     websocket.send(JSON.stringify(wsConnect));
   } else {
@@ -78,7 +78,7 @@ function firstConnect() {
 }
 
 function heartBeat() {
-  console.log("heartBeat 计时开始");
+  //console.log("heartBeat 计时开始");
   //清除延时器
   timeoutObj && clearTimeout(timeoutObj);
   serverTimeoutObj && clearTimeout(serverTimeoutObj);
@@ -116,7 +116,7 @@ function reconnect() {
 }
 
 async function setOnmessageMessage(event: any) {
-  console.log("收到来自服务器WS消息", event.data);
+  //console.log("收到来自服务器WS消息", event.data);
   let returnData = JSON.parse(event.data);
   var messageData = JSON.parse(returnData.data);
   if (returnData.action == 3) {
@@ -172,13 +172,11 @@ async function setOnmessageMessage(event: any) {
   }
 }
 function websocketonopen() {
-  console.log(
-    "WebSocket 通道连接成功" + new Date() + "----" + websocket.readyState
-  );
+  //console.log("WebSocket 通道连接成功" + new Date() + "----" + websocket.readyState);
   firstConnect();
 }
 function websocketonerror(e: any) {
-  console.log("WebSocket连接发生错误" + e);
+  //console.log("WebSocket连接发生错误" + e);
 }
 function websocketclose(e: any) {
   websocket.close();

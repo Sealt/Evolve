@@ -77,7 +77,7 @@
           :to="item.id"
           :file-item="item" />
       </div>
-      <div class="text-[15px]">{{ info.content }}</div>
+      <div class="whitespace-pre-line text-[15px]">{{ info.content }}</div>
       <div
         v-show="info.imageList.length == 1"
         class="flex w-fit overflow-hidden rounded-[5px]">
