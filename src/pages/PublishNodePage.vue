@@ -25,6 +25,7 @@
       label="备注"
       placeholder="补充和说明"
       input-align="right" />
+    <div class="text-gray-500 text-13 p-15">新建节点需要事件运营权限</div>
     <Popup v-model:show="showEventPopup" class="h-1/2" round position="bottom">
       <div class="flex flex-col p-15 gap-15">
         <div class="flex items-center justify-between gap-10">
@@ -51,7 +52,7 @@
             <div class="flex flex-col">
               <div class="text-15">{{ item.eventName }}</div>
               <div class="text-13 text-vant-t2">
-                {{ item.hotIndex + " 热度 " + item.discussCount  + " 讨论"}}
+                {{ item.hotIndex + " 热度 " + item.discussCount + " 讨论" }}
               </div>
             </div>
             <div class="flex justify-end grow">

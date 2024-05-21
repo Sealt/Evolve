@@ -24,9 +24,8 @@
       </div>
       <div class="flex text-13 text-vant-t2 self-start pt-40">
         <div>
-          用户名一年仅可修改一次，请慎重修改<br />· 不能以数字开头<br />·
-          用户名需大于5位小于15位<br />· 禁止包含非法字符和违禁关键词<br />·
-          无法使用其他用户使用过的用户名
+          用户名一年仅可修改一次，请慎重修改（测试期间无限制）<br />· 不能以数字开头<br />·
+          用户名需大于3位小于15位<br />· 禁止包含非法字符和违禁关键词<br />
         </div>
       </div>
     </div>
@@ -50,7 +49,7 @@ const onEdit = () => {
       showToast("更改成功");
       router.replace('/user/edit')
     } else {
-      showToast("更改失败");
+      showToast(res.message);
     }
   });
 };

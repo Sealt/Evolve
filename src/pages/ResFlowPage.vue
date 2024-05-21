@@ -59,8 +59,8 @@ function reload(keyword: any) {
       loadStatus.value = false;
       loadLock = 0;
       if (res.code == 200) {
-        records.value = [...records.value, ...res.data.records];
-        pageInfo.value.pages = res.data.pages;
+        records.value = [...records.value, ...res.data.data];
+        pageInfo.value.pages = res.data.pageSize;
         pageInfo.value.current++;
         if (pageInfo.value.current > pageInfo.value.pages) {
           loadMoreContent.value = "没有更多了";

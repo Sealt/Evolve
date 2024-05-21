@@ -8,12 +8,12 @@
 
 <script setup lang="ts">
 import { RouterView, useRouter } from "vue-router";
-import { onMounted,onBeforeUnmount } from "vue";
+import { onMounted } from "vue";
 import { useUserStore } from "./stores/user";
-import { showToast, showDialog, showNotify, showLoadingToast } from "vant";
+import { showDialog, showNotify } from "vant";
 const userStore = useUserStore();
 const router = useRouter();
-
+const wsValue = import.meta.env.VITE_WS_URL;
 const wsConnect = {
   action: 1,
   msgId: "CONNECT",
@@ -58,14 +58,12 @@ function onPushMessage(e: any) {
 }
 function initWebSocket() {
   // WebSocket与普通的请求所用协议有所不同，ws等同于http，wss等同于https
-  let wsUrl = `wss://evolve.ntrun.com:8082/ws`;
+  let wsUrl = wsValue;
   websocket = new WebSocket(wsUrl);
   websocket.onopen = websocketonopen;
   websocket.onerror = websocketonerror;
   websocket.onmessage = setOnmessageMessage;
   websocket.onclose = websocketclose;
-  // 监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
-  // window.onbeforeunload = that.onbeforeunload
 }
 
 function firstConnect() {
@@ -116,11 +114,16 @@ function reconnect() {
 }
 
 async function setOnmessageMessage(event: any) {
-  //console.log("收到来自服务器WS消息", event.data);
   let returnData = JSON.parse(event.data);
   var messageData = JSON.parse(returnData.data);
   if (returnData.action == 3) {
     reset(); // 得到服务器回复，重置心跳
+    if(messageData == 'send_message_ok')
+    window.dispatchEvent(
+      new CustomEvent("onMessageOkWs", {
+        detail: messageData,
+      })
+    );
   }
   if (returnData.action == 5) {
     // 主动推送业务消息

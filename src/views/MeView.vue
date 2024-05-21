@@ -81,8 +81,7 @@
             <div class="text-12">{{ item.text }}</div>
           </div>
         </div>
-        <div
-          class="flex flex-col rounded-[10px] overflow-hidden shrink-0">
+        <div class="flex flex-col rounded-[10px] overflow-hidden shrink-0">
           <Cell title="个人资料" is-link @click="router.push('/user/edit')" />
           <Cell title="校园认证" is-link @click="router.push('/user/auth')" />
           <Cell
@@ -111,10 +110,11 @@ import {
   Cell,
   showToast,
   PullRefresh,
+  showConfirmDialog,
 } from "vant";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/stores/user";
-import { ref, onMounted,onActivated } from "vue";
+import { ref, onMounted, onActivated } from "vue";
 const tabActiveName = ref("a");
 import { getUserInfo } from "@/api/user";
 const data: any = ref({
@@ -128,7 +128,7 @@ const data: any = ref({
 });
 const router = useRouter();
 const userStore = useUserStore();
-const tabbarRef:any = ref(null);
+const tabbarRef: any = ref(null);
 const pullLoading = ref(false);
 onActivated(() => {
   tabbarRef.value.$el.style.height = "7vh";
@@ -159,13 +159,23 @@ const adminItems = [
   { icon: "apps-o", text: "入口管理" },
   { icon: "filter-o", text: "类目管理" },
   { icon: "user-o", text: "用户管理" },
-  { icon: "certificate", text: "验证码",to:"/mode/code" },
+  { icon: "certificate", text: "验证码", to: "/mode/code" },
 ];
 const onLogout = () => {
-  // localStorage.removeItem("user");
-  userStore.clear();
-  showToast("退出成功");
-  router.push("/login");
+  showConfirmDialog({
+    title: "退出",
+    message: "确定要退出登录吗？",
+    confirmButtonText: "确定",
+    cancelButtonText: "取消",
+  })
+    .then(() => {
+      userStore.clear();
+      showToast("退出成功");
+      router.push("/login");
+    })
+    .catch(() => {
+      return;
+    });
 };
 onMounted(() => {
   getUserInfo({ id: userStore.userId, infoType: "all" }).then((res) => {

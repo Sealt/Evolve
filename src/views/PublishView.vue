@@ -9,7 +9,7 @@
       @click-right="onPublish" />
     <Tabs v-model:active="activeTab" lazy-render>
       <Tab title="信息"><PublishInfoPage ref="info" /></Tab>
-      <Tab title="经验"><PublishExpPage ref="exp"/></Tab>
+      <Tab title="经验"><PublishExpPage ref="exp" /></Tab>
       <Tab title="资源"><PublishResPage ref="res" /></Tab>
       <Tab title="项目"><PublishProjectPage ref="proj" /></Tab>
       <Tab title="事件"><PublishEventPage ref="event" /> </Tab>

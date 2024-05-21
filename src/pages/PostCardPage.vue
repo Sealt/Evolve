@@ -212,14 +212,7 @@ import Comment from "@/components/Comment.vue";
 import LittleCard from "@/components/LittleCard.vue";
 import { getInfo } from "@/api/info";
 import { getResource } from "@/api/res";
-import {
-  comment,
-  like,
-  unLike,
-  star,
-  unStar,
-  linkToNode,
-} from "@/api/action";
+import { comment, like, unLike, star, unStar, linkToNode } from "@/api/action";
 import { searchNode } from "@/api/search";
 import { ref, onMounted, getCurrentInstance } from "vue";
 import { onBeforeRouteLeave, useRouter } from "vue-router";
@@ -380,7 +373,7 @@ onMounted(() => {
       }
     });
   }
-  window.addEventListener("commentPost", (e:any) => {
+  window.addEventListener("commentPost", (e: any) => {
     if (e.detail == data.value.id) {
       data.value.commentCount++;
     }
@@ -416,10 +409,11 @@ const onComment = () => {
       showToast("评论成功");
       commentText.value = "";
       commentRef.value.reloadComment(res.data);
-      data.value.commentCount++;
-      window.dispatchEvent(new CustomEvent("commentPost",{
-        detail: router.currentRoute.value.params.id
-      }));
+      window.dispatchEvent(
+        new CustomEvent("commentPost", {
+          detail: router.currentRoute.value.params.id,
+        })
+      );
     }
   });
 };
@@ -440,9 +434,14 @@ const likeOn = () => {
     if (res.code == 200) {
       data.value.likeCount = res.data;
       data.value.isLike = true;
-      window.dispatchEvent(new CustomEvent("likePost",{
-        detail: router.currentRoute.value.params.id
-      }));
+      window.dispatchEvent(
+        new CustomEvent("likePost", {
+          detail: {
+            targetId: router.currentRoute.value.params.id,
+            data: res.data,
+          },
+        })
+      );
     }
   });
 };
@@ -463,9 +462,14 @@ const likeOff = () => {
     if (res.code == 200) {
       data.value.likeCount = res.data;
       data.value.isLike = null;
-      window.dispatchEvent(new CustomEvent("unLikePost",{
-        detail: router.currentRoute.value.params.id
-      }));
+      window.dispatchEvent(
+        new CustomEvent("unLikePost", {
+          detail: {
+            targetId: router.currentRoute.value.params.id,
+            data: res.data,
+          },
+        })
+      );
     }
   });
 };
@@ -486,9 +490,14 @@ const starOn = () => {
     if (res.code == 200) {
       data.value.starCount = res.data;
       data.value.isStar = true;
-      window.dispatchEvent(new CustomEvent("starPost",{
-        detail: router.currentRoute.value.params.id
-      }));
+      window.dispatchEvent(
+        new CustomEvent("starPost", {
+          detail: {
+            targetId: router.currentRoute.value.params.id,
+            data: res.data,
+          },
+        })
+      );
     }
   });
 };
@@ -509,9 +518,14 @@ const starOff = () => {
     if (res.code == 200) {
       data.value.starCount = res.data;
       data.value.isStar = null;
-      window.dispatchEvent(new CustomEvent("unStarPost",{
-        detail: router.currentRoute.value.params.id
-      }));
+      window.dispatchEvent(
+        new CustomEvent("unStarPost", {
+          detail: {
+            targetId: router.currentRoute.value.params.id,
+            data: res.data,
+          },
+        })
+      );
     }
   });
 };

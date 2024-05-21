@@ -25,8 +25,9 @@
       <div class="text-14">{{ commentItem.content }}</div>
       <div class="flex justify-between py-5 items-center">
         <span class="text-12 text-gray-500">{{
-          dayjs(commentItem.commentTime).fromNow()
-        }}</span>
+          dayjs(commentItem.commentTime).fromNow() +' '
+        }}{{ commentItem.commentIp }}</span
+        ><span class="text-12 text-gray-500"></span>
         <div class="flex items-center gap-5">
           <div
             class="flex items-center"
@@ -156,9 +157,11 @@ const onComment = () => {
       } else {
         emits("newComment", res.data);
       }
-      window.dispatchEvent(new CustomEvent("commentPost",{
-        detail: router.currentRoute.value.params.id
-      }));
+      window.dispatchEvent(
+        new CustomEvent("commentPost", {
+          detail: router.currentRoute.value.params.id,
+        })
+      );
       emits("closeCommentPop");
     }
   });

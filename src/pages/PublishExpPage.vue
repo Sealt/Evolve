@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col">
     <Cell
-      title="发布到"
+      title="发布到事件"
       is-link
       :value="eventId == '' ? '更容易被看到' : eventValue"
       @click="handleEventPopup" />
@@ -28,6 +28,9 @@
       label="有效范围"
       placeholder="经验对哪些群体有效"
       input-align="right" />
+    <div class="text-gray-500 text-13 p-15">
+      请正确选择经验所属的事件，降低信息差<br />平台建议和反馈请发布至“高校研学平台”<br />闲聊趣闻等请发布至“校园趣事”
+    </div>
     <Popup v-model:show="showEventPopup" class="h-1/2" round position="bottom">
       <div class="flex flex-col p-15 gap-15">
         <div class="flex items-center justify-between gap-10">
@@ -54,7 +57,7 @@
             <div class="flex flex-col">
               <div class="text-15">{{ item.eventName }}</div>
               <div class="text-13 text-vant-t2">
-                {{ item.hotIndex + " 热度 " + item.discussCount  + " 讨论" }}
+                {{ item.hotIndex + " 热度 " + item.discussCount + " 讨论" }}
               </div>
             </div>
             <div class="flex justify-end grow">
@@ -81,6 +84,7 @@ import {
   type UploaderFileListItem,
   type UploaderInstance,
   closeToast,
+  showConfirmDialog,
 } from "vant";
 import { ref, onMounted } from "vue";
 import { pubInfo, getTargetList, type IInfoType } from "@/api/publish";
@@ -97,9 +101,32 @@ const imgList = ref<UploaderFileListItem[]>([]);
 const showEventPopup = ref(false);
 const uploader = ref<UploaderInstance>();
 const targetList: any = ref([]);
-const eventId = ref('');
+const eventId = ref("");
 
 const onPublish = () => {
+  if (textValue.value == "") {
+    showToast("请输入内容");
+    return;
+  }
+  if (eventId.value == "") {
+    showConfirmDialog({
+      title: "发布",
+      message: "未选择事件，您的经验可能无法被别人看到，是否继续发布？",
+      confirmButtonText: "发布",
+      cancelButtonText: "取消",
+    })
+      .then((res) => {
+        console.log(res);
+        publishData();
+      })
+      .catch(() => {
+        return;
+      });
+  } else {
+    publishData();
+  }
+};
+const publishData = () => {
   var formData = new FormData();
   imgList.value.forEach((file) => {
     formData.append("images", file.file as File);
@@ -135,8 +162,7 @@ defineExpose({
 const onSelectEvent = (item: any) => {
   showEventPopup.value = false;
   eventId.value = item.id;
-  eventValue.value = item.eventName
-  showToast("success");
+  eventValue.value = item.eventName;
 };
 const onClosePopup = () => {
   showEventPopup.value = false;
@@ -145,13 +171,17 @@ const onSearch = () => {
   getTargetList({ typed: 1, query: searchValue.value }).then((res) => {
     if (res.code == 200) {
       targetList.value = res.data;
-      showToast("success");
     }
   });
 };
 
 const handleEventPopup = () => {
   showEventPopup.value = true;
+  getTargetList({ typed: 1, query: "" }).then((res) => {
+    if (res.code == 200) {
+      targetList.value = res.data;
+    }
+  });
 };
 
 const imgDelete = () => {

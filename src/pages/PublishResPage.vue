@@ -56,6 +56,9 @@
       :max-size="10240 * 1024"
       @oversize="onOversize"
       @delete="imgDelete" />
+    <div class="text-gray-500 text-13 p-15">
+      请正确选择资源所属的项目和事件，降低信息差<br />平台建议和反馈请发布至“高校研学平台”<br />闲聊趣闻等请发布至“校园趣事”
+    </div>
     <Popup v-model:show="showResPopup" class="h-1/2" round position="bottom">
       <div class="flex flex-col p-15 gap-15">
         <div class="flex items-center justify-between gap-10">
@@ -220,6 +223,7 @@ import {
   type UploaderFileListItem,
   type UploaderInstance,
   closeToast,
+  showConfirmDialog,
 } from "vant";
 import LittleCard from "@/components/LittleCard.vue";
 import { ref } from "vue";
@@ -252,6 +256,26 @@ var projectId = "";
 var eventId = "";
 
 const onPublish = () => {
+  if (textValue.value == "") {
+    showToast("发布内容为空");
+    return;
+  }
+  if (projectId == "" || eventId == "") {
+    showConfirmDialog({
+      title: "提示",
+      message: "未选择项目或事件，您的资源很可能无法被别人看到，是否继续发布？",
+    })
+      .then(() => {
+        publishData();
+      })
+      .catch(() => {
+        return;
+      });
+  } else {
+    publishData();
+  }
+};
+const publishData = () => {
   // 处理一份最终的文件数组
   fileList.value.forEach((file: any) => {
     if (file.uploadType == "upload") {
@@ -358,14 +382,12 @@ const onSelectProject = (item: any) => {
   showResPopup.value = false;
   projectId = item.id;
   projectValue.value = item.projectName;
-  showToast("success");
   targetList.value = [];
 };
 const onSelectEvent = (item: any) => {
   showEventPopup.value = false;
   eventId = item.id;
   eventValue.value = item.eventName;
-  showToast("success");
   targetList.value = [];
 };
 const onCloseProjectPopup = () => {
@@ -380,7 +402,6 @@ const onProjectSearch = () => {
   getTargetList({ typed: 2, query: searchValue.value }).then((res) => {
     if (res.code == 200) {
       targetList.value = res.data;
-      showToast("success");
     }
   });
 };
@@ -388,15 +409,24 @@ const onEventSearch = () => {
   getTargetList({ typed: 1, query: searchValue.value }).then((res) => {
     if (res.code == 200) {
       targetList.value = res.data;
-      showToast("success");
     }
   });
 };
 const handleProjectPopup = () => {
   showResPopup.value = true;
+  getTargetList({ typed: 2, query: "" }).then((res) => {
+    if (res.code == 200) {
+      targetList.value = res.data;
+    }
+  });
 };
 const handleEventPopup = () => {
   showEventPopup.value = true;
+  getTargetList({ typed: 1, query: "" }).then((res) => {
+    if (res.code == 200) {
+      targetList.value = res.data;
+    }
+  });
 };
 const handleFilePopup = () => {
   if (fileUploader.value) {

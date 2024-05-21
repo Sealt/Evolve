@@ -15,6 +15,9 @@
       label="事件简介"
       placeholder="请输入"
       input-align="right" />
+      <div class="text-gray-500 text-13 p-15">
+      新建事件需要管理员权限
+    </div>
     <Popup v-model:show="showEventPopup" class="h-1/2" round position="bottom">
       <div class="flex flex-col p-15 gap-15">
         <div class="flex items-center justify-between gap-10">

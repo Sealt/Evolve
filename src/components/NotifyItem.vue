@@ -136,7 +136,7 @@ const props = defineProps<{
   content?: string;
   gender?: string;
   createTime?: string;
-  noRead?: string;
+  noRead?: number;
   dot?: boolean;
   icon?: string;
   iconClass?: string;

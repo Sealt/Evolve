@@ -77,7 +77,7 @@
           :to="item.id"
           :file-item="item" />
       </div>
-      <div class="whitespace-pre-line text-[15px]">{{ info.content }}</div>
+      <div class="whitespace-pre-line line-clamp-6 text-[15px]">{{ info.content }}</div>
       <div
         v-show="info.imageList.length == 1"
         class="flex w-fit overflow-hidden rounded-[5px]">
@@ -191,9 +191,14 @@ const likeOn = () => {
     typed: currentType,
   }).then((res) => {
     if (res.code == 200) {
-      window.dispatchEvent(new CustomEvent("likePost",{
-        detail: props.info.id
-      }));
+      window.dispatchEvent(
+        new CustomEvent("likePost", {
+          detail: {
+            targetId: props.info.id,
+            data: res.data,
+          },
+        })
+      );
     }
   });
 };
@@ -215,9 +220,14 @@ const likeOff = () => {
     typed: currentType,
   }).then((res) => {
     if (res.code == 200) {
-      window.dispatchEvent(new CustomEvent("unLikePost",{
-        detail: props.info.id
-      }));
+      window.dispatchEvent(
+        new CustomEvent("unLikePost", {
+          detail: {
+            targetId: props.info.id,
+            data: res.data,
+          },
+        })
+      );
     }
   });
 };
@@ -239,9 +249,14 @@ const starOn = () => {
     typed: currentType,
   }).then((res) => {
     if (res.code == 200) {
-      window.dispatchEvent(new CustomEvent("starPost",{
-        detail: props.info.id
-      }));
+      window.dispatchEvent(
+        new CustomEvent("starPost", {
+          detail: {
+            targetId: props.info.id,
+            data: res.data,
+          },
+        })
+      );
     }
   });
 };
@@ -263,9 +278,14 @@ const starOff = () => {
     typed: currentType,
   }).then((res) => {
     if (res.code == 200) {
-      window.dispatchEvent(new CustomEvent("unStarPost",{
-        detail: props.info.id
-      }));
+      window.dispatchEvent(
+        new CustomEvent("unStarPost", {
+          detail: {
+            targetId: props.info.id,
+            data: res.data,
+          },
+        })
+      );
     }
   });
 };
@@ -296,31 +316,31 @@ onMounted(() => {
       props.info.user.realAuth.campus + " " + props.info.user.realAuth.collage;
   }
   infoDesc.value = from + auth;
-  window.addEventListener("likePost", (e:any) => {
-    if (e.detail == props.info.id) {
-      props.info.likeCount++;
+  window.addEventListener("likePost", (e: any) => {
+    if (e.detail.targetId == props.info.id) {
+      props.info.likeCount = e.detail.data;
       props.info.isLike = true;
     }
   });
-  window.addEventListener("unLikePost", (e:any) => {
-    if (e.detail == props.info.id) {
-      props.info.likeCount--;
+  window.addEventListener("unLikePost", (e: any) => {
+    if (e.detail.targetId == props.info.id) {
+      props.info.likeCount = e.detail.data;
       props.info.isLike = null;
     }
   });
-  window.addEventListener("starPost", (e:any) => {
-    if (e.detail == props.info.id) {
-      props.info.starCount++;
+  window.addEventListener("starPost", (e: any) => {
+    if (e.detail.targetId == props.info.id) {
+      props.info.starCount = e.detail.data;
       props.info.isStar = true;
     }
   });
-  window.addEventListener("unStarPost", (e:any) => {
-    if (e.detail == props.info.id) {
-      props.info.starCount--;
+  window.addEventListener("unStarPost", (e: any) => {
+    if (e.detail.targetId == props.info.id) {
+      props.info.starCount = e.detail.data;
       props.info.isStar = null;
     }
   });
-  window.addEventListener("commentPost", (e:any) => {
+  window.addEventListener("commentPost", (e: any) => {
     if (e.detail == props.info.id) {
       props.info.commentCount++;
     }

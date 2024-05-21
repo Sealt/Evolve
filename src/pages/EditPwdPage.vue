@@ -86,23 +86,31 @@ var checkToken = '';
 const smstime = ref(60);
 const smsText = ref("发送验证码");
 const onEdit = () => {
+  if (pwdOne.value != pwdTwo.value) {
+    showToast("两次密码不一致");
+    return;
+  }
   editPassword({userPassword:pwdTwo.value,checkToken:checkToken}).then(res => {
     if(res.code ==200){
       showToast("success");
   router.replace("/user/account");
     } else {
-      showToast('修改失败')
+      showToast(res.message)
     }
   })
 
 };
 const onCheck = () => {
+  if (sms.value == "") {
+    showToast("请输入验证码");
+    return;
+  }
   checkSms({code:sms.value,mobile:router.currentRoute.value.query.mobile as string}).then(res => {
     if (res.code == 200) {
       checkToken = res.message
       status.value = "edit";
     } else {
-      showToast('校验失败')
+      showToast(res.message)
     }
   })
 
@@ -113,6 +121,7 @@ const onGet = () => {
     scene: "editpwd",
   }).then((res) => {
     if (res.code == 200) {
+      sms.value = res.message;
       disableSms.value = true;
       smsText.value = "发送验证码(" + smstime.value + ")";
       var jb = setInterval(() => {
@@ -125,7 +134,6 @@ const onGet = () => {
         smstime.value--;
         smsText.value = "发送验证码(" + smstime.value + ")";
       }, 1000);
-      //sms.value = res.message
     }
   });
 };

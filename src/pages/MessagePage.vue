@@ -36,7 +36,7 @@
             class="size-40 shrink-0"
             round />
           <div
-            class="bg-white text-14 rounded-tl-[5px] rounded-tr-[15px] rounded-bl-[15px] rounded-br-[15px] p-10 min-h-40 max-w-300 break-all">
+            class="bg-white whitespace-pre-line text-14 rounded-tl-[5px] rounded-tr-[15px] rounded-bl-[15px] rounded-br-[15px] p-10 min-h-40 max-w-300 break-all">
             {{ item.body.text }}
           </div>
           <div class="w-40 shrink-0"></div>
@@ -44,7 +44,7 @@
         <div class="flex items-start gap-10 justify-end" v-else>
           <div class="w-40 shrink-0"></div>
           <div
-            class="flex text-14 items-center bg-vant rounded-tl-[15px] rounded-tr-[5px] rounded-bl-[15px] rounded-br-[15px] text-white p-10 min-h-40 max-w-300 break-all">
+            class="flex whitespace-pre-line text-14 items-center bg-vant rounded-tl-[15px] rounded-tr-[5px] rounded-bl-[15px] rounded-br-[15px] text-white p-10 min-h-40 max-w-300 break-all">
             {{ item.body.text }}
           </div>
           <Image
@@ -95,6 +95,7 @@ onMounted(() => {
   targetId = router.currentRoute.value.query.userid;
 
   window.addEventListener("onMessageWs", getSocketData);
+  window.addEventListener("onMessageOkWs", onMessageOkWs);
   getMessages({ targetUid: targetId }).then((res) => {
     if (res.code == 200) {
       res.data.forEach((element: any) => {
@@ -114,13 +115,6 @@ onMounted(() => {
 watch(
   () => messageHistory.value.length,
   (cur, pre) => {
-    if (pre == 0) {
-      getChat({ targetUid: targetId }).then((res) => {
-        if (res.code == 200) {
-          chatData.value = res.data;
-        }
-      });
-    }
     if (pre != 0 && pre != cur) {
       nextTick(() => {
         scrollPanel.value.scrollTo({
@@ -135,7 +129,6 @@ const showTime = (item: any, index: any) => {
   if (index == 0) {
     return true;
   } else {
-
     if (
       dayjs(item.createTime).diff(
         messageHistory.value[index - 1]?.createTime,
@@ -146,6 +139,24 @@ const showTime = (item: any, index: any) => {
     } else return false;
   }
 };
+const onMessageOkWs = () => {
+  if (messageHistory.value.length == 0) {
+    showToast("消息发送成功");
+    getChat({ targetUid: targetId }).then((res) => {
+      if (res.code == 200) {
+        chatData.value = res.data;
+      }
+    });
+    getMessages({ targetUid: targetId }).then((res) => {
+      if (res.code == 200) {
+        res.data.forEach((element: any) => {
+          messageHistory.value.push(element);
+        });
+      }
+    });
+  }
+};
+
 const getSocketData = (e: any) => {
   var res = JSON.parse(e.detail.data);
   if (targetId == res.fromUid) {
@@ -193,7 +204,9 @@ const onPush = () => {
   window.dispatchEvent(
     new CustomEvent("pushMessageWs", { detail: JSON.stringify(wsMessage) })
   );
-  messageHistory.value.push(wsMessage.data);
+  if (messageHistory.value.length != 0) {
+    messageHistory.value.push(wsMessage.data);
+  }
   messageText.value = "";
 };
 </script>

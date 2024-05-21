@@ -68,8 +68,8 @@ function reload(keyword: string) {
       loadStatus.value = false;
       loadLock = 0;
       if (res.code == 200) {
-        records.value = [...records.value, ...res.data.records];
-        pageInfo.value.pages = res.data.pages;
+        records.value = [...records.value, ...res.data.data];
+        pageInfo.value.pages = res.data.pageSize;
         pageInfo.value.current++;
         loadMoreContent.value = "加载更多";
       } else {
@@ -86,8 +86,8 @@ function reload(keyword: string) {
       loadStatus.value = false;
       loadLock = 0;
       if (res.code == 200) {
-        records.value = [...records.value, ...res.data.records];
-        pageInfo.value.pages = res.data.pages;
+        records.value = [...records.value, ...res.data.data];
+        pageInfo.value.pages = res.data.pageSize;
         pageInfo.value.current++;
         loadMoreContent.value = "加载更多";
       } else {

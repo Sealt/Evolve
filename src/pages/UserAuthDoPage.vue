@@ -57,11 +57,23 @@ const router = useRouter();
 const imgValue:any = ref([]);
 const value1 = ref("");
 const value2 = ref("");
-const value3 = ref("abc");
+const value3 = ref("");
 const value4 = ref("");
 const value5 = ref("");
 const value6 = ref("");
 const onClick = () => {
+  if (
+    !value1.value ||
+    !value2.value ||
+    !value3.value ||
+    !value4.value ||
+    !value5.value ||
+    !value6.value ||
+    imgValue.value.length == 0
+  ) {
+    showToast("请填写完整信息");
+    return;
+  }
   var data = new FormData();
   data.append("file", imgValue.value[0].file);
   var info = {
@@ -75,8 +87,10 @@ const onClick = () => {
   data.append("info", JSON.stringify(info));
   submitAuth(data).then((res) => {
     if (res.data.code == 200) {
-      showToast("success");
+      showToast("提交成功");
       router.back();
+    } else {
+      showToast(res.data.message);
     }
   });
 };

@@ -58,7 +58,7 @@
 </template>
 
 <script setup lang="ts">
-import { TreeSelect, Loading, Empty,showConfirmDialog, showToast } from "vant";
+import { TreeSelect, Loading, Empty, showConfirmDialog, showToast } from "vant";
 import LittleCard from "./LittleCard.vue";
 import { ref, onMounted } from "vue";
 import { getSorts as getEventSort, getEvents } from "@/api/event";
@@ -107,7 +107,18 @@ onMounted(() => {
         res.data.forEach((item: any) => {
           treeItems.value.push({ id: item.id, text: item.largeName });
         });
-        onClickNav(0);
+        if (Number(router.currentRoute.value.query.id) != 0) {
+          for (let index = 0; index < treeItems.value.length; index++) {
+            let element = treeItems.value[index];
+            if (element.id == router.currentRoute.value.query.id) {
+              activeIndex.value = index;
+              onClickNav(index);
+              break;
+            }
+          }
+        } else {
+          onClickNav(0);
+        }
       }
     });
   }
@@ -175,7 +186,9 @@ const onTouchStart = (item: any) => {
         }).then((res) => {
           if (res.code == 200) {
             showToast("移除成功");
-            contentItems.value.items = contentItems.value.items.filter((i: any) => i.id != item.id);
+            contentItems.value.items = contentItems.value.items.filter(
+              (i: any) => i.id != item.id
+            );
           }
         });
       })

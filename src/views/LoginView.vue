@@ -155,8 +155,7 @@ import {
   Search,
   Field,
   Checkbox,
-  Button,
-  showToast,
+  Button,showToast
 } from "vant";
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -220,7 +219,7 @@ const onLogin = () => {
   getSms(params).then((res) => {
     if (res.code == 200) {
       // todo 测试
-      // sms.value = res.message
+      sms.value = res.message
       status.value = "check";
       disableSms.value = true;
       smsText.value = "发送验证码(" + smstime.value + ")";
