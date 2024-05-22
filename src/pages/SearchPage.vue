@@ -6,6 +6,7 @@
       right-icon="search"
       @click-left-icon="onBack"
       @click-right-icon="onSearch"
+      @search="onSearch"
       ref="search" />
     <div class="bg-vant-n2 flex flex-col p-10 gap-10 grow">
       <SearchHistory />

@@ -59,19 +59,19 @@
     </div>
     <div class="px-15 pt-10 pb-5">
       <div
-        class="flex gap-5 flex-wrap"
-        v-if="data.event != null || data.project != null">
+        class="flex gap-5 flex-wrap">
         <TinyCard
-          v-if="
-            $router.currentRoute.value.params.type == 'info' ||
-            $router.currentRoute.value.params.type == 'exp'
-          "
+          v-if="data.event != null"
           :icon="data.event.icon"
-          :cardname="data.event.eventName" />
+          :cardname="data.event.eventName"
+          type="event"
+          :id="data.eventId" />
         <TinyCard
-          v-else
+          v-if="data.project != null"
           :icon="data.project.icon"
-          :cardname="data.project.projectName" />
+          :cardname="data.project.projectName"
+          type="project"
+          :id="data.projectId" />
       </div>
     </div>
     <div v-show="data.infoSource" class="px-15 text-12 text-gray-500">
@@ -320,14 +320,16 @@ const sheetSelectOn = (item: any) => {
   }
 };
 const onSearch = () => {
-  searchNode({ current: 1, size: 10, keyword: searchValue.value }).then(
-    (res) => {
-      if (res.code == 200) {
-        targetList.value = res.data.records;
-        showToast("success");
-      }
+  searchNode({
+    current: 1,
+    size: 10,
+    keyword: searchValue.value,
+    from: "linkToNode",
+  }).then((res) => {
+    if (res.code == 200) {
+      targetList.value = res.data.data;
     }
-  );
+  });
 };
 const onCloseNodePopup = () => {
   showNodePopup.value = false;

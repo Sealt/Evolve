@@ -94,7 +94,6 @@ const onSelectEvent = (item: any) => {
   showEventPopup.value = false;
   eventLargeId.value = item.id;
   eventLargeValue.value = item.largeName;
-  showToast("success");
 };
 const onClosePopup = () => {
   showEventPopup.value = false;
@@ -103,13 +102,17 @@ const onSearch = () => {
   getTargetList({ typed: 3, query: searchValue.value }).then((res) => {
     if (res.code == 200) {
       targetList.value = res.data;
-      showToast("success");
     }
   });
 };
 const showEventPopup = ref(false);
 const handleEventPopup = () => {
   showEventPopup.value = true;
+  getTargetList({ typed: 3, query: searchValue.value }).then((res) => {
+    if (res.code == 200) {
+      targetList.value = res.data;
+    }
+  });
 };
 </script>
 

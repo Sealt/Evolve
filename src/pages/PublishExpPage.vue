@@ -15,7 +15,7 @@
       v-model="imgList"
       :after-read="afterRead"
       :max-count="9"
-      :max-size="10240 * 1024"
+      :max-size="5120 * 1024"
       @oversize="onOversize"
       @delete="imgDelete" />
     <Field
@@ -223,7 +223,7 @@ const afterRead = (file: any) => {
 };
 const onOversize = (file: any) => {
   //console.log(file);
-  showToast("文件大小不能超过 10Mb");
+  showToast("文件大小不能超过 5Mb");
 };
 </script>
 

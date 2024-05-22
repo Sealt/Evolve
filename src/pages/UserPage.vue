@@ -52,11 +52,14 @@
         </div>
       </div>
       <div class="flex px-15 py-10 gap-5">
-        <div class="text-13 bg-white/30 rounded-full px-10 text-white">
+        <div v-if="data.gender != '保密'" class="text-13 bg-white/30 rounded-full px-10 text-white">
           {{ data.gender }}
         </div>
         <div class="text-13 bg-white/30 rounded-full px-10 text-white">
           {{ data.realAuth == null ? "暂无认证" : data.realAuth.collage }}
+        </div>
+        <div class="text-13 bg-white/30 rounded-full px-10 text-white">
+          {{ 'IP属地：'+data.ipLocation }}
         </div>
       </div>
       <Tabs v-model:active="tabActiveName" sticky swipeable class="pt-10" lazy-render>
@@ -98,7 +101,6 @@ const followOn = () => {
     typed:7
   }).then(res=>{
     if(res.code == 200){
-      showToast('success')
       data.value.isFollow = true;
     }
   })
@@ -109,7 +111,6 @@ const followOff = () => {
     typed:7
   }).then(res=>{
     if(res.code == 200){
-      showToast('success')
       data.value.isFollow = null;
     }
   })

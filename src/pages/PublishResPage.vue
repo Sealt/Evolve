@@ -53,7 +53,7 @@
       :after-read="afterRead"
       multiple
       :max-count="9"
-      :max-size="10240 * 1024"
+      :max-size="5120 * 1024"
       @oversize="onOversize"
       @delete="imgDelete" />
     <div class="text-gray-500 text-13 p-15">
@@ -464,7 +464,7 @@ const afterRead = (file: any) => {
   }
 };
 const onOversize = (file: any) => {
-  showToast("文件大小不能超过 10Mb");
+  showToast("文件大小不能超过 5Mb");
 };
 </script>
 

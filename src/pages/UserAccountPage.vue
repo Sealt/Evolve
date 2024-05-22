@@ -19,7 +19,7 @@ const userStore = useUserStore()
 const router = useRouter();
 const data = ref({userName: '' , mobile: '',mail:''});
 onMounted(() => {
-    getUserInfo({id:userStore.userId,type:"account"}).then(res => {
+    getUserInfo({id:userStore.userId,infoType:"account"}).then(res => {
         data.value = res.data
     })
 })

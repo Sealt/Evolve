@@ -77,7 +77,9 @@
           :to="item.id"
           :file-item="item" />
       </div>
-      <div class="whitespace-pre-line line-clamp-6 text-[15px]">{{ info.content }}</div>
+      <div class="whitespace-pre-line line-clamp-6 text-[15px]">
+        {{ info.content }}
+      </div>
       <div
         v-show="info.imageList.length == 1"
         class="flex w-fit overflow-hidden rounded-[5px]">
@@ -99,17 +101,19 @@
           class="min-h-[28vw] min-w-[28vw] max-h-[20vh]"
           :src="image" />
       </div>
-      <div
-        class="flex gap-5 flex-wrap"
-        v-if="info.event != null || info.project != null">
+      <div class="flex gap-5 flex-wrap">
         <TinyCard
-          v-if="cardType == 'info' || cardType == 'exp'"
+          v-if="info.event != null"
           :icon="info.event.icon"
-          :cardname="info.event.eventName" />
+          :cardname="info.event.eventName"
+          type="event"
+          :id="info.eventId" />
         <TinyCard
-          v-else
+          v-if="info.project != null"
           :icon="info.project.icon"
-          :cardname="info.project.projectName" />
+          :cardname="info.project.projectName"
+          type="project"
+          :id="info.projectId" />
       </div>
       <HotCommentCard v-show="info.hotCommentId" />
     </div>

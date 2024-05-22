@@ -92,7 +92,7 @@ const onEdit = () => {
   }
   editPassword({userPassword:pwdTwo.value,checkToken:checkToken}).then(res => {
     if(res.code ==200){
-      showToast("success");
+      showToast("修改密码成功");
   router.replace("/user/account");
     } else {
       showToast(res.message)

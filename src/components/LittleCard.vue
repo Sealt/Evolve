@@ -159,7 +159,7 @@ const handleClick = () => {
   }
   if (props.type == "res") {
     gain({ fileId: props.fileItem.id }).then((res) => {
-      showToast("gain success");
+      showToast("获取成功");
     });
     showResPopup.value = true;
   }

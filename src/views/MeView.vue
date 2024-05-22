@@ -135,7 +135,7 @@ onActivated(() => {
 });
 const onRefresh = () => {
   pullLoading.value = true;
-  getUserInfo({ id: userStore.userId, infoType: "all" }).then((res) => {
+  getUserInfo({ id: userStore.userId, infoType: "me" }).then((res) => {
     pullLoading.value = false;
     if (res.code == 200) {
       data.value = res.data;
@@ -178,7 +178,7 @@ const onLogout = () => {
     });
 };
 onMounted(() => {
-  getUserInfo({ id: userStore.userId, infoType: "all" }).then((res) => {
+  getUserInfo({ id: userStore.userId, infoType: "me" }).then((res) => {
     data.value = res.data;
   });
 });

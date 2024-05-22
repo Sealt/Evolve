@@ -95,7 +95,6 @@ const followOn = () => {
     typed: 4,
   }).then((res) => {
     if (res.code == 200) {
-      showToast("success");
       project.value.isFollow = true;
     }
   });
@@ -106,7 +105,6 @@ const followOff = () => {
     typed: 4,
   }).then((res) => {
     if (res.code == 200) {
-      showToast("success");
       project.value.isFollow = null;
     }
   });

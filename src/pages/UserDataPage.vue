@@ -98,7 +98,7 @@ const saveBio = () => {
   });
 };
 onMounted(() => {
-  getUserInfo({ id: userStore.userId, infoType: "all" }).then((res) => {
+  getUserInfo({ id: userStore.userId, infoType: "data" }).then((res) => {
     data.value = res.data;
   });
 });

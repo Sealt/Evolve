@@ -30,7 +30,7 @@ const onFocus = () => {
   router.push("/search");
 };
 onMounted(() => {
-  getUserInfo({ id: userStore.userId, type: "avatar" }).then((res) => {
+  getUserInfo({ id: userStore.userId, infoType: "avatar" }).then((res) => {
     avatar.value = res.data.avatar;
   });
 });

@@ -22,9 +22,9 @@
       input-align="right" />
     <Field
       v-model="commentText"
-      label="备注"
       placeholder="补充和说明"
-      input-align="right" />
+      type="textarea"
+      :autosize="{ maxHeight: 200, minHeight: 150 }" />
     <div class="text-gray-500 text-13 p-15">新建节点需要事件运营权限</div>
     <Popup v-model:show="showEventPopup" class="h-1/2" round position="bottom">
       <div class="flex flex-col p-15 gap-15">
@@ -108,7 +108,6 @@ const onSelectEvent = (item: any) => {
   showEventPopup.value = false;
   eventId.value = item.id;
   eventValue.value = item.eventName;
-  showToast("success");
 };
 const onClosePopup = () => {
   showEventPopup.value = false;
@@ -117,13 +116,17 @@ const onSearch = () => {
   getTargetList({ typed: 1, query: searchValue.value }).then((res) => {
     if (res.code == 200) {
       targetList.value = res.data;
-      showToast("success");
     }
   });
 };
 const showEventPopup = ref(false);
 const handleEventPopup = () => {
   showEventPopup.value = true;
+  getTargetList({ typed: 1, query: searchValue.value }).then((res) => {
+    if (res.code == 200) {
+      targetList.value = res.data;
+    }
+  });
 };
 </script>
 

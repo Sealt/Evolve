@@ -111,7 +111,6 @@ const onSelectProjectLarge = (item: any) => {
   showProjectPopup.value = false;
   projectLargeId.value = item.id;
   projectLargeValue.value = item.largeName;
-  showToast("success");
 };
 const onClosePopup = () => {
   showProjectPopup.value = false;
@@ -120,13 +119,17 @@ const onSearch = () => {
   getTargetList({ typed: 4, query: searchValue.value }).then((res) => {
     if (res.code == 200) {
       targetList.value = res.data;
-      showToast("success");
     }
   });
 };
 const showProjectPopup = ref(false);
 const handleProjectPopup = () => {
   showProjectPopup.value = true;
+  getTargetList({ typed: 4, query: searchValue.value }).then((res) => {
+    if (res.code == 200) {
+      targetList.value = res.data;
+    }
+  });
 };
 </script>
 
