@@ -141,7 +141,7 @@ export const getUserProject = async () => {
 // getStars
 export const getStars = async (data:any) => {
   return await request.get({
-    url: '/user/getStars',
+    url: '/action/getStars',
     params: data
   })
 }

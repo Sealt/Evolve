@@ -30,3 +30,4 @@ coverage
 *.tsbuildinfo
 .VSCodeCounter/*
 package-lock.json
+.env*
